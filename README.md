@@ -33,7 +33,7 @@ git clone https://github.com/clearsmog/claude-skills.git /tmp/claude-skills
 # Copy desired skills (won't overwrite your existing skills)
 cp -r /tmp/claude-skills/notebooklm ~/.claude/skills/
 cp -r /tmp/claude-skills/skill-manager ~/.claude/skills/
-cp -r /tmp/claude-skills/typst.md ~/.claude/skills/
+cp -r /tmp/claude-skills/typst ~/.claude/skills/
 
 # Cleanup
 rm -rf /tmp/claude-skills
@@ -64,7 +64,8 @@ skills/
 ├── github-to-skills/     # GitHub repo to skill converter
 ├── skill-manager/        # Skill lifecycle management
 ├── skill-evolution-manager/  # Skill learning & evolution
-└── typst.md              # Typst syntax guide
+└── typst/                # Typst syntax guide
+    └── SKILL.md
 ```
 
 ## Contributing
