@@ -1,18 +1,44 @@
 ---
 name: typst
-description: Syntax guide and ecosystem reference for writing Typst (.typ) files. Use this skill when writing, editing, or debugging Typst documents. Covers core syntax, common errors, packages, and best practices.
+description: Syntax guide and ecosystem reference for writing Typst (.typ) files. Use this skill when writing, editing, or debugging Typst documents. Covers core syntax, common errors, packages, accessibility, and best practices.
+version: 2.0.0
 license: MIT
+targets:
+  - typst: ">=0.14.0"
 ---
 
 # Typst Syntax & Ecosystem Guide
 
 Use this skill when writing or editing Typst (.typ) files.
 
+**Current Typst version**: 0.14.2 (Dec 2025)
+
 ## Documentation
 
-- **Official Reference:** https://typst.app/docs/reference/
-- **Package Registry:** https://typst.app/universe/
-- **Tutorial:** https://typst.app/docs/tutorial/
+- **Official Reference**: https://typst.app/docs/reference/
+- **Changelog**: https://typst.app/docs/changelog/
+- **Package Registry**: https://typst.app/universe/
+- **Accessibility Guide**: https://typst.app/docs/guides/accessibility/
+
+### Reference Files
+
+- [references/syntax.md](references/syntax.md) - Core syntax patterns and new features
+- [references/bibliography.md](references/bibliography.md) - Citations and bibliographies
+- [references/accessibility.md](references/accessibility.md) - PDF/UA, alt text, tagged PDFs
+- [references/html-export.md](references/html-export.md) - HTML export and `target()` function
+
+## What's New in Typst 0.13-0.14
+
+| Feature | Version | Description |
+|---------|---------|-------------|
+| Accessibility | 0.14 | Tagged PDFs by default, PDF/UA-1 support |
+| `figure.alt` | 0.14 | Alt text for screen readers |
+| `pdf.attach` | 0.14 | Attach files to PDFs (replaces `pdf.embed`) |
+| Character justification | 0.14 | `par.justification-limits` for microtypography |
+| Multithreaded layout | 0.14 | 2-3x speedup for large documents |
+| `curve` function | 0.13 | New Bézier curve drawing (replaces `path`) |
+| First-line indent | 0.13 | Works on all paragraphs with `all: true` |
+| HTML export | 0.13 | Experimental, use `target()` for conditional rendering |
 
 ## Core Syntax
 
@@ -22,17 +48,18 @@ Typst uses **parentheses** for both (not square brackets like Python/JS):
 
 ```typst
 // Arrays - use ()
-let colors = (red, green, blue)
-let first = colors.at(0)        // NOT colors[0]
-let length = colors.len()
+#let colors = (red, green, blue)
+#let first = colors.at(0)        // NOT colors[0]
+#let length = colors.len()
+#let singleton = (item,)         // Trailing comma for single-element
 
 // Dictionaries - use () with colons
-let person = (name: "Alice", age: 30)
-let name = person.name          // or person.at("name")
+#let person = (name: "Alice", age: 30)
+#let name = person.name          // or person.at("name")
 
 // WRONG - common mistakes
-let arr = [1, 2, 3]             // This is a content block, not array!
-let item = arr[0]               // Wrong access syntax
+#let arr = [1, 2, 3]             // This is a content block, not array!
+#let item = arr[0]               // Wrong access syntax
 ```
 
 ### Content Blocks vs Code Blocks
@@ -68,15 +95,72 @@ My name is #name.             // # needed to evaluate
 }
 ```
 
-## Special Characters
+## CLI Commands
 
-| Character | Problem | Solution |
-|-----------|---------|----------|
-| `#` | Command prefix | Escape with `\#` in content |
-| `_` | Triggers emphasis | Use `......` for blanks, not `_____` |
-| `*` | Triggers bold | Escape with `\*` if needed literally |
-| `@` | Reference/citation | Escape with `\@` in plain text |
-| `$` | Math mode | Escape with `\$` for currency |
+### Basic Commands
+
+```bash
+# Compile to PDF
+typst compile document.typ
+
+# Watch and recompile on changes
+typst watch document.typ
+
+# Compile specific pages
+typst compile document.typ output.pdf --pages 1-5
+
+# Query document metadata
+typst query document.typ "heading.where(level: 1)" | jq ".[].body.text"
+
+# List available fonts
+typst fonts
+```
+
+### PDF Standards and Accessibility
+
+```bash
+# Enable PDF/UA-1 for accessibility compliance
+typst compile document.typ --pdf-standard ua-1
+
+# Use specific PDF version
+typst compile document.typ --pdf-standard 2.0
+
+# PDF/A for archival
+typst compile document.typ --pdf-standard a-2b
+
+# Combine standards
+typst compile document.typ --pdf-standard 1.7,ua-1
+```
+
+**Valid PDF standards**: `1.4`, `1.5`, `1.6`, `1.7`, `2.0`, `a-1b`, `a-1a`, `a-2b`, `a-2u`, `a-2a`, `a-3b`, `a-3u`, `a-3a`, `a-4`, `a-4f`, `a-4e`, `ua-1`
+
+### HTML Export (Experimental)
+
+```bash
+TYPST_FEATURES=html typst compile document.typ output.html
+```
+
+## Accessibility (0.14+)
+
+Typst produces accessible tagged PDFs by default.
+
+```typst
+// Always set document metadata
+#set document(title: "Document Title", author: "Author Name")
+#set text(lang: "en")
+
+// Add alt text to images
+#image("chart.png", alt: "Bar chart showing sales growth")
+
+// Alt text for complex figures
+#figure(
+  stack(dir: ltr, rect[A], sym.arrow, rect[B]),
+  alt: "Flow diagram showing A leads to B",
+  caption: [Process Flow],
+)
+```
+
+See [references/accessibility.md](references/accessibility.md) for detailed guidelines.
 
 ## Tables
 
@@ -91,7 +175,6 @@ Only ONE `fill:` parameter per table:
   columns: (auto, 1fr),
   [*Header*], [*Value*],
   [Row 1], [Data],
-  [Row 2], [Data],
 )
 
 // WRONG - duplicate argument error
@@ -102,183 +185,119 @@ Only ONE `fill:` parameter per table:
 )
 ```
 
-### Table Options
+## New Features
+
+### Curve Function (0.13)
+
+Replaces `path` for Bézier curves:
 
 ```typst
-#table(
-  columns: (auto, 1fr, 2fr),      // Column widths
-  align: (left, center, right),   // Per-column alignment
-  inset: 8pt,                     // Cell padding
-  stroke: 0.5pt,                  // Border thickness
-  gutter: 1em,                    // Space between cells
-  ...
+#curve(
+  stroke: 2pt + blue,
+  curve.move((0pt, 0pt)),
+  curve.line((50pt, 0pt)),
+  curve.quad((25pt, -20pt), (50pt, 0pt)),  // Quadratic
+  curve.cubic((10pt, 0pt), (40pt, 50pt), (50pt, 25pt)),  // Cubic
+  curve.close(),
 )
 ```
 
-## Symbols
-
-Use `#sym.*` for reliable cross-platform symbols:
+### Character-Level Justification (0.14)
 
 ```typst
-// Arrows
-#sym.arrow.r       // → right
-#sym.arrow.l       // ← left
-#sym.arrow.l.r     // ↔ bidirectional
-#sym.arrow.t       // ↑ up
-#sym.arrow.b       // ↓ down
-
-// Common
-#sym.square        // □ checkbox
-#sym.checkmark     // ✓ checkmark
-#sym.dot           // · middle dot
-#sym.bullet        // • bullet
-#sym.dash.em       // — em dash
-
-// Math/logic
-#sym.times         // × multiplication
-#sym.div           // ÷ division
-#sym.lt.eq         // ≤ less or equal
-#sym.gt.eq         // ≥ greater or equal
-#sym.approx        // ≈ approximately
-#sym.percent       // % percent
+#set par(
+  justify: true,
+  justification-limits: (min: -0.02em, max: 0.02em),
+)
 ```
 
-## Popular Packages
-
-Install from https://typst.app/universe/
-
-| Package | Purpose | Usage |
-|---------|---------|-------|
-| **cetz** | Diagrams, drawings | `#import "@preview/cetz:0.2.0"` |
-| **fletcher** | Flowcharts, arrows | `#import "@preview/fletcher:0.4.0"` |
-| **tablex** | Advanced tables | `#import "@preview/tablex:0.0.8"` |
-| **polylux** | Presentations/slides | `#import "@preview/polylux:0.3.1"` |
-| **lovelace** | Pseudocode | `#import "@preview/lovelace:0.2.0"` |
-| **codelst** | Code listings | `#import "@preview/codelst:2.0.0"` |
+### PDF Attachments (0.14)
 
 ```typst
-// Example: Using a package
-#import "@preview/tablex:0.0.8": tablex, rowspanx, colspanx
-
-#tablex(
-  columns: 3,
-  [A], [B], [C],
-  [1], [2], [3],
+#pdf.attach(
+  "data.xml",
+  read("invoice-data.xml", encoding: none),
+  mime-type: "application/xml",
 )
+```
+
+See [references/syntax.md](references/syntax.md) for more new features.
+
+## Popular Packages (2025)
+
+| Package | Purpose | Version |
+|---------|---------|---------|
+| **cetz** | Diagrams, drawings | 0.4.2 |
+| **fletcher** | Flowcharts, arrows | 0.5.9 |
+| **codly** | Code blocks | latest |
+| **polylux** | Presentations | latest |
+| **touying** | Modern slides | latest |
+| **pinit** | Arrows/pointers | latest |
+| **tiaoma** | QR codes/barcodes | 0.3.0 |
+| **gentle-clues** | Callouts | latest |
+
+```typst
+#import "@preview/cetz:0.4.2"
+#import "@preview/fletcher:0.5.9"
 ```
 
 ## Templates
 
-Apply document-wide styling with `#show:`:
-
 ```typst
-// Use a template
-#import "@preview/charged-ieee:0.1.0": ieee
+#import "@preview/charged-ieee:0.1.4": *
+
 #show: ieee.with(
   title: "My Paper",
-  authors: ("Alice", "Bob"),
+  authors: (
+    (name: "Author One", email: "author@example.com"),
+  ),
+  abstract: [Your abstract...],
+  bibliography: bibliography("refs.bib"),
 )
 
-// Custom show rules
-#show heading.where(level: 1): it => {
-  set text(size: 16pt, weight: "bold")
-  block(above: 1em, below: 0.5em, it.body)
-}
+= Introduction
+...
 ```
 
 ## Bibliography
 
-Typst supports BibTeX (.bib) and Hayagriva (.yml) formats:
-
 ```typst
-// In your document
+// Cite in text
 This is a citation @einstein1905.
+With page: @smith2023[p. 42]
 
 // At the end
-#bibliography("references.bib")
+#bibliography("references.bib", style: "ieee")
 ```
 
-## Safe Patterns
+See [references/bibliography.md](references/bibliography.md) for complete guide.
 
-### Blank Fields
+## Common Mistakes to Avoid
 
-```typst
-// CORRECT
-[......%]          // Dots for blanks
-Answer: ____________   // Underscores outside brackets
+- ❌ Using `[]` for arrays (use `()` instead)
+- ❌ Accessing array elements with `arr[0]` (use `arr.at(0)`)
+- ❌ Forgetting `#` prefix for code in markup context
+- ❌ Using `pdf.embed` (deprecated - use `pdf.attach`)
+- ❌ Using `path` for curves (use `curve` instead)
+- ❌ Forgetting alt text on figures (accessibility)
 
-// WRONG
-[_____%]           // Underscores trigger emphasis inside []
-```
+## Special Characters
 
-### Currency
-
-```typst
-// CORRECT
-[\$5,000]          // Escaped dollar
-£10,000            // Pound OK
-EUR 5,000          // Text alternative
-
-// WRONG
-[$5,000]           // Starts math mode
-```
-
-## Common Errors
-
-### "unclosed delimiter"
-
-Special character inside `[brackets]`:
-
-```typst
-// ERROR
-[Value: ____]
-
-// FIX
-[Value: ......]    // Use dots
-```
-
-### "duplicate argument"
-
-Same parameter used twice:
-
-```typst
-// ERROR
-#rect(fill: red, fill: blue)
-
-// FIX
-#rect(fill: red)
-```
-
-### "unexpected" token
-
-Unescaped special character:
-
-```typst
-// ERROR
-[Cost: $500]
-
-// FIX
-[Cost: \$500]
-```
-
-### "unknown variable"
-
-Forgot `#` in markup context:
-
-```typst
-// ERROR
-let x = 5          // Missing #
-
-// FIX
-#let x = 5
-```
+| Character | Problem | Solution |
+|-----------|---------|----------|
+| `#` | Command prefix | Escape with `\#` |
+| `_` | Triggers emphasis | Escape with `\_` |
+| `*` | Triggers bold | Escape with `\*` |
+| `@` | Reference/citation | Escape with `\@` |
+| `$` | Math mode | Escape with `\$` |
 
 ## Quick Reference
 
 ```typst
 // Page setup
 #set page(margin: 1.5cm, paper: "a4")
-#set text(font: "New Computer Modern", size: 10pt)
+#set text(font: "New Computer Modern", size: 11pt, lang: "en")
+#set document(title: "Title", author: "Author")
 
 // Headings
 = Level 1
@@ -295,28 +314,29 @@ let x = 5          // Missing #
 // Layout
 #grid(columns: (1fr, 1fr), gutter: 1em, [Col 1], [Col 2])
 #v(1em)        // Vertical space
-#h(1fr)        // Flexible horizontal space (push right)
+#h(1fr)        // Flexible horizontal space
 #pagebreak()   // New page
 
 // Lists
 - Bullet item
-- Another item
   - Nested
 
 + Numbered item
-+ Another
 
 // Math
 $E = m c^2$                    // Inline
 $ integral_0^infinity f(x) $   // Display
+
+// Figure with alt text
+#figure(
+  image("img.png", alt: "Description"),
+  caption: [Caption text],
+)
 ```
 
 ## Debugging
 
-1. **Compile incrementally** — Don't write 200 lines then compile
+1. **Watch mode** — Auto-recompile: `typst watch file.typ`
 2. **Check line numbers** — Errors show exact location
-3. **Watch mode** — Auto-recompile on save:
-   ```bash
-   typst watch file.typ file.pdf
-   ```
+3. **Profile** — `typst compile --timings file.typ`
 4. **Isolate problems** — Comment out sections with `/* ... */`
