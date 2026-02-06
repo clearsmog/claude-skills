@@ -28,4 +28,4 @@ Install from https://typst.app/universe/ — check for latest versions.
 | **tablem** | Markdown-like table syntax | `#import "@preview/tablem:0.3.0"` |
 | **showybox** | Customizable text boxes | `#import "@preview/showybox:2.0.4"` |
 
-Note: `polylux:0.3.1` is incompatible with Typst 0.14+ — use `touying` instead.
+Note: `polylux:0.4.0` works on Typst 0.14+ but `touying` is more actively developed and feature-rich.
