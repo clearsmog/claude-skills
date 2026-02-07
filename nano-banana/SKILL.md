@@ -1,10 +1,11 @@
 ---
+name: nano-banana
+description: Generate images via Gemini (Google) and get Typst embedding code. Use when the user needs AI-generated illustrations, conceptual diagrams, or photorealistic images for documents.
 allowed-tools: Bash
 argument-hint: <prompt> [--dir images] [--width 80%] [--caption "..."] [--edit input.png] [--resolution 1K|2K|4K] [--num 1]
-description: Generate images via Gemini and get Typst embedding code
 ---
 
-Parse `$ARGUMENTS` into flags for `~/.claude/scripts/gemini_imagen.py` and run it in **one** Bash call. The script handles filename generation, API key checks, and Typst code output.
+Parse `$ARGUMENTS` into flags for the bundled script and run it in **one** Bash call. The script handles filename generation, API key checks, and Typst code output.
 
 **Argument mapping:**
 
@@ -24,9 +25,9 @@ Always pass `--typst`. If `--output`/`-o` is not given, omit it (script auto-gen
 Run exactly one command:
 
 ```bash
-GEMINI_API_KEY="$GEMINI_API_KEY" uv run --script ~/.claude/scripts/gemini_imagen.py -p "<prompt>" --typst [other flags...]
+GEMINI_API_KEY="$GEMINI_API_KEY" uv run --script {baseDir}/scripts/gemini_imagen.py -p "<prompt>" --typst [other flags...]
 ```
 
-If GEMINI_API_KEY is empty in this shell, read it from fish: ``fish -c 'echo $GEMINI_API_KEY'``.
+If GEMINI_API_KEY is empty in this shell, read it from fish: `` `fish -c 'echo $GEMINI_API_KEY'` ``.
 
 Print the script's stdout to the user. Done.

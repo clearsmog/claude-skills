@@ -126,7 +126,10 @@ def generate_image(
         img_count = 0
         for part in candidate.content.parts:
             if part.text is not None:
-                print(f"Model: {part.text}", file=sys.stderr)
+                try:
+                    print(f"Model: {part.text}", file=sys.stderr)
+                except UnicodeEncodeError:
+                    print(f"Model: {part.text.encode('ascii', errors='replace').decode('ascii')}", file=sys.stderr)
             elif part.inline_data is not None:
                 data = part.inline_data.data
                 if isinstance(data, str):
@@ -214,6 +217,8 @@ def main():
 )""")
 
     except Exception as e:
+        import traceback
+        traceback.print_exc(file=sys.stdout)
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
