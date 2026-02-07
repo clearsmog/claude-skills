@@ -331,6 +331,29 @@ typst fonts                                    # List available fonts
 typst compile --timings document.typ           # Profile compilation
 ```
 
+## Image Generation (`/nano-banana`)
+
+When a Typst document needs images, choose the right tool:
+
+| Need | Tool | Why |
+|------|------|-----|
+| Callout boxes, styled `rect()` layouts | **Typst native** | Matches fonts, editable in source |
+| Simple flowcharts (< 10 nodes) | **Typst native** (`fletcher` or `cetz` package) | Precise labels, version-friendly |
+| Tables, grids, comparison layouts | **Typst native** | Perfect fit |
+| Data-driven charts (bar, scatter, line) | **matplotlib/Python** | Numerical precision |
+| Conceptual illustrations or metaphors | **`/nano-banana`** | Artistic visuals Typst can't draw |
+| Photorealistic or decorative images | **`/nano-banana`** | Only AI generation can do this |
+| Complex diagrams where label accuracy doesn't matter | **`/nano-banana`** | Faster than 100+ lines of Typst |
+
+**Auto-invoke rule:** When the user requests a conceptual diagram, illustration, or visual that cannot be reasonably drawn with Typst native tools or packages, automatically run `/nano-banana` to generate it via Gemini. Pass `--typst` to get ready-to-paste `#figure(image(...))` code. Do NOT ask the user whether to use `/nano-banana` — just use it.
+
+**Do NOT use `/nano-banana`** when the image needs precise text labels (Gemini often misspells), or when the visual is a structured layout that Typst handles natively (boxes, tables, grids).
+
+Example:
+```bash
+/nano-banana "three-legged stool analogy for risk parity" --dir images --width 80%
+```
+
 ## Debugging
 
 1. **Compile incrementally** — Don't write 200 lines then compile
