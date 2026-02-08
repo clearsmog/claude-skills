@@ -56,6 +56,7 @@ def generate_image(
     input_images: list[str] | None = None,
     resolution: str = "1K",
     num_images: int = 1,
+    aspect_ratio: str | None = None,
     api_key: str | None = None,
 ) -> list[str]:
     """Generate image(s) and return list of saved paths."""
@@ -96,13 +97,18 @@ def generate_image(
     contents = parts if len(parts) > 1 else prompt
 
     if model in MODELS_WITH_IMAGE_CONFIG:
+        img_cfg_kwargs = {"image_size": resolution}
+        if aspect_ratio:
+            img_cfg_kwargs["aspect_ratio"] = aspect_ratio
         config = types.GenerateContentConfig(
             response_modalities=["TEXT", "IMAGE"],
-            image_config=types.ImageConfig(image_size=resolution),
+            image_config=types.ImageConfig(**img_cfg_kwargs),
         )
     else:
+        img_cfg = types.ImageConfig(aspect_ratio=aspect_ratio) if aspect_ratio else None
         config = types.GenerateContentConfig(
             response_modalities=["TEXT", "IMAGE"],
+            image_config=img_cfg,
         )
 
     saved_paths: list[str] = []
@@ -174,6 +180,9 @@ def main():
     parser.add_argument("--model", "-m", default="gemini-3-pro-image-preview")
     parser.add_argument("--input-image", "-i", action="append", dest="input_images", metavar="IMAGE")
     parser.add_argument("--resolution", "-r", choices=["1K", "2K", "4K"], default="1K")
+    parser.add_argument("--aspect-ratio", "-a", default=None,
+                        choices=["1:1", "2:3", "3:2", "3:4", "4:3", "4:5", "5:4", "9:16", "16:9", "21:9"],
+                        help="Output image aspect ratio")
     parser.add_argument("--num-images", "-n", type=int, default=1)
     parser.add_argument("--api-key", "-k")
     # Typst integration flags
@@ -199,6 +208,7 @@ def main():
             input_images=args.input_images,
             resolution=args.resolution,
             num_images=args.num_images,
+            aspect_ratio=args.aspect_ratio,
             api_key=args.api_key,
         )
 
