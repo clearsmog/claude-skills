@@ -164,7 +164,7 @@ Search the web for real-world images, company logos, or stock photos and downloa
 
 ### Skill integration
 
-The typst skill knows about both `/nano-banana` and `/mindmap` and will auto-invoke them when appropriate:
+The typst skill knows about `/nano-banana`, `/mindmap`, and `/image-search` and will auto-invoke them when appropriate:
 
 ```
 # Auto-invokes /nano-banana
@@ -178,7 +178,7 @@ The typst skill knows about both `/nano-banana` and `/mindmap` and will auto-inv
 "Find a photo of the Golden Gate Bridge for the report"
 ```
 
-Claude uses decision tables to route requests to the right tool:
+Claude uses a priority-based decision tree to route requests to the right tool:
 
 | Request type | Routed to |
 |-------------|-----------|
