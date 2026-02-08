@@ -54,7 +54,7 @@ For node colors, arrows, and summaries, see [references/advanced-syntax.md](refe
 
 ## Flags
 
-`-i` input, `-o` output, `-f png|svg`, `-t academic|latte|dark`, `-d side|right|left`, `--typst`, `--caption "..."`, `--typst-width 90%`
+`-i` input, `-o` output, `-f png|svg`, `-t academic|latte|dark`, `-d side|right|left`, `-s` scale (default 3), `--typst`, `--caption "..."`, `--typst-width 90%`
 
 Defaults: `--dir mindmaps/`, auto-generates filename from topic.
 
