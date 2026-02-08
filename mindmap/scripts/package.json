@@ -1,0 +1,9 @@
+{
+  "name": "mindmap-generator",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "mind-elixir": "^5.8.0",
+    "puppeteer": "^24"
+  }
+}

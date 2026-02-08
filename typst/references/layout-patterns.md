@@ -79,3 +79,35 @@ Consistent color pairs (outer, inner) for multi-section documents:
   #rect(fill: rgb("#e1bee7"), ...)  // inner
 ]
 ```
+
+## `curve` Function (replaces `path`)
+
+```typst
+// Line segments
+#curve(
+  curve.move((0pt, 0pt)),
+  curve.line((30pt, 0pt)),
+  curve.line((30pt, 30pt)),
+  curve.close(),
+  fill: blue.lighten(80%),
+  stroke: blue,
+)
+
+// Cubic Bezier curves
+#curve(
+  curve.move((0pt, 50pt)),
+  curve.cubic((20pt, 0pt), (40pt, 0pt), (60pt, 50pt)),
+  stroke: 2pt + red,
+)
+
+// Close path for filled shapes
+#curve(
+  curve.move((0pt, 0pt)),
+  curve.line((40pt, 0pt)),
+  curve.cubic((40pt, 20pt), (0pt, 20pt), (0pt, 40pt)),
+  curve.close(),
+  fill: gradient.linear(blue, purple),
+)
+```
+
+Key: `curve.move` sets start, `curve.line` draws straight, `curve.cubic(ctrl1, ctrl2, end)` draws Bezier, `curve.close()` connects back to start.
