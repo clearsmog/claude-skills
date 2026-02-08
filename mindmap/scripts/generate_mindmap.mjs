@@ -39,6 +39,7 @@ const { values: args } = parseArgs({
     typst:     { type: "boolean", default: false },
     "typst-width": { type: "string", default: "90%" },
     caption:   { type: "string" },
+    scale:     { type: "string",  short: "s", default: "3" },
   },
   strict: true,
 });
@@ -164,7 +165,8 @@ try {
 // ---------------------------------------------------------------------------
 const browser = await puppeteer.launch({ headless: true });
 const page = await browser.newPage();
-await page.setViewport({ width: vpWidth, height: vpHeight, deviceScaleFactor: 2 });
+const scaleFactor = parseInt(args.scale ?? "3", 10);
+await page.setViewport({ width: vpWidth, height: vpHeight, deviceScaleFactor: scaleFactor });
 
 const tmpHtml = resolve(__dirname, ".tmp-mindmap.html");
 writeFileSync(tmpHtml, html);
