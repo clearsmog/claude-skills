@@ -145,6 +145,10 @@ When a Typst document needs images, choose the right tool:
 | Conceptual illustrations or metaphors | **`/nano-banana`** | Artistic visuals Typst can't draw |
 | Photorealistic or decorative images | **`/nano-banana`** | Only AI generation can do this |
 | Complex diagrams where label accuracy doesn't matter | **`/nano-banana`** | Faster than 100+ lines of Typst |
+| Company/brand logos | **`/image-search --logo`** | Exact logo from Logo.dev |
+| Real-world photos (not AI) | **`/image-search`** | Google Images via SerpAPI |
+| Stock photos (license-clear) | **`/image-search --stock`** | Unsplash/Pexels APIs |
+| Existing graphics from a URL | **`/image-search --url`** | Direct download |
 
 **Auto-invoke rule:** When the user requests a conceptual diagram, illustration, or visual that cannot be reasonably drawn with Typst native tools or packages, automatically run `/nano-banana` to generate it via Gemini. Pass `--typst` to get ready-to-paste `#figure(image(...))` code. Do NOT ask the user whether to use `/nano-banana` — just use it.
 
@@ -173,6 +177,29 @@ Example:
 ```
 
 Default theme (`academic`) uses blue/orange colors matching the Typst study materials palette. Use `--theme latte` for a pastel alternative or `--theme dark` for dark backgrounds.
+
+## Web Image Search (`/image-search`)
+
+When a Typst document needs real-world images — company logos, product photos, charts, or any existing graphic from the web:
+
+| Need | Tool | Why |
+|------|------|-----|
+| Company/brand logo | **`/image-search --logo "Stripe"`** | Exact logo via Logo.dev, fallback to search |
+| Real-world photograph | **`/image-search "golden gate bridge"`** | Google Images via SerpAPI (or DuckDuckGo) |
+| License-clear stock photo | **`/image-search --stock "office meeting"`** | Unsplash/Pexels APIs |
+| Image from a known URL | **`/image-search --url "https://..." "desc"`** | Direct download |
+| Multiple images | **`/image-search "query" -n 3`** | Downloads top N results |
+
+**Auto-invoke rule:** When the user needs company logos, real-world photos, or web graphics for a Typst document, automatically run `/image-search` with `--typst`. Do NOT ask the user whether to use `/image-search` — just use it.
+
+**Do NOT use `/image-search`** when the user needs AI-generated or conceptual images (use `/nano-banana` instead), or when the visual can be drawn natively in Typst.
+
+Examples:
+```bash
+/image-search --logo "Goldman Sachs" --width 40%
+/image-search "electric vehicle charging station" --size large
+/image-search --stock "sustainable energy" -n 2
+```
 
 ## Debugging
 

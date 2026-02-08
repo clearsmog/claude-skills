@@ -9,6 +9,7 @@ Custom skills for [Claude Code](https://claude.com/claude-code), following the [
 | **typst** | Auto-loaded | Syntax guide, common errors, packages, and best practices for Typst (.typ) files. Auto-loaded when editing `.typ` documents. |
 | **nano-banana** | Slash command | Generate images via Google Gemini and get ready-to-paste Typst `#figure(image(...))` code. Invoke with `/nano-banana`. |
 | **mindmap** | Slash command | Generate mind map images using mind-elixir. Produces PNG or SVG from plaintext input. Invoke with `/mindmap`. |
+| **image-search** | Slash command | Search the web for images (photos, logos, stock photos) and download them with Typst embedding code. Invoke with `/image-search`. |
 
 ## Installation
 
@@ -123,6 +124,44 @@ Generate mind map images from a topic or structured content.
 | `--typst` | — | Print Typst `#figure(image(...))` code |
 | `--caption` | — | Figure caption |
 
+### image-search
+
+Search the web for real-world images, company logos, or stock photos and download them.
+
+```bash
+# Search for images (SerpAPI -> DuckDuckGo fallback)
+/image-search "golden gate bridge sunset"
+
+# Company logo
+/image-search --logo "Stripe"
+
+# Logo with custom width
+/image-search --logo "Goldman Sachs" --width 40%
+
+# Stock photos (license-clear, Unsplash/Pexels)
+/image-search --stock "sustainable energy" -n 2
+
+# Download from a specific URL
+/image-search --url "https://example.com/chart.png" "quarterly chart"
+
+# With size/type filters (SerpAPI only)
+/image-search "electric vehicles" --size large --type photo -n 3
+```
+
+**Options:**
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--logo` | off | Logo mode — treat query as company/domain |
+| `--stock` | off | Stock photo mode (Unsplash/Pexels) |
+| `--url` | — | Direct URL download mode |
+| `--dir` | `images` | Output directory |
+| `-n` | `1` | Number of images to download |
+| `--size` | — | Size filter: `large`/`medium`/`icon` |
+| `--type` | — | Type filter: `photo`/`clipart`/`face`/`lineart` |
+| `--width` | `80%` | Typst image width |
+| `--caption` | auto | Typst figure caption |
+
 ### Skill integration
 
 The typst skill knows about both `/nano-banana` and `/mindmap` and will auto-invoke them when appropriate:
@@ -133,6 +172,10 @@ The typst skill knows about both `/nano-banana` and `/mindmap` and will auto-inv
 
 # Auto-invokes /mindmap
 "Add a concept map of CAPM to my week 3 flowchart"
+
+# Auto-invokes /image-search
+"Add the Apple logo to my stock pitch"
+"Find a photo of the Golden Gate Bridge for the report"
 ```
 
 Claude uses decision tables to route requests to the right tool:
@@ -142,6 +185,9 @@ Claude uses decision tables to route requests to the right tool:
 | Conceptual illustrations, metaphors | `/nano-banana` |
 | Photorealistic or decorative images | `/nano-banana` |
 | Mind maps, concept maps, topic trees | `/mindmap` |
+| Company logos, brand marks | `/image-search --logo` |
+| Real-world photos, web graphics | `/image-search` |
+| Stock photos (license-clear) | `/image-search --stock` |
 | Flowcharts, tables, boxes | Typst native |
 | Data-driven charts | matplotlib |
 
@@ -161,6 +207,21 @@ echo 'export GEMINI_API_KEY="your-key"' >> ~/.zshrc
 ```
 
 Image generation requires a paid Gemini API tier (no free quota for image models).
+
+### image-search requirements
+
+- **uv** — `brew install uv`
+- **SERPAPI_KEY** (optional) — get one at https://serpapi.com/
+
+```bash
+# fish
+set -Ux SERPAPI_KEY "your-key"
+
+# bash/zsh
+echo 'export SERPAPI_KEY="your-key"' >> ~/.zshrc
+```
+
+Without a key, image search falls back to DuckDuckGo (free, unlimited). For stock photo mode, optionally set `UNSPLASH_ACCESS_KEY` and/or `PEXELS_API_KEY`.
 
 ### mindmap requirements
 
@@ -183,6 +244,10 @@ skills/
 │   ├── SKILL.md                   # Slash command definition
 │   └── scripts/
 │       └── gemini_imagen.py       # Gemini image generation
+├── image-search/
+│   ├── SKILL.md                   # Slash command definition
+│   └── scripts/
+│       └── image_search.py        # Web image search & download
 └── mindmap/
     ├── SKILL.md                   # Slash command definition
     ├── references/
