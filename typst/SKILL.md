@@ -165,11 +165,11 @@ When a Typst document needs a mind map or concept overview:
 | Simple 2-level list | **Typst native** | Overkill to launch Puppeteer for a flat list |
 | Flowchart with directional logic | **Typst native** (`fletcher`) | Mind maps show hierarchy, not flow |
 
-**Auto-invoke rule:** When the user requests a mind map, concept map, topic tree, or overview diagram for a Typst document, automatically run `/mindmap` to generate it. Pass `--typst` to get ready-to-paste `#figure(image(...))` code. Do NOT ask the user whether to use `/mindmap` — just use it.
+**Auto-invoke rule:** When the user requests a mind map, concept map, topic tree, or overview diagram for a Typst document, automatically run `/mindmap` to generate it. Pass `--typst --format svg` for vector output (crisp text at any zoom). Do NOT ask the user whether to use `/mindmap` — just use it.
 
 Example:
 ```bash
-/mindmap "Portfolio Theory" --typst --caption "Portfolio Theory Overview"
+/mindmap "Portfolio Theory" --typst --format svg --caption "Portfolio Theory Overview"
 ```
 
 Default theme (`academic`) uses blue/orange colors matching the Typst study materials palette. Use `--theme latte` for a pastel alternative or `--theme dark` for dark backgrounds.
