@@ -9,7 +9,7 @@ Parse `$ARGUMENTS` into flags for the bundled script and run it in **one** Bash 
 
 Flags: `-p` prompt, `-d` dir, `--width`, `--caption "..."`, `-i` edit-image, `-r 1K|2K|4K`, `-n` count, `-m` model, `-a` aspect-ratio
 
-Always pass `--typst`. If `--output`/`-o` is not given, omit it (script auto-generates from prompt + dir).
+Pass `--typst` when generating images for Typst documents (the typical case). If `--output`/`-o` is not given, omit it (script auto-generates from prompt + dir).
 
 Run exactly one command:
 
@@ -17,7 +17,7 @@ Run exactly one command:
 GEMINI_API_KEY="$GEMINI_API_KEY" uv run --script {baseDir}/scripts/gemini_imagen.py -p "<prompt>" --typst [other flags...]
 ```
 
-If GEMINI_API_KEY is empty in this shell, read it from fish: `` `fish -c 'echo $GEMINI_API_KEY'` ``.
+If GEMINI_API_KEY is empty in this shell, read it from fish: `` `fish -c 'set fish_greeting; echo $GEMINI_API_KEY'` ``.
 
 Print the script's stdout to the user. Done.
 

@@ -132,9 +132,17 @@ typst compile document.typ out.pdf --pages 1-5 # Specific pages
 typst fonts                                    # List available fonts
 ```
 
-## Image Generation (`/nano-banana`)
+## Images & Visual Tools
 
-When a Typst document needs images, choose the right tool:
+When a Typst document needs an image, follow this priority order:
+
+1. Can Typst draw it natively (table, grid, box, simple flowchart)? → **Typst native**
+2. Is it a real photograph, logo, or existing graphic? → **`/image-search`**
+3. Is it a mind map or hierarchical overview? → **`/mindmap`**
+4. Is it a data-driven chart needing numerical precision? → **matplotlib/Python**
+5. Otherwise (conceptual illustration, metaphor, artistic visual) → **`/nano-banana`**
+
+Full routing reference:
 
 | Need | Tool | Why |
 |------|------|-----|
@@ -153,6 +161,11 @@ When a Typst document needs images, choose the right tool:
 **Auto-invoke rule:** When the user requests a conceptual diagram, illustration, or visual that cannot be reasonably drawn with Typst native tools or packages, automatically run `/nano-banana` to generate it via Gemini. Pass `--typst` to get ready-to-paste `#figure(image(...))` code. Do NOT ask the user whether to use `/nano-banana` — just use it.
 
 **Do NOT use `/nano-banana`** when the image needs precise text labels (Gemini often misspells), or when the visual is a structured layout that Typst handles natively (boxes, tables, grids).
+
+**Accessibility (Typst 0.14+):** Always add `alt:` to embedded images:
+```typst
+#figure(image("path.png", alt: "Description for screen readers"), caption: [...])
+```
 
 Example:
 ```bash

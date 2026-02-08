@@ -9,7 +9,7 @@ Parse `$ARGUMENTS` into flags for the bundled script and run it in **one** Bash 
 
 Flags: `query` (positional), `--logo`, `--stock`, `--url <url>`, `-d` dir, `-o` output, `-n` count, `--size`, `--type`, `--width`, `--caption "..."`
 
-Always pass `--typst`. If `--output`/`-o` is not given, omit it (script auto-generates from query + dir).
+Pass `--typst` when generating images for Typst documents (the typical case). If `--output`/`-o` is not given, omit it (script auto-generates from query + dir).
 
 Run exactly one command:
 
