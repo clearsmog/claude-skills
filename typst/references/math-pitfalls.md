@@ -34,6 +34,29 @@ The value is £80.00.
 [Discount (\<100)]
 ```
 
+### CJK Text with Comparisons
+
+Chinese/Japanese annotations containing `<` or `>` trigger the same label
+parsing. This is the #1 source of hard-to-find errors in bilingual documents:
+
+```typst
+// WRONG — "unclosed label" deep in Chinese text
+#let cn(body) = text(font: "Songti SC")[#body]
+#cn[当收益率 < 5% 时，投资不划算]
+
+// FIX 1 — Fullwidth angle brackets (invisible to reader)
+#cn[当收益率 ＜ 5% 时，投资不划算]
+
+// FIX 2 — Chinese words
+#cn[当收益率小于 5% 时，投资不划算]
+
+// FIX 3 — Escape
+#cn[当收益率 \< 5% 时，投资不划算]
+```
+
+**Batch fix:** Find all bare `<` `>` in `.typ` files:
+`grep -n '[^\\]<\|[^\\]>' document.typ`
+
 ## Numbers with Currency in Math
 
 Never mix currency symbols with numbers inside `$ $`:
@@ -52,10 +75,16 @@ $ "Coupon" = 3,500 $
 
 Typst parses adjacent letters as a single variable name:
 
+| You write | Typst sees | Fix |
+|-----------|-----------|-----|
+| `$NPV = 0$` | variable `NPV` → error | `$"NPV" = 0$` (quoted string, upright) |
+| `$tD$` | variable `tD` → error | `$t D$` (space) or `$t times D$` |
+| `$WACC$` | variable `WACC` → error | `$"WACC"$` |
+| `$V_L = V_U + tD$` | `tD` is one variable | `$V_L = V_U + t D$` |
+
 ```typst
 // WRONG - "unknown variable: NPV"
 $NPV = 0$
-$V_L = V_U + tD$
 
 // CORRECT
 $"NPV" = 0$              // quoted string (upright)

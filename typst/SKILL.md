@@ -4,222 +4,184 @@ description: Syntax guide and ecosystem reference for writing Typst (.typ) files
 license: MIT
 ---
 
-# Typst Syntax & Ecosystem Guide
+# Typst Skill
 
-Use this skill when writing or editing Typst (.typ) files.
+**Current version**: Typst 0.14.2 (Dec 2025)
 
-**Current Typst version**: 0.14.x (Dec 2025)
+## Smart Defaults
 
-## Documentation
+If you know nothing else, follow these rules:
 
-- **Official Reference:** https://typst.app/docs/reference/
-- **Package Registry:** https://typst.app/universe/
-- **Tutorial:** https://typst.app/docs/tutorial/
-- **Changelog:** https://typst.app/docs/changelog/
+1. **Always** import `@local/qk:1.0.0` — `#import "@local/qk:1.0.0": *`
+2. **Always** use `qk-doc` or `qk-report` preset (unless user specifies custom)
+3. **Always** `#set figure(placement: auto)` — prevents blank half-pages
+4. **Always** add `alt:` to images — `image("path.png", alt: "description")`
+5. **Always** escape `$` in content — scan for bare `$` before compiling
+6. **Default fonts**: Libertinus Serif (body), Inter (headings), New Computer Modern Math (math), Fira Code (code)
+7. **Default compile**: `typst compile --root .. Source/<file>.typ`
+8. **When in doubt** about template: Study Guide
+9. **When in doubt** about visual tool: Typst native first → cetz-plot → matplotlib
 
-### Reference Files
+## New Document Decision Tree
 
-- [references/math-pitfalls.md](references/math-pitfalls.md) - Currency in math, adjacent letters, commas, angle brackets
-- [references/layout-patterns.md](references/layout-patterns.md) - Compact setup, spacing, nested boxes, color themes, `curve` function
-- [references/symbols.md](references/symbols.md) - `sym.*` arrows, common symbols, math/logic
-- [references/packages.md](references/packages.md) - Popular packages with import syntax
-- [references/common-patterns.md](references/common-patterns.md) - Tables, templates, bibliography, safe patterns, quick reference
+```
+User request → scan for keywords:
+  "resume/CV/job"           → CV / Résumé template
+  "slides/presentation"     → Presentation (16:9)
+  "essay/thesis/paper"      → Essay
+  "report/brief/client"     → Business Report
+  "research/analysis"       → Research Report
+  "study guide/revision"    → Study Guide
+  "reference/glossary"      → Annotated Reference
+  ambiguous?                → ask purpose + audience → pick template
+```
 
-## What's New in 0.13-0.14
+**Steps:**
+1. Auto-detect template from keywords above
+2. Import `@local/qk:1.0.0` at top
+3. Use `qk-doc` or `qk-report` preset when applicable
+4. Confirm briefly: "I'll use the **Study Guide** template — sound good?"
+5. Build from `references/templates.md`
+6. Custom styles are fine — templates are starting points, not constraints
+
+## Visual Tool Routing (compact)
+
+| Need | Tool |
+|------|------|
+| Tables, boxes, grids | Typst native |
+| Flowcharts, trees, ER, state diagrams | `fletcher` |
+| Sequence diagrams | `chronos` |
+| Gantt charts | `timeliney` |
+| Simple charts (< 3 series) | cetz-plot |
+| Complex charts (4+ series) | matplotlib |
+| Mind maps | `/mindmap` (auto-invoke) |
+| Conceptual illustrations | `/nano-banana` (auto-invoke) |
+| Real photos, logos | `/image-search` (auto-invoke) |
+
+Detail and examples in `references/tool-routing.md`.
+
+## Proactive Behaviors
+
+### Visual Auto-detection
+
+When writing Typst documents, automatically identify content that benefits from visuals. Do NOT wait for the user to request them.
+
+| Content pattern | Visual to add | Tool |
+|-----------------|---------------|------|
+| Sequential steps or phases | Timeline / flowchart | fletcher or timeliney |
+| Decision logic (if/then) | Decision tree | fletcher |
+| Process with inputs/outputs | Workflow diagram | fletcher |
+| Comparison of 2+ approaches | Comparison table | Typst native table |
+| Hierarchy or taxonomy | Mind map or tree | `/mindmap` or fletcher |
+| Data trends or distributions | Chart | cetz-plot or matplotlib |
+| Cause-effect relationships | Flowchart | fletcher |
+| Before/after or evolution | Timeline | timeliney or fletcher |
+| System architecture or layers | Block diagram | fletcher or Typst boxes |
+| Concept with analogy | Illustration | `/nano-banana` |
+
+### Content Structure
+
+- Suggest TOC (`#outline()`) at 4+ sections
+- Suggest file split at 40+ pages — see `references/common-patterns.md` "Large Documents"
+- Convert prose lists to tables when 3+ items with attributes
+
+### Component Library Auto-use
+
+When writing content, automatically convert matching patterns to `@local/qk:1.0.0` components:
+
+| Content pattern | Use instead |
+|-----------------|-------------|
+| Warning paragraph | `warning[...]` |
+| Key point / takeaway | `keypoint[...]` |
+| Tip or best practice | `tip[...]` |
+| Common mistake / trap | `trap[...]` |
+| Step-by-step procedure | `step-box("Title", [...])` |
+| KPI or metric highlight | `stat-card("value", "label")` |
+
+### Cross-referencing
+
+Add `<label>` + `@ref` for recurring concepts across sections.
+
+### Accessibility (Typst 0.14+)
+
+- `alt:` on all figures — `image("path.png", alt: "description")`
+- Semantic heading hierarchy — don't skip levels
+- `table.header()` for repeating headers — improves PDF/UA accessibility
+
+## Fallback Chains
+
+| If this fails... | Try... |
+|------------------|--------|
+| `/nano-banana` | Placeholder rect with description text |
+| `/image-search` | `/nano-banana` with descriptive prompt |
+| `/mindmap` | `fletcher` tree diagram |
+| matplotlib | Check `.venv` → `uv venv .venv.nosync && ln -s .venv.nosync .venv` |
+| `typst compile` | Isolate with `/* ... */`, compile incrementally |
+
+## Reference File Index
+
+| When you need... | Read... |
+|------------------|---------|
+| Syntax, errors, special chars | `references/quick-ref.md` |
+| `@local/qk:1.0.0` API | `references/component-library.md` |
+| Visual tool details, examples, fallbacks | `references/tool-routing.md` |
+| Document preambles | `references/templates.md` |
+| Table patterns, show rules, large docs | `references/common-patterns.md` |
+| Page layout, spacing, figures, curves | `references/layout-patterns.md` |
+| Math mode traps | `references/math-pitfalls.md` |
+| Package imports | `references/packages.md` |
+| `sym.*` symbols | `references/symbols.md` |
+
+## Version Notes (0.13–0.14)
 
 | Feature | Ver | Description |
 |---------|-----|-------------|
-| Tagged PDFs by default | 0.14 | Accessible PDFs out of the box, PDF/UA-1 support |
+| Tagged PDFs, PDF/UA-1 | 0.14 | Accessible PDFs by default |
 | `figure.alt` / `image(alt:)` | 0.14 | Alt text for screen readers |
-| `pdf.attach` | 0.14 | Attach files to PDFs (replaces deprecated `pdf.embed`) |
-| Character justification | 0.14 | `par.justification-limits` for microtypography |
-| Multithreaded layout | 0.14 | 2-3x speedup for large documents |
-| `curve` function | 0.13 | Bezier curve drawing (replaces deprecated `path`) |
-| First-line indent | 0.13 | `#set par(first-line-indent: 1em)` with `all: true` |
+| `pdf.attach` | 0.14 | Attach files (replaces `pdf.embed`) |
+| PDF as image format | 0.14 | `image("file.pdf")` |
+| Multiple table headers | 0.14 | Hierarchical headers repeat across pages |
+| `curve` function | 0.13 | Bezier drawing (replaces `path`) |
 
-### Deprecated Functions
-
-- `path` -> use `curve` instead (see [layout-patterns.md](references/layout-patterns.md#curve-function-replaces-path))
-- `pdf.embed` -> use `pdf.attach` instead
-- `image.decode` -> pass bytes directly to `image`
-- `polylux:0.3.1` is **incompatible** with Typst 0.14 -> use `touying` instead
-
-## Core Syntax
-
-### Arrays and Dictionaries
-
-Typst uses **parentheses** for both (not square brackets like Python/JS):
-
-```typst
-// Arrays - use ()
-let colors = (red, green, blue)
-let first = colors.at(0)        // NOT colors[0]
-let length = colors.len()
-
-// Dictionaries - use () with colons
-let person = (name: "Alice", age: 30)
-let name = person.name          // or person.at("name")
-
-// WRONG - common mistakes
-let arr = [1, 2, 3]             // This is a content block, not array!
-let item = arr[0]               // Wrong access syntax
-```
-
-### Content Blocks vs Code Blocks
-
-```typst
-// Content blocks [] - for markup/text
-[This is *bold* and _italic_ text]
-
-// Code blocks {} - for logic
-{
-  let x = 5
-  if x > 3 { "big" } else { "small" }
-}
-
-// In markup mode, use # to switch to code
-This is text. #let x = 5 Now x is #x.
-```
-
-### The # Prefix
-
-In markup context, `#` switches to code mode:
-
-```typst
-// Markup mode (default at start of file)
-Hello world.
-#let name = "Alice"           // # needed for code
-My name is #name.             // # needed to evaluate
-
-// In code block, # not needed
-#{
-  let x = 5                   // No # needed inside {}
-  x + 3
-}
-```
-
-## Special Characters
-
-| Character | Problem | Solution |
-|-----------|---------|----------|
-| `#` | Command prefix | Escape with `\#` in content |
-| `_` | Triggers emphasis | Use `......` for blanks, not `_____` |
-| `*` | Triggers bold | Escape with `\*` if needed literally |
-| `@` | Reference/citation | Escape with `\@` in plain text |
-| `$` | Math mode delimiter | Escape with `\$` for currency; NEVER use inside `$ $` |
-| `<>` | Label reference | Use words ("below", "above") or escape with `\<` `\>` |
-| `£` `€` | Unknown in math mode | Keep currency symbols OUTSIDE math expressions |
-
-## Common Errors
-
-| Error | Cause | Fix |
-|-------|-------|-----|
-| "unclosed delimiter" | `_` or `$` in `[]` | Escape: `\$`, use `......` not `____` |
-| "duplicate argument" | Same param twice | Remove duplicate |
-| "unexpected token" | Unescaped special char | Escape: `\$`, `\#`, `\@` |
-| "unknown variable" | Missing `#` or `$NPV$` | Add `#`, or `$"NPV"$` |
-| "context is known" | Counter in header | Wrap in `context [...]` |
-| "element functions" | Old package | Update package or use `touying` |
-
-See [references/math-pitfalls.md](references/math-pitfalls.md) for full math mode pitfalls.
+**Deprecated**: `path` → `curve` · `pdf.embed` → `pdf.attach` · `image.decode` → pass bytes directly · polylux:0.3.1 → `polylux:0.4.0` or `touying`
 
 ## CLI Commands
 
 ```bash
 typst compile document.typ                     # Compile to PDF
-typst watch document.typ                       # Watch and recompile
+typst compile document.typ --root ..           # Set project root
 typst compile document.typ out.pdf --pages 1-5 # Specific pages
+typst watch document.typ                       # Watch and recompile
 typst fonts                                    # List available fonts
+typst query doc.typ "heading.where(level: 1)"  # Query document structure
 ```
 
-## Images & Visual Tools
+**`--root` flag:** When a `.typ` file uses `#import` or `#image()` with paths outside its directory, set `--root` to the project root.
 
-When a Typst document needs an image, follow this priority order:
+**Batch compile:** `for f in *.typ; do typst compile "$f"; done`
 
-1. Can Typst draw it natively (table, grid, box, simple flowchart)? → **Typst native**
-2. Is it a real photograph, logo, or existing graphic? → **`/image-search`**
-3. Is it a mind map or hierarchical overview? → **`/mindmap`**
-4. Is it a data-driven chart needing numerical precision? → **matplotlib/Python**
-5. Otherwise (conceptual illustration, metaphor, artistic visual) → **`/nano-banana`**
+## Conventions
 
-Full routing reference:
+- Source files in `Source/`, compiled PDFs in `PDFs/`
+- Compile with `--root ..` when `.typ` references parent directory assets
+- For multi-file projects: `main.typ` + `#include` sections + shared `lib.typ`
+- File naming: lowercase-kebab-case (e.g., `portfolio-theory-guide.typ`)
 
-| Need | Tool | Why |
-|------|------|-----|
-| Callout boxes, styled `rect()` layouts | **Typst native** | Matches fonts, editable in source |
-| Simple flowcharts (< 10 nodes) | **Typst native** (`fletcher` or `cetz` package) | Precise labels, version-friendly |
-| Tables, grids, comparison layouts | **Typst native** | Perfect fit |
-| Data-driven charts (bar, scatter, line) | **matplotlib/Python** | Numerical precision |
-| Conceptual illustrations or metaphors | **`/nano-banana`** | Artistic visuals Typst can't draw |
-| Photorealistic or decorative images | **`/nano-banana`** | Only AI generation can do this |
-| Complex diagrams where label accuracy doesn't matter | **`/nano-banana`** | Faster than 100+ lines of Typst |
-| Company/brand logos | **`/image-search --logo`** | Exact logo from Logo.dev |
-| Real-world photos (not AI) | **`/image-search`** | Google Images via SerpAPI |
-| Stock photos (license-clear) | **`/image-search --stock`** | Unsplash/Pexels APIs |
-| Existing graphics from a URL | **`/image-search --url`** | Direct download |
+## Fonts
 
-**Auto-invoke rule:** When the user requests a conceptual diagram, illustration, or visual that cannot be reasonably drawn with Typst native tools or packages, automatically run `/nano-banana` to generate it via Gemini. Pass `--typst` to get ready-to-paste `#figure(image(...))` code. Do NOT ask the user whether to use `/nano-banana` — just use it.
+| Font | Style | Notes |
+|------|-------|-------|
+| New Computer Modern | Academic serif | Default; bundled with Typst |
+| Georgia | Readable serif | Safe on macOS |
+| Helvetica Neue | Clean sans-serif | macOS only |
 
-**Do NOT use `/nano-banana`** when the image needs precise text labels (Gemini often misspells), or when the visual is a structured layout that Typst handles natively (boxes, tables, grids).
+**Variable font warning:** Apple system fonts (New York, SF Pro) are variable → "variable fonts are not currently supported." Install static `.otf`/`.ttf` versions or use alternatives.
 
-**Accessibility (Typst 0.14+):** Always add `alt:` to embedded images:
-```typst
-#figure(image("path.png", alt: "Description for screen readers"), caption: [...])
-```
+**CJK fallback:** `#set text(font: ("New Computer Modern", "Songti SC"))`
 
-Example:
-```bash
-/nano-banana "three-legged stool analogy for risk parity" --dir images --width 80%
-```
+## Documentation
 
-## Mind Map Generation (`/mindmap`)
-
-When a Typst document needs a mind map or concept overview:
-
-| Need | Tool | Why |
-|------|------|-----|
-| Hierarchical topic overview (3+ branches) | **`/mindmap`** | Organic layout, curved connectors, color-coded |
-| Simple 2-level list | **Typst native** | Overkill to launch Puppeteer for a flat list |
-| Flowchart with directional logic | **Typst native** (`fletcher`) | Mind maps show hierarchy, not flow |
-
-**Auto-invoke rule:** When the user requests a mind map, concept map, topic tree, or overview diagram for a Typst document, automatically run `/mindmap` to generate it. Pass `--typst` to get ready-to-paste `#figure(image(...))` code. Do NOT ask the user whether to use `/mindmap` — just use it.
-
-Example:
-```bash
-/mindmap "Portfolio Theory" --typst --caption "Portfolio Theory Overview"
-```
-
-Default theme (`academic`) uses blue/orange colors matching the Typst study materials palette. Use `--theme latte` for a pastel alternative or `--theme dark` for dark backgrounds.
-
-## Web Image Search (`/image-search`)
-
-When a Typst document needs real-world images — company logos, product photos, charts, or any existing graphic from the web:
-
-| Need | Tool | Why |
-|------|------|-----|
-| Company/brand logo | **`/image-search --logo "Stripe"`** | Exact logo via Logo.dev, fallback to search |
-| Real-world photograph | **`/image-search "golden gate bridge"`** | Google Images via SerpAPI (or DuckDuckGo) |
-| License-clear stock photo | **`/image-search --stock "office meeting"`** | Unsplash/Pexels APIs |
-| Image from a known URL | **`/image-search --url "https://..." "desc"`** | Direct download |
-| Multiple images | **`/image-search "query" -n 3`** | Downloads top N results |
-
-**Auto-invoke rule:** When the user needs company logos, real-world photos, or web graphics for a Typst document, automatically run `/image-search` with `--typst`. Do NOT ask the user whether to use `/image-search` — just use it.
-
-**Do NOT use `/image-search`** when the user needs AI-generated or conceptual images (use `/nano-banana` instead), or when the visual can be drawn natively in Typst.
-
-Examples:
-```bash
-/image-search --logo "Goldman Sachs" --width 40%
-/image-search "electric vehicle charging station" --size large
-/image-search --stock "sustainable energy" -n 2
-```
-
-## Debugging
-
-1. **Compile incrementally** — Don't write 200 lines then compile
-2. **Check line numbers** — Errors show exact location
-3. **Watch mode** — Auto-recompile on save:
-   ```bash
-   typst watch file.typ file.pdf
-   ```
-4. **Isolate problems** — Comment out sections with `/* ... */`
+- [Official Reference](https://typst.app/docs/reference/)
+- [Package Registry](https://typst.app/universe/)
+- [Tutorial](https://typst.app/docs/tutorial/)
+- [Changelog](https://typst.app/docs/changelog/)

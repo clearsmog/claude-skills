@@ -37,6 +37,35 @@ Only ONE `fill:` parameter per table:
 )
 ```
 
+### Repeating Table Headers (Typst 0.14+)
+
+Headers automatically repeat on each page when using `table.header`:
+
+```typst
+#table(
+  columns: 3,
+  table.header(
+    [Name], [Role], [Department],
+  ),
+  [Alice], [Engineer], [Platform],
+  [Bob], [Designer], [Product],
+  // ... many rows spanning pages
+)
+```
+
+For hierarchical (multi-row) headers:
+
+```typst
+#table(
+  columns: 4,
+  table.header(
+    table.cell(colspan: 2)[Revenue], table.cell(colspan: 2)[Costs],
+    [Q1], [Q2], [Q1], [Q2],
+  ),
+  [100], [120], [80], [85],
+)
+```
+
 ## Templates
 
 Apply document-wide styling with `#show:`:
@@ -68,65 +97,46 @@ This is a citation @einstein1905.
 #bibliography("references.bib")
 ```
 
-## Safe Patterns
+## Large Documents (500+ lines)
 
-### Blank Fields
+### File Organization
 
-```typst
-// CORRECT
-[......%]          // Dots for blanks
-Answer: ____________   // Underscores outside brackets
+Split into multiple files when a document exceeds ~500 lines:
 
-// WRONG
-[_____%]           // Underscores trigger emphasis inside []
+```
+project/
+├── main.typ          # Entry point: #include for each section
+├── lib.typ           # Shared helpers, colors, functions
+├── sections/
+│   ├── 01-intro.typ
+│   ├── 02-analysis.typ
+│   └── 03-conclusion.typ
+└── images/
 ```
 
-### Currency
-
 ```typst
-// CORRECT
-[\$5,000]          // Escaped dollar
-£10,000            // Pound OK
-EUR 5,000          // Text alternative
-
-// WRONG
-[$5,000]           // Starts math mode
+// main.typ
+#import "lib.typ": *
+#include "sections/01-intro.typ"
+#include "sections/02-analysis.typ"
+#include "sections/03-conclusion.typ"
 ```
 
-## Quick Reference
+Compile with: `typst compile main.typ --root .`
+
+### Reusable Helper Pattern
+
+Define helpers as functions returning content — the pattern used across
+all templates in [templates.md](templates.md):
 
 ```typst
-// Page setup
-#set page(margin: 1.5cm, paper: "a4")
-#set text(font: "New Computer Modern", size: 10pt)
+// Callout box factory — one function, many variants
+#let _box(title, fg, bg, border, body) = block(
+  width: 100%, inset: 10pt, radius: 3pt, fill: bg, stroke: 0.5pt + border,
+)[#text(size: 9pt, weight: "bold", fill: fg)[#title] #v(0.2em) #text(size: 9pt)[#body]]
 
-// Headings
-= Level 1
-== Level 2
-=== Level 3
-
-// Text formatting
-*bold*  _italic_  `code`  #underline[underlined]
-
-// Colors
-#text(fill: rgb("#ff0000"))[Red text]
-#rect(fill: blue.lighten(80%), inset: 10pt)[Box]
-
-// Layout
-#grid(columns: (1fr, 1fr), gutter: 1em, [Col 1], [Col 2])
-#v(1em)        // Vertical space
-#h(1fr)        // Flexible horizontal space (push right)
-#pagebreak()   // New page
-
-// Lists
-- Bullet item
-- Another item
-  - Nested
-
-+ Numbered item
-+ Another
-
-// Math
-$E = m c^2$                    // Inline
-$ integral_0^infinity f(x) $   // Display
+// One-liner wrappers for each variant
+#let warning(body) = _box("Warning", rgb("#991b1b"), rgb("#fef2f2"), rgb("#dc2626"), body)
+#let tip(body)     = _box("Tip", rgb("#004d40"), rgb("#e0f2f1"), rgb("#00897b"), body)
 ```
+
