@@ -31,7 +31,11 @@ MODELS_WITH_IMAGE_CONFIG = {"gemini-3-pro-image-preview"}
 def get_api_key(provided_key: str | None) -> str | None:
     if provided_key:
         return provided_key
-    return os.environ.get("GEMINI_API_KEY") or os.environ.get("GENAI_API_KEY")
+    key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GENAI_API_KEY")
+    if key:
+        # Strip ANSI escapes / non-ASCII that may leak from shell greeting
+        key = re.sub(r"[^A-Za-z0-9_-]", "", key)
+    return key
 
 
 def slugify(text: str, max_len: int = 40) -> str:
@@ -196,7 +200,14 @@ def main():
 
     # Resolve output path
     if args.output:
-        output_path = args.output
+        out_p = Path(args.output)
+        # If -o is just a filename (no directory), place in --dir
+        if out_p.parent == Path("."):
+            out_p = Path(args.dir) / out_p
+        # Ensure .png extension
+        if not out_p.suffix:
+            out_p = out_p.with_suffix(".png")
+        output_path = str(out_p)
     else:
         output_path = auto_filename(args.prompt, args.dir)
 

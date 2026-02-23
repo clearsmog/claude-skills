@@ -17,7 +17,7 @@ Run exactly one command:
 SERPAPI_KEY="$SERPAPI_KEY" uv run --script {baseDir}/scripts/image_search.py "<query>" --typst [other flags...]
 ```
 
-If SERPAPI_KEY is empty in this shell, read it from fish: `` `fish -c 'set fish_greeting; echo $SERPAPI_KEY'` `` (suppress greeting to avoid ANSI pollution).
+If SERPAPI_KEY is empty in this shell, read it directly from fish universal variables (avoids shell greeting pollution): `` `printf '%b' "$(sed -n 's/.*SERPAPI_KEY://p' ~/.config/fish/fish_variables)"` ``.
 
 For `--stock` mode, also forward Unsplash/Pexels keys if available:
 ```bash

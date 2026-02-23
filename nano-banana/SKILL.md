@@ -17,7 +17,7 @@ Run exactly one command:
 GEMINI_API_KEY="$GEMINI_API_KEY" uv run --script {baseDir}/scripts/gemini_imagen.py -p "<prompt>" --typst [other flags...]
 ```
 
-If GEMINI_API_KEY is empty in this shell, read it from fish: `` `fish -c 'set fish_greeting; echo $GEMINI_API_KEY'` ``.
+If GEMINI_API_KEY is empty in this shell, read it directly from fish universal variables (avoids shell greeting pollution): `` `printf '%b' "$(sed -n 's/.*GEMINI_API_KEY://p' ~/.config/fish/fish_variables)"` ``.
 
 Print the script's stdout to the user. Done.
 

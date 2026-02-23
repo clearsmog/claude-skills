@@ -3,7 +3,7 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "serpapi>=0.1.5",
-#     "ddgs>=7.0.0",
+#     "duckduckgo-search>=6.0.0",
 #     "pillow>=10.0.0",
 #     "httpx>=0.27.0",
 # ]
@@ -41,6 +41,21 @@ def auto_filename(query: str, output_dir: str, ext: str = ".png") -> str:
     return str(Path(output_dir) / f"{date}-{slug}{ext}")
 
 
+def resolve_output(args_output: str | None, args_dir: str,
+                   query: str, ext: str = ".png") -> str:
+    """Resolve output path: combine -o with -d, ensure extension."""
+    if args_output:
+        out_p = Path(args_output)
+        # If -o is just a filename (no directory), place in --dir
+        if out_p.parent == Path("."):
+            out_p = Path(args_dir) / out_p
+        # Ensure extension
+        if not out_p.suffix:
+            out_p = out_p.with_suffix(ext)
+        return str(out_p)
+    return auto_filename(query, args_dir, ext)
+
+
 def format_size(path: str) -> str:
     size = Path(path).stat().st_size
     if size >= 1024 * 1024:
@@ -76,6 +91,9 @@ def search_images(query: str, num: int = 1, size: str | None = None,
                   type_filter: str | None = None) -> list[str]:
     """Search for images. SerpAPI first, DuckDuckGo fallback."""
     key = os.environ.get("SERPAPI_KEY")
+    if key:
+        # Strip ANSI escapes / non-ASCII that may leak from shell greeting
+        key = re.sub(r"[^A-Za-z0-9_-]", "", key)
     if key:
         try:
             import serpapi
@@ -250,7 +268,7 @@ def main():
 
     # --- Direct URL mode ---
     if args.url:
-        output_path = args.output or auto_filename(args.query, args.dir)
+        output_path = resolve_output(args.output, args.dir, args.query)
         result = download_image(args.url, output_path)
         if result:
             saved_paths.append(result)
@@ -265,8 +283,7 @@ def main():
             domain = resolve_domain(args.query)
             print(f"Resolved '{args.query}' -> {domain}", file=sys.stderr)
 
-        output_path = args.output or auto_filename(
-            args.query, args.dir, ext="-logo.png")
+        output_path = resolve_output(args.output, args.dir, args.query, ext=".png")
         result = fetch_logo(domain, output_path)
         if result:
             saved_paths.append(result)
@@ -286,14 +303,12 @@ def main():
     elif args.stock:
         urls = search_stock(args.query, num=args.num)
         for i, url in enumerate(urls[:args.num]):
+            base = resolve_output(args.output, args.dir, args.query)
             if args.num == 1:
-                output_path = args.output or auto_filename(
-                    args.query, args.dir)
+                output_path = base
             else:
-                base = args.output or auto_filename(args.query, args.dir)
-                stem = Path(base).stem
-                output_path = str(
-                    Path(base).parent / f"{stem}_{i + 1}.png")
+                bp = Path(base)
+                output_path = str(bp.parent / f"{bp.stem}_{i + 1}{bp.suffix}")
             result = download_image(url, output_path)
             if result:
                 saved_paths.append(result)
@@ -306,14 +321,12 @@ def main():
         urls = search_images(args.query, num=args.num, size=args.size,
                              type_filter=args.type_filter)
         for i, url in enumerate(urls[:args.num]):
+            base = resolve_output(args.output, args.dir, args.query)
             if args.num == 1:
-                output_path = args.output or auto_filename(
-                    args.query, args.dir)
+                output_path = base
             else:
-                base = args.output or auto_filename(args.query, args.dir)
-                stem = Path(base).stem
-                output_path = str(
-                    Path(base).parent / f"{stem}_{i + 1}.png")
+                bp = Path(base)
+                output_path = str(bp.parent / f"{bp.stem}_{i + 1}{bp.suffix}")
             result = download_image(url, output_path)
             if result:
                 saved_paths.append(result)
