@@ -1,262 +1,193 @@
 # Claude Code Skills
 
-Custom skills for [Claude Code](https://claude.com/claude-code), following the [Agent Skills](https://agentskills.io) open standard.
+A collection of custom skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that add Typst document authoring, AI image generation, web image search, mind mapping, and Google Tasks management.
 
-## Skills
+Built on the [Agent Skills](https://agentskills.io) open standard.
 
-| Skill | Type | Description |
-|-------|------|-------------|
-| **typst** | Auto-loaded | Syntax guide, common errors, packages, and best practices for Typst (.typ) files. Auto-loaded when editing `.typ` documents. |
-| **nano-banana** | Slash command | Generate images via Google Gemini and get ready-to-paste Typst `#figure(image(...))` code. Invoke with `/nano-banana`. |
-| **mindmap** | Slash command | Generate mind map images using mind-elixir. Produces PNG or SVG from plaintext input. Invoke with `/mindmap`. |
-| **image-search** | Slash command | Search the web for images (photos, logos, stock photos) and download them with Typst embedding code. Invoke with `/image-search`. |
-
-## Installation
-
-### Method 1: Clone (recommended)
-
-Clone directly into your Claude Code skills directory:
+## Quick Start
 
 ```bash
 git clone https://github.com/clearsmog/claude-skills.git ~/.claude/skills
 ```
 
-All skills are immediately available. The `typst` skill auto-loads when you work with `.typ` files, and `/nano-banana` and `/mindmap` appear in the slash command menu.
+That's it. Skills are available immediately — the Typst skill auto-loads when you work with `.typ` files, and the slash commands (`/nano-banana`, `/mindmap`, `/image-search`) appear in your command menu.
 
-### Method 2: Plugin marketplace
+> **Already have a `~/.claude/skills` directory?** Clone to a different path and symlink individual skill folders, or use the plugin method: `/plugins add https://github.com/clearsmog/claude-skills`
 
-Register this repo as a Claude Code plugin:
+## What's Included
 
-```
-/plugins add https://github.com/clearsmog/claude-skills
-```
+### Typst — Auto-loaded reference guide
 
-Skills will be namespaced as `claude-skills:typst`, `claude-skills:nano-banana`, etc.
-
-## Usage
-
-### typst
-
-Automatically loaded when Claude detects `.typ` files. Provides syntax reference, common error fixes, and ecosystem knowledge. No manual invocation needed.
+Automatically activates when Claude detects `.typ` files. Provides syntax reference, common error fixes, template library, visual tool routing, and package ecosystem knowledge.
 
 ```
-# Claude auto-loads the skill when you ask:
-"Create a Typst document with a comparison table"
+"Create a study guide about portfolio theory"
 "Fix the compilation error in my .typ file"
+"Add a comparison table to my research report"
 ```
 
-### nano-banana
+Includes a component library (`@local/qk:1.0.0`) with 15 callout variants, styled tables, stat cards, badges, and document presets. Reference files for math pitfalls, layout patterns, packages, and symbols are loaded on-demand — not every invocation — keeping context lean.
 
-Generate AI images with one command and get Typst-ready embedding code.
+---
+
+### `/nano-banana` — AI image generation
+
+Generate images with Google Gemini and get Typst-ready `#figure(image(...))` code.
 
 ```bash
-# Basic usage
 /nano-banana "a conceptual diagram of risk parity"
-
-# With options
-/nano-banana "Black-Litterman Bayesian update flowchart" --dir charts --width 90%
-
-# With aspect ratio
 /nano-banana "portfolio allocation banner" --aspect-ratio 21:9
-
-# Edit an existing image
 /nano-banana "make the background lighter" --edit images/diagram.png
-
-# Multiple outputs at high resolution
-/nano-banana "abstract portfolio visualization" --num 3 --resolution 4K
 ```
 
-**Options:**
-
-| Flag | Default | Description |
+| Flag | Default | What it does |
 |------|---------|-------------|
-| `--dir` | `images` | Output directory |
+| `--dir` | `images` | Where to save |
 | `--width` | `80%` | Typst image width |
-| `--caption` | auto | Figure caption |
-| `--edit` | — | Input image for editing |
-| `--resolution` | `1K` | Output resolution (`1K`/`2K`/`4K`) |
-| `--num` | `1` | Number of images to generate |
-| `--aspect-ratio` | model default | Aspect ratio (`1:1`, `16:9`, `9:16`, `3:4`, `4:3`, `21:9`) |
-| `--model` | `gemini-3-pro` | Gemini model ID |
+| `--edit` | — | Edit an existing image instead of creating one |
+| `--resolution` | `1K` | `1K` / `2K` / `4K` |
+| `--num` | `1` | Generate multiple variants |
+| `--aspect-ratio` | auto | `1:1`, `16:9`, `9:16`, `3:4`, `4:3`, `21:9` |
 
-**Output:** The command generates the image and prints Typst code:
+**Models:** `gemini-3-pro` (default, best quality, ~$0.13/image) or `gemini-2.5-flash-image` (fast, ~$0.04/image).
 
-```typst
-#figure(
-  image("charts/2026-02-07-risk-parity-stool.png", width: 80%),
-  caption: [Risk Parity: Equal Risk Contribution],
-)
-```
+**Requires:** `uv` + `GEMINI_API_KEY` from [Google AI Studio](https://ai.google.dev/) (paid tier).
 
-**Available models:**
+---
 
-| Model | Cost/image | Notes |
-|-------|-----------|-------|
-| `gemini-3-pro` (default) | ~$0.13 | Best quality, supports 4K resolution |
-| `gemini-2.5-flash-image` | ~$0.04 | Fast, good for quick iterations |
+### `/mindmap` — Mind map generation
 
-### mindmap
-
-Generate mind map images from a topic or structured content.
+Generate mind map images from a topic. Claude expands your topic into branches automatically.
 
 ```bash
-# From a topic (Claude expands into branches)
 /mindmap "Portfolio Theory"
-
-# With Typst embedding code
 /mindmap "CAPM" --typst --caption "CAPM Overview"
-
-# Custom theme and format
 /mindmap "Risk Parity" --theme dark --format svg
-
-# Custom direction
-/mindmap "Diversification" --direction right
 ```
 
-**Options:**
-
-| Flag | Default | Description |
+| Flag | Default | What it does |
 |------|---------|-------------|
-| `--dir` | `mindmaps` | Output directory |
-| `--format` | `png` | Output format (`png`/`svg`) |
-| `--theme` | `academic` | Color theme (`academic`/`latte`/`dark`) |
-| `--direction` | `side` | Layout direction (`side`/`right`/`left`) |
-| `--typst` | — | Print Typst `#figure(image(...))` code |
-| `--caption` | — | Figure caption |
+| `--dir` | `mindmaps` | Where to save |
+| `--format` | `png` | `png` or `svg` |
+| `--theme` | `academic` | `academic` (blue/orange), `latte` (pastel), `dark` |
+| `--direction` | `side` | `side`, `right`, or `left` |
+| `--typst` | — | Print Typst embedding code |
 
-### image-search
+**Requires:** Node.js (`brew install node`). Dependencies auto-install on first run.
 
-Search the web for real-world images, company logos, or stock photos and download them.
+---
+
+### `/image-search` — Web image search
+
+Find and download real-world images, company logos, or stock photos.
 
 ```bash
-# Search for images (SerpAPI -> DuckDuckGo fallback)
 /image-search "golden gate bridge sunset"
-
-# Company logo
 /image-search --logo "Stripe"
-
-# Logo with custom width
-/image-search --logo "Goldman Sachs" --width 40%
-
-# Stock photos (license-clear, Unsplash/Pexels)
 /image-search --stock "sustainable energy" -n 2
-
-# Download from a specific URL
 /image-search --url "https://example.com/chart.png" "quarterly chart"
-
-# With size/type filters (SerpAPI only)
-/image-search "electric vehicles" --size large --type photo -n 3
 ```
 
-**Options:**
-
-| Flag | Default | Description |
+| Flag | Default | What it does |
 |------|---------|-------------|
-| `--logo` | off | Logo mode — treat query as company/domain |
-| `--stock` | off | Stock photo mode (Unsplash/Pexels) |
-| `--url` | — | Direct URL download mode |
-| `--dir` | `images` | Output directory |
-| `-n` | `1` | Number of images to download |
-| `--size` | — | Size filter: `large`/`medium`/`icon` |
-| `--type` | — | Type filter: `photo`/`clipart`/`face`/`lineart` |
-| `--width` | `80%` | Typst image width |
-| `--caption` | auto | Typst figure caption |
+| `--logo` | off | Treat query as company name → fetch logo |
+| `--stock` | off | Search Unsplash/Pexels (license-clear) |
+| `--url` | — | Download from a specific URL |
+| `-n` | `1` | Number of images |
+| `--size` | — | `large` / `medium` / `icon` |
+| `--type` | — | `photo` / `clipart` / `face` / `lineart` |
 
-### Skill integration
+**Requires:** `uv`. Optionally set `SERPAPI_KEY` for Google Images; without it, falls back to DuckDuckGo (free, unlimited).
 
-The typst skill knows about `/nano-banana`, `/mindmap`, and `/image-search` and will auto-invoke them when appropriate:
+---
+
+### Google Tasks — Task management
+
+Auto-loads when you ask about tasks, to-dos, or reminders. Uses the `gtasks` CLI.
 
 ```
-# Auto-invokes /nano-banana
-"Add an illustration of the three-legged stool analogy to my risk parity document"
-
-# Auto-invokes /mindmap
-"Add a concept map of CAPM to my week 3 flowchart"
-
-# Auto-invokes /image-search
-"Add the Apple logo to my stock pitch"
-"Find a photo of the Golden Gate Bridge for the report"
+"Show my urgent tasks"
+"Add a task to review the quarterly report by Friday"
+"Mark task 3 as done"
 ```
 
-Claude uses a priority-based decision tree to route requests to the right tool:
+**Requires:** `gtasks` CLI installed separately (not included in this repo).
 
-| Request type | Routed to |
-|-------------|-----------|
-| Conceptual illustrations, metaphors | `/nano-banana` |
-| Photorealistic or decorative images | `/nano-banana` |
-| Mind maps, concept maps, topic trees | `/mindmap` |
-| Company logos, brand marks | `/image-search --logo` |
-| Real-world photos, web graphics | `/image-search` |
-| Stock photos (license-clear) | `/image-search --stock` |
-| Flowcharts, tables, boxes | Typst native |
-| Data-driven charts | matplotlib |
+## How the Skills Work Together
+
+The Typst skill knows about the other tools and auto-invokes them when appropriate:
+
+```
+"Add an illustration of the three-legged stool analogy"   →  /nano-banana
+"Add a concept map of CAPM to my study guide"             →  /mindmap
+"Add the Apple logo to my stock pitch"                    →  /image-search --logo
+```
+
+The routing priority:
+
+```
+Can Typst draw it natively?      →  Typst (tables, boxes, fletcher flowcharts)
+Simple chart (< 3 series)?      →  cetz-plot (native, font-matching)
+Real photo or logo?              →  /image-search
+Mind map or concept tree?        →  /mindmap
+Structured diagram?              →  Native packages (fletcher, chronos, timeliney)
+Complex chart (4+ series)?      →  matplotlib
+Conceptual illustration?         →  /nano-banana
+```
 
 ## Setup
 
-### nano-banana requirements
+All skills need [uv](https://docs.astral.sh/uv/) (`brew install uv`).
 
-- **uv** — `brew install uv`
-- **GEMINI_API_KEY** — get one at https://ai.google.dev/
+| Skill | Additional requirements |
+|-------|----------------------|
+| **typst** | None — works out of the box |
+| **nano-banana** | `GEMINI_API_KEY` ([get one](https://ai.google.dev/), paid tier required) |
+| **image-search** | `SERPAPI_KEY` optional ([get one](https://serpapi.com/)); DuckDuckGo fallback is free |
+| **mindmap** | Node.js (`brew install node`) |
+| **google-tasks** | `gtasks` CLI installed separately |
+
+**Setting API keys:**
 
 ```bash
 # fish
 set -Ux GEMINI_API_KEY "your-key"
-
-# bash/zsh
-echo 'export GEMINI_API_KEY="your-key"' >> ~/.zshrc
-```
-
-Image generation requires a paid Gemini API tier (no free quota for image models).
-
-### image-search requirements
-
-- **uv** — `brew install uv`
-- **SERPAPI_KEY** (optional) — get one at https://serpapi.com/
-
-```bash
-# fish
 set -Ux SERPAPI_KEY "your-key"
 
-# bash/zsh
-echo 'export SERPAPI_KEY="your-key"' >> ~/.zshrc
+# bash / zsh
+export GEMINI_API_KEY="your-key"  # add to ~/.zshrc
+export SERPAPI_KEY="your-key"
 ```
 
-Without a key, image search falls back to DuckDuckGo (free, unlimited). For stock photo mode, optionally set `UNSPLASH_ACCESS_KEY` and/or `PEXELS_API_KEY`.
-
-### mindmap requirements
-
-- **Node.js** — `brew install node`
-- Dependencies install automatically on first `/mindmap` invocation.
-
-## Structure
+## Repository Structure
 
 ```
 skills/
 ├── typst/
-│   ├── SKILL.md                   # Typst syntax guide (auto-loaded)
+│   ├── SKILL.md                      # Behavioral core (auto-loaded)
 │   └── references/
-│       ├── math-pitfalls.md       # Math mode edge cases
-│       ├── layout-patterns.md     # Spacing, boxes, colors, curve()
-│       ├── common-patterns.md     # Tables, templates, bibliography
-│       ├── symbols.md             # sym.* arrows and symbols
-│       └── packages.md            # Popular packages
+│       ├── quick-ref.md              # Syntax, errors, special characters
+│       ├── component-library.md      # @local/qk:1.0.0 API reference
+│       ├── tool-routing.md           # Visual tool routing + examples
+│       ├── templates.md              # 7 document preambles
+│       ├── common-patterns.md        # Tables, show rules, large documents
+│       ├── layout-patterns.md        # Spacing, figures, curve()
+│       ├── math-pitfalls.md          # Math mode edge cases
+│       ├── packages.md              # Popular packages with imports
+│       └── symbols.md               # sym.* arrows and symbols
 ├── nano-banana/
-│   ├── SKILL.md                   # Slash command definition
-│   └── scripts/
-│       └── gemini_imagen.py       # Gemini image generation
+│   ├── SKILL.md                      # Slash command definition
+│   └── scripts/gemini_imagen.py      # Gemini image generation
 ├── image-search/
-│   ├── SKILL.md                   # Slash command definition
-│   └── scripts/
-│       └── image_search.py        # Web image search & download
-└── mindmap/
-    ├── SKILL.md                   # Slash command definition
-    ├── references/
-    │   └── advanced-syntax.md     # Node colors, arrows, summaries
-    └── scripts/
-        └── generate_mindmap.mjs   # Mind-elixir rendering
+│   ├── SKILL.md                      # Slash command definition
+│   └── scripts/image_search.py       # Web image search & download
+├── mindmap/
+│   ├── SKILL.md                      # Slash command definition
+│   ├── references/advanced-syntax.md # Node colors, arrows, summaries
+│   └── scripts/generate_mindmap.mjs  # Mind-elixir rendering
+└── google-tasks/
+    └── SKILL.md                      # Google Tasks CLI reference
 ```
-
-Reference files are loaded on-demand (not on every invocation), keeping SKILL.md context lean.
 
 ## License
 
