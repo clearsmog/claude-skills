@@ -31,7 +31,7 @@ Install from https://typst.app/universe/ — check for latest versions.
 
 | Package | Purpose | Import |
 |---------|---------|--------|
-| **touying** | Presentations (Typst 0.14+) | `#import "@preview/touying:0.6.1"` |
+| **touying** | Presentations (Typst 0.14+). **Use 0.6.x API** (`#show: theme.with(...)`), NOT the old 0.3.x `register()` pattern. See `references/touying-guide.md`. | `#import "@preview/touying:0.6.1"` |
 | **tablem** | Markdown-like table syntax | `#import "@preview/tablem:0.3.0"` |
 | **showybox** | Customizable text boxes | `#import "@preview/showybox:2.0.4"` |
 

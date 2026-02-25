@@ -14,25 +14,31 @@ If you know nothing else, follow these rules:
 
 1. **Always** import `@local/qk:1.0.0` — `#import "@local/qk:1.0.0": *`
 2. **Always** use `qk-doc` or `qk-report` preset (unless user specifies custom)
-3. **Always** `#set figure(placement: auto)` — prevents blank half-pages
-4. **Always** add `alt:` to images — `image("path.png", alt: "description")`
-5. **Always** escape `$` in content — scan for bare `$` before compiling
-6. **Default fonts**: Libertinus Serif (body), Inter (headings), New Computer Modern Math (math), Fira Code (code)
-7. **Default compile**: `typst compile --root .. Source/<file>.typ`
-8. **When in doubt** about template: Study Guide
-9. **When in doubt** about visual tool: Typst native first → cetz-plot → matplotlib
+3. **Always** use touying for presentations (not raw page dimensions) — see `references/touying-guide.md`
+4. **Always** `#set figure(placement: auto)` — prevents blank half-pages
+5. **Always** add `alt:` to images — `image("path.png", alt: "description")`
+6. **Always** escape `$` in content — scan for bare `$` before compiling
+7. **Default fonts**: Libertinus Serif (body), Inter (headings), New Computer Modern Math (math), Fira Code (code)
+8. **Default compile**: `typst compile --root .. Source/<file>.typ`
+9. **When in doubt** about template: Study Guide
+10. **When in doubt** about visual tool: Typst native first → cetz-plot → matplotlib
+11. **Always** scan project for existing `.typ` files and match their style (fonts, colors, qk preset) unless user specifies otherwise
 
 ## New Document Decision Tree
 
 ```
 User request → scan for keywords:
   "resume/CV/job"           → CV / Résumé template
-  "slides/presentation"     → Presentation (16:9)
+  "slides/presentation"     → Presentation (touying — metropolis default)
+  "lecture/class/academic"   → Academic Lecture (touying — university theme)
   "essay/thesis/paper"      → Essay
   "report/brief/client"     → Business Report
   "research/analysis"       → Research Report
   "study guide/revision"    → Study Guide
-  "reference/glossary"      → Annotated Reference
+  "reference/glossary"                      → Annotated Reference
+  "cheatsheet/reference card/formula sheet" → Cheatsheet template
+  "exam/problem set/homework"              → Exam template
+  "flashcard/Q&A/quiz"                     → Flashcard template
   ambiguous?                → ask purpose + audience → pick template
 ```
 
@@ -40,7 +46,7 @@ User request → scan for keywords:
 1. Auto-detect template from keywords above
 2. Import `@local/qk:1.0.0` at top
 3. Use `qk-doc` or `qk-report` preset when applicable
-4. Confirm briefly: "I'll use the **Study Guide** template — sound good?"
+4. Auto-select template. State choice in Phase 3 summary. User can re-invoke with explicit type override if wrong.
 5. Build from `references/templates.md`
 6. Custom styles are fine — templates are starting points, not constraints
 
@@ -64,20 +70,27 @@ Detail and examples in `references/tool-routing.md`.
 
 ### Visual Auto-detection
 
-When writing Typst documents, automatically identify content that benefits from visuals. Do NOT wait for the user to request them.
+When writing Typst documents, automatically identify content that benefits from visuals. Do NOT wait for the user to request them. Follow priority: Typst native → cetz-plot → `/image-search` → `/mindmap` → native packages → matplotlib → `/nano-banana`.
 
 | Content pattern | Visual to add | Tool |
 |-----------------|---------------|------|
-| Sequential steps or phases | Timeline / flowchart | fletcher or timeliney |
-| Decision logic (if/then) | Decision tree | fletcher |
-| Process with inputs/outputs | Workflow diagram | fletcher |
-| Comparison of 2+ approaches | Comparison table | Typst native table |
-| Hierarchy or taxonomy | Mind map or tree | `/mindmap` or fletcher |
-| Data trends or distributions | Chart | cetz-plot or matplotlib |
-| Cause-effect relationships | Flowchart | fletcher |
-| Before/after or evolution | Timeline | timeliney or fletcher |
-| System architecture or layers | Block diagram | fletcher or Typst boxes |
-| Concept with analogy | Illustration | `/nano-banana` |
+| Comparison grids, attribute tables | Styled table | Typst native |
+| Callout boxes, styled layouts | `rect()` / `block()` | Typst native |
+| Sequential steps, decision logic | Flowchart / decision tree | `fletcher` |
+| Process with inputs/outputs | Workflow diagram | `fletcher` |
+| System architecture, ER diagrams | Block / entity diagram | `fletcher` |
+| Hierarchy or taxonomy | Tree diagram | `fletcher` or `/mindmap` |
+| Topic overview, concept map | Mind map | `/mindmap` |
+| Request-response, API flows | Sequence diagram | `chronos` |
+| Project schedule, phases | Gantt chart | `timeliney` |
+| Historical events, evolution | Timeline | `herodot` or `timeliney` |
+| Data trends, distributions (< 3 series) | Line/area/scatter chart | cetz-plot |
+| Complex charts (4+ series, annotations) | Publication chart | matplotlib/Python |
+| Company logo, brand mark | Logo image | `/image-search --logo` |
+| Real-world photograph | Photo | `/image-search` |
+| Concept with analogy, metaphor | AI illustration | `/nano-banana` |
+
+See `references/tool-routing.md` for full examples, fallback chains, and auto-invoke rules.
 
 ### Content Structure
 
@@ -130,6 +143,10 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 | Page layout, spacing, figures, curves | `references/layout-patterns.md` |
 | Math mode traps | `references/math-pitfalls.md` |
 | Package imports | `references/packages.md` |
+| Touying presentations (themes, slides, speaker notes) | `references/touying-guide.md` |
+| Visual verification (PNG rendering, spot-checks) | `references/visual-verification.md` |
+| Quality gates, rubrics, dispatch table | `references/quality-gates.md` |
+| Data-driven generation (JSON, CSV, batch, variants) | `references/data-driven.md` |
 | `sym.*` symbols | `references/symbols.md` |
 
 ## Version Notes (0.13–0.14)
@@ -144,6 +161,8 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 | `curve` function | 0.13 | Bezier drawing (replaces `path`) |
 
 **Deprecated**: `path` → `curve` · `pdf.embed` → `pdf.attach` · `image.decode` → pass bytes directly · polylux:0.3.1 → `polylux:0.4.0` or `touying`
+
+| touying 0.6.1 | 0.6 | Presentation framework — `#show: theme.with(...)` API (NOT the old `register()` pattern) |
 
 ## CLI Commands
 

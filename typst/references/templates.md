@@ -10,51 +10,96 @@
 **Use when:** "analysis", "research", "review", "sector", "evaluation" | **Skip when:** <2 pages, slides, CVs
 
 ```typst
-#set page(margin: (x: 1.5cm, y: 1.5cm), paper: "a4", numbering: "1 / 1")
-#set text(font: "New Computer Modern", size: 9.5pt)
-#set par(leading: 0.55em, spacing: 0.65em, justify: true)
-#show heading.where(level: 1): it => {
-  pagebreak(weak: true)
-  block(above: 0.6em, below: 0.5em, text(size: 16pt, weight: "bold", fill: rgb("#1a237e"), it.body))
-  line(length: 100%, stroke: 0.8pt + rgb("#1a237e"))
-  v(0.3em)
-}
-#show heading.where(level: 2): it => {
-  block(above: 0.8em, below: 0.4em, text(size: 12pt, weight: "bold", fill: rgb("#283593"), it.body))
-}
-#show heading.where(level: 3): it => {
-  block(above: 0.6em, below: 0.3em, text(size: 10.5pt, weight: "bold", fill: rgb("#37474f"), it.body))
-}
+#import "@local/qk:1.0.0": *
+
+#show: qk-report.with(
+  title: "Report Title",
+  header-text: "Section Title",
+  footer-text: "Confidential",
+  heading-numbering: "1.1",
+  styled-lists: true,
+  styled-captions: true,
+)
 ```
 
 ---
 
-## 2. Presentation (16:9)
+## 2. Presentation (touying — Metropolis)
 **Use when:** "slides", "presentation", "deck", "pitch" | **Skip when:** text-heavy docs, reports, essays
 
+> Uses touying 0.6.1 theme system. See `references/touying-guide.md` for full API.
+
 ```typst
-#let navy  = rgb("#1B365D")
-#let gold  = rgb("#B8860B")
-#let teal  = rgb("#2A9D8F")
-#let lgray = rgb("#F5F5F5")
-#let dtext = rgb("#2C2C2C")
+#import "@preview/touying:0.6.1": *
+#import themes.metropolis: *
+#import "@local/qk:1.0.0": qk-slides, slide-callout, keypoint, tip, trap
 
-#set page(width: 254mm, height: 142.9mm, margin: (x: 12mm, y: 8mm), fill: lgray, footer: none)
-#set text(font: "New Computer Modern", size: 9pt, fill: dtext)
-#set par(leading: 0.55em)
+#show: metropolis-theme.with(
+  aspect-ratio: "16-9",
+  footer: self => self.info.institution,
+  config-info(
+    title: [Presentation Title],
+    subtitle: [Subtitle],
+    author: [Author Name],
+    date: datetime.today(),
+    institution: [Institution],
+  ),
+)
+#show: qk-slides.with(title: "Presentation Title")
 
-#let slide-header(title, slide-num: none) = {
-  place(top + left, dx: -12mm, dy: -8mm, rect(width: 254mm, height: 3mm, fill: navy))
-  v(2mm)
-  text(size: 16pt, weight: "bold", fill: navy, title)
-  v(2mm)
-  if slide-num != none {
-    place(bottom + right, text(size: 6pt, fill: navy.lighten(30%), [Slide #slide-num]))
-  }
-  place(bottom + left, text(size: 5.5pt, fill: navy.lighten(40%), tracking: 1pt, [CONFIDENTIAL]))
-}
-#let kv(key, val) = grid(columns: (1fr, 1fr), gutter: 2pt,
-  text(weight: "bold", size: 7.5pt, fill: navy, key), text(size: 7.5pt, val))
+#title-slide()
+
+= First Section
+
+== Slide Title
+
+Content here.
+
+#pause
+
+Revealed on click.
+
+#slide-callout(keypoint)[Key takeaway for the audience.]
+```
+
+## 2b. Academic Lecture (touying — University)
+**Use when:** "lecture", "class", "academic talk" | **Skip when:** corporate/pitch decks, short docs
+
+```typst
+#import "@preview/touying:0.6.1": *
+#import themes.university: *
+#import "@local/qk:1.0.0": qk-slides, slide-callout, keypoint, tip, trap
+
+#show: university-theme.with(
+  aspect-ratio: "16-9",
+  config-info(
+    title: [Lecture Title],
+    subtitle: [Course Name — Week N],
+    author: [Instructor Name],
+    date: datetime.today(),
+    institution: [University Name],
+    logo: emoji.school,
+  ),
+)
+#show: qk-slides.with(title: "Lecture Title")
+
+#title-slide()
+
+= Topic Overview
+
+== Key Concept
+
+Motivation before formalism — always.
+
+#pause
+
+$ E[R_p] = sum_(i=1)^n w_i E[R_i] $
+
+#slide-callout(tip)[Worked example within 2 slides of every definition.]
+
+#focus-slide[Questions?]
+
+#matrix-slide[Left Column][Right Column]
 ```
 
 ---
@@ -173,33 +218,29 @@
 **Use when:** "report", "brief", "visit prep", "client", "branded" | **Skip when:** academic papers, slides, CVs
 
 ```typst
+#import "@local/qk:1.0.0": *
+
+// Brand overrides on top of qk-report
 #let brand-primary = rgb("#0033a0")
-#let brand-dark    = rgb("#001a4e")
-#let brand-light   = rgb("#e8eef8")
 #let brand-gold    = rgb("#c5a247")
-#let brand-grey    = rgb("#f7f8fa")
 #let brand-green   = rgb("#1a7a3a")
 #let brand-red     = rgb("#c0392b")
 
-#set page(margin: (x: 1.8cm, y: 2cm), footer: context {
-  let pg = counter(page).get().first()
-  if pg > 1 {
-    line(length: 100%, stroke: 0.3pt + rgb("#ccc")); v(4pt)
-    grid(columns: (1fr, auto, 1fr),
-      align(left, text(8pt, fill: rgb("#999"))[Report Title]),
-      align(center, text(8pt, fill: rgb("#999"))[— #pg —]),
-      align(right, text(8pt, fill: rgb("#999"))[Date]))
-  }
-})
-#set text(font: "Georgia", size: 10pt)
-#set par(justify: true, leading: 0.65em)
-#set heading(numbering: none)
+#show: qk-report.with(
+  title: "Report Title",
+  header-text: "Report Title",
+  footer-text: "Date",
+  body-size: 10pt,
+  styled-lists: true,
+)
+
+// Brand heading overrides
 #show heading.where(level: 1): it => {
   v(10pt)
   block(width: 100%)[
     #block(fill: brand-primary, inset: (x: 12pt, y: 8pt), radius: (top: 4pt),
       width: 100%, text(fill: white, weight: "bold", size: 13pt, it.body))
-    #block(fill: brand-light, inset: 0pt, width: 100%, height: 2pt)
+    #block(fill: brand-primary.lighten(85%), inset: 0pt, width: 100%, height: 2pt)
   ]
   v(6pt)
 }
@@ -209,26 +250,6 @@
     #v(-2pt) #line(length: 40%, stroke: 1pt + brand-gold)]
   v(4pt)
 }
-#let tip-box(body) = block(fill: rgb("#fff8e1"), stroke: (left: 3pt + brand-gold),
-  inset: 10pt, radius: (right: 4pt), width: 100%)[#text(size: 9.5pt)[#body]]
-#let insight-box(body) = block(fill: brand-light, stroke: (left: 3pt + brand-primary),
-  inset: 10pt, radius: (right: 4pt), width: 100%)[#text(size: 9.5pt)[#body]]
-#let warn-box(body) = block(fill: rgb("#fdecea"), stroke: (left: 3pt + brand-red),
-  inset: 10pt, radius: (right: 4pt), width: 100%)[#text(size: 9.5pt)[#body]]
-#let stat-card(value, label) = block(fill: brand-grey, inset: (x: 10pt, y: 8pt),
-  radius: 4pt, width: 100%, align(center)[
-    #text(size: 16pt, weight: "bold", fill: brand-primary)[#value]
-    #v(2pt) #text(size: 8pt, fill: rgb("#666"))[#label]
-  ])
-#let styled-table(..args) = {
-  set table(
-    stroke: (x, y) => if y == 0 { (bottom: 1.5pt + brand-primary) }
-      else { (bottom: 0.5pt + rgb("#e0e0e0")) },
-    inset: 8pt,
-    fill: (x, y) => if y == 0 { brand-dark } else if calc.odd(y) { brand-grey } else { white })
-  show table.cell.where(y: 0): set text(fill: white, weight: "bold", size: 9pt)
-  table(..args)
-}
 ```
 
 ---
@@ -237,61 +258,144 @@
 **Use when:** "study guide", "revision", "cheatsheet", "exam", "formula sheet" | **Skip when:** formal papers, client docs, slides
 
 ```typst
-#set page(paper: "a4", margin: (x: 2cm, y: 2.5cm),
-  header: context {
-    if counter(page).get().first() > 1 [
-      #set text(font: "Inter", size: 8.5pt, fill: rgb("#78909c"))
-      Study Guide Title #h(1fr) #counter(page).display()
-      #v(4pt) #line(length: 100%, stroke: 0.4pt + rgb("#b0bec5"))
-    ]
-  },
-  footer: context {
-    if counter(page).get().first() > 1 [
-      #line(length: 100%, stroke: 0.4pt + rgb("#b0bec5"))
-      #v(4pt) #set text(size: 8pt, fill: rgb("#b0bec5"))
-      #align(center)[Course Name]
-    ]
-  },
+#import "@local/qk:1.0.0": *
+
+#show: qk-doc.with(
+  title: "Study Guide Title",
+  header-text: "Short Title",
+  footer-text: "Course Name",
+  styled-lists: true,
+  styled-captions: true,
 )
-#set text(font: ("Libertinus Serif", "Charter", "Georgia"), size: 11pt)
-#set heading(numbering: "1.1")
-#set par(justify: true, leading: 0.7em, spacing: 0.85em)
-#show math.equation: set text(font: "New Computer Modern Math")
-#show raw: set text(font: "Fira Code", size: 9.5pt)
-#set list(marker: (
-  text(fill: rgb("#1565c0"), size: 7pt, "●"),
-  text(fill: rgb("#78909c"), size: 6pt, "●"),
-  text(fill: rgb("#b0bec5"), size: 5pt, "●"),
-), spacing: 0.65em)
+
+// qk-doc already provides: Libertinus Serif body, Inter headings,
+// NCM Math, Fira Code, blue accent headings, smart header/footer,
+// zebra tables. No need to redefine.
+```
+
+---
+
+## 8. Cheatsheet / Reference Card
+**Use when:** "cheatsheet", "reference card", "formula sheet", "quick reference" | **Skip when:** >2 pages, narrative docs, slides
+
+> Dense, information-rich layout. A4 landscape, small text, minimal margins, colored section bars.
+
+```typst
+#import "@local/qk:1.0.0": *
+
+#set page(paper: "a4", flipped: true, margin: (x: 1cm, y: 1cm))
+#set text(font: "New Computer Modern", size: 8pt)
+#set par(leading: 0.45em, spacing: 0.5em, justify: true)
+#set heading(numbering: none)
+
+// Compact colored section headers
 #show heading.where(level: 1): it => {
-  set text(font: "Inter", size: 18pt, weight: "bold", fill: rgb("#0d47a1"))
-  block(above: 2em, below: 0.8em)[
-    #block(width: 100%, inset: (bottom: 8pt), stroke: (bottom: 2.5pt + rgb("#1565c0")))[#it]]
+  block(fill: colors.navy, inset: (x: 6pt, y: 4pt), radius: 2pt, width: 100%,
+    text(fill: white, weight: "bold", size: 9pt, it.body))
+  v(2pt)
 }
 #show heading.where(level: 2): it => {
-  set text(font: "Inter", size: 14pt, weight: "bold", fill: rgb("#1565c0"))
-  block(above: 1.5em, below: 0.8em, inset: (left: 10pt), stroke: (left: 3pt + rgb("#1565c0")))[#it]
+  block(above: 0.4em, below: 0.2em,
+    text(weight: "bold", size: 8.5pt, fill: colors.accent, it.body))
 }
-#show heading.where(level: 3): it => {
-  set text(font: "Inter", size: 12pt, weight: "semibold", fill: rgb("#1976d2"))
-  block(above: 1.2em, below: 0.6em)[#it]
-}
-#set table(stroke: 0.5pt + rgb("#cfd8dc"))
-#show table.cell.where(y: 0): set text(fill: white, weight: "bold", size: 10pt)
 
-#let infobox(title: "", icon: none, color: rgb("#e3f2fd"), accent: none, body) = {
-  let c = if accent != none { accent } else { color.darken(40%) }
-  block(width: 100%, inset: (x: 14pt, y: 12pt), radius: 6pt, fill: color,
-    stroke: (left: 4pt + c, rest: 0.5pt + color.darken(15%)), above: 1em, below: 1em)[
-    #if title != "" [
-      #text(font: "Inter", weight: "bold", size: 10.5pt, fill: c)[
-        #if icon != none [#icon ] #upper(title)] #v(0.4em)]
-    #set text(size: 10.5pt); #body]
+#columns(3, gutter: 8pt)[
+  // Content here — use short paragraphs, tables, formula-box
+]
+```
+
+---
+
+## 9. Exam / Problem Set
+**Use when:** "exam", "problem set", "homework", "quiz", "assignment" | **Skip when:** study guides, slides, reports
+
+> Uses qk academic components. Numbered questions with answer space. Optional answer key toggle.
+
+```typst
+#import "@local/qk:1.0.0": *
+
+#let show-answers = false  // Toggle to true for answer key version
+
+#show: qk-doc.with(
+  title: "Exam Title",
+  header-text: "Course — Exam",
+  footer-text: "Page",
+  heading-numbering: none,
+)
+
+// Exam header
+#align(center)[
+  #text(size: 16pt, weight: "bold")[Course Name — Final Exam]
+  #v(4pt)
+  #text(size: 10pt)[Date: #datetime.today().display() #h(2em) Time: 2 hours #h(2em) Total: 100 marks]
+]
+#v(1em)
+#line(length: 100%, stroke: 1pt)
+#grid(columns: (1fr, 1fr), gutter: 12pt,
+  [Name: #box(width: 100%, stroke: (bottom: 0.5pt))[]],
+  [Student ID: #box(width: 100%, stroke: (bottom: 0.5pt))[]],
+)
+#v(1em)
+
+// Questions using qk components
+#question-box(number: 1)[
+  Define portfolio diversification and explain its effect on risk. *(10 marks)*
+]
+#if show-answers {
+  answer-box[
+    Portfolio diversification is the practice of...
+  ]
+} else {
+  v(5cm)  // Answer space
 }
-#let keypoint(body) = infobox(title: "Key Point", icon: sym.diamond.filled, color: rgb("#e8f5e9"), accent: rgb("#2e7d32"), body)
-#let warning(body)  = infobox(title: "Warning", icon: sym.excl, color: rgb("#ffebee"), accent: rgb("#c62828"), body)
-#let examtip(body)  = infobox(title: "Exam Tip", icon: sym.star.filled, color: rgb("#fff3e0"), accent: rgb("#e65100"), body)
-#let example(body)  = infobox(title: "Example", icon: sym.square.filled, color: rgb("#f3e5f5"), accent: rgb("#6a1b9a"), body)
-#let trap(body)     = infobox(title: "Common Trap", icon: sym.triangle.stroked.t, color: rgb("#ffebee"), accent: rgb("#c62828"), body)
-#let memorize(body) = infobox(title: "Must Memorize", icon: sym.checkmark.heavy, color: rgb("#e3f2fd"), accent: rgb("#1565c0"), body)
+
+#question-box(number: 2)[
+  Calculate the expected return given the following data. *(15 marks)*
+]
+#formula-box("Expected Return")[
+  $ E[R_p] = sum_(i=1)^n w_i E[R_i] $
+]
+```
+
+---
+
+## 10. Flashcard / Q&A
+**Use when:** "flashcard", "Q&A cards", "revision cards", "study cards" | **Skip when:** continuous text, exams, slides
+
+> Alternating question/answer cards on half-pages. Suitable for print-and-cut.
+
+```typst
+#import "@local/qk:1.0.0": *
+
+#set page(paper: "a4", margin: (x: 1.5cm, y: 1.5cm))
+#set text(font: "New Computer Modern", size: 11pt)
+
+#let flashcard(question, answer) = {
+  block(width: 100%, inset: 16pt, radius: 6pt, above: 1em, below: 0em,
+    fill: rgb("#f0f4ff"), stroke: 1.5pt + colors.accent)[
+    #text(weight: "bold", size: 10pt, fill: colors.accent)[Q:]
+    #v(4pt)
+    #text(size: 11pt)[#question]
+  ]
+  block(width: 100%, inset: 16pt, radius: 6pt, above: 0em, below: 1em,
+    fill: rgb("#f0faf0"), stroke: 1.5pt + colors.success)[
+    #text(weight: "bold", size: 10pt, fill: colors.success)[A:]
+    #v(4pt)
+    #text(size: 10pt)[#answer]
+  ]
+  line(length: 100%, stroke: (dash: "dashed", paint: luma(200), thickness: 0.5pt))
+}
+
+#align(center, text(size: 18pt, weight: "bold")[Revision Flashcards — Topic Name])
+#v(1em)
+
+#flashcard(
+  [What is the Capital Asset Pricing Model?],
+  [CAPM: $E[R_i] = R_f + beta_i (E[R_m] - R_f)$. It relates expected return to systematic risk (beta).]
+)
+
+#flashcard(
+  [What does beta measure?],
+  [Beta measures the sensitivity of an asset's returns to market returns. Beta > 1 means more volatile than market.]
+)
 ```

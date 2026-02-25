@@ -105,3 +105,19 @@ Installed at `~/Library/Application Support/typst/packages/local/qk/1.0.0/`.
   footer-text: "Confidential",
 )
 ```
+
+## Migrating from Custom Styles
+
+Common inline patterns and their qk equivalents:
+
+| Inline Pattern | qk Equivalent |
+|----------------|---------------|
+| Manual `#set page(...)` + `#set text(...)` + heading show rules | `#show: qk-doc.with(...)` or `#show: qk-report.with(...)` |
+| Custom `#let infobox(...)` callout factory | `#callout(title:, icon:, fill:, accent:, body)` or specific variants |
+| `#let styled-table(...)` with zebra rows | `#styled-table(header-color:, ..args)` from qk tables module |
+| `#let stat-card(value, label)` inline | `#stat-card(value, label, color:, bg:)` from qk cards module |
+| Custom header/footer with `context` | `qk-doc` / `qk-report` presets handle this automatically |
+| `#set list(marker: ...)` with blue bullets | `qk-doc.with(styled-lists: true)` |
+| Custom figure caption styling | `qk-doc.with(styled-captions: true)` |
+
+**When to keep custom styles:** Essay (unique first-line-indent + author header), CV (specialized layout), Annotated Reference (domain-specific callout factory).
