@@ -10,7 +10,16 @@ Built on the [Agent Skills](https://agentskills.io) open standard.
 git clone https://github.com/clearsmog/claude-skills.git ~/.claude/skills
 ```
 
-That's it. Skills are available immediately — the Typst skill auto-loads when you work with `.typ` files, and slash commands (`/create-document`, `/finish`, `/nano-banana`, etc.) appear in your command menu.
+That's it. Skills are available immediately — slash commands (`/create-document`, `/finish`, `/nano-banana`, etc.) appear in your command menu.
+
+### Companion Rules (recommended)
+
+The repo includes companion [rules](https://docs.anthropic.com/en/docs/claude-code/settings#rules) that enable always-on behaviors like visual auto-detection. Without them, visual tools only fire when you explicitly invoke `/typst` or `/create-document`.
+
+```bash
+# Copy (or symlink) the rules into place
+cp -r ~/.claude/skills/rules/*.md ~/.claude/rules/
+```
 
 > **Already have a `~/.claude/skills` directory?** Clone to a different path and symlink individual skill folders, or use the plugin method: `/plugins add https://github.com/clearsmog/claude-skills`
 
@@ -81,7 +90,7 @@ The skills form an integrated pipeline:
 
 ### Visual Tool Routing
 
-The Typst skill auto-invokes visual tools based on content patterns:
+When the companion rules are installed (`rules/typst.md` → `~/.claude/rules/`), Claude auto-detects visual needs whenever it edits any `.typ` file — no explicit skill invocation required. Without the rules, auto-detection only fires inside `/typst`, `/create-document`, or `/finish`.
 
 ```
 Can Typst draw it natively?      ->  Typst (tables, boxes, fletcher flowcharts)
@@ -92,6 +101,8 @@ Structured diagram?              ->  Native packages (fletcher, chronos, timelin
 Complex chart (4+ series)?      ->  matplotlib
 Conceptual illustration?         ->  /nano-banana
 ```
+
+Auto-detection is suppressed for quick edits (< 15 lines), documents that already have visuals, or when the user requests text-only output.
 
 ## Slash Command Reference
 
@@ -176,6 +187,8 @@ export SERPAPI_KEY="your-key"
 
 ```
 skills/
+├── rules/
+│   └── typst.md                     # Companion rules (visual auto-detection)
 ├── create-document/SKILL.md         # Autonomous document creation pipeline
 ├── compile/SKILL.md                 # Format-detecting compilation
 ├── finish/SKILL.md                  # Master quality pipeline
