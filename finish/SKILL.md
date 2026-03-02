@@ -107,7 +107,7 @@ If the visual spot-check caught simple issues, fix them now so review agents sta
 **For `.typ` files:**
 - Apply fixes directly via Edit tool
 - If typst-reviewer flags "content would benefit from visuals":
-  - Invoke `/nano-banana` for conceptual illustrations
+  - Call `gemini-generate-image` MCP for conceptual illustrations
   - Invoke `/image-search` for real photos/logos
 
 **For `.py` files:**
@@ -156,6 +156,6 @@ See `typst/references/quality-gates.md` for authoritative limits.
 
 ## Important
 
-- For `.typ` files, visual tool invocation (nano-banana, image-search) only happens when the reviewer explicitly flags missing visuals
+- For `.typ` files, visual tool invocation (`gemini-generate-image` MCP, `/image-search`) only happens when the reviewer explicitly flags missing visuals
 - Always re-compile after fixes to verify they don't break anything
 - Always re-render affected pages to PNG after fixes to confirm visual correctness

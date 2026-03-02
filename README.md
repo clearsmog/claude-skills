@@ -1,6 +1,6 @@
 # Claude Code Skills
 
-A collection of 22 custom skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — document authoring, quality pipelines, AI image generation, web image search, mind mapping, and more.
+A collection of 21 custom skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — document authoring, quality pipelines, web image search, mind mapping, and more. AI image generation uses the Gemini MCP server directly.
 
 Built on the [Agent Skills](https://agentskills.io) open standard.
 
@@ -10,7 +10,7 @@ Built on the [Agent Skills](https://agentskills.io) open standard.
 git clone https://github.com/clearsmog/claude-skills.git ~/.claude/skills
 ```
 
-That's it. Skills are available immediately — slash commands (`/create-document`, `/finish`, `/nano-banana`, etc.) appear in your command menu.
+That's it. Skills are available immediately — slash commands (`/create-document`, `/finish`, `/image-search`, etc.) appear in your command menu.
 
 ### Companion Rules (recommended)
 
@@ -51,7 +51,6 @@ cp -r ~/.claude/skills/rules/*.md ~/.claude/rules/
 
 | Skill | Command | What it does |
 |-------|---------|-------------|
-| **nano-banana** | `/nano-banana [prompt]` | Generate images via Google Gemini with Typst embedding code |
 | **image-search** | `/image-search [query]` | Find and download real-world images, logos, or stock photos |
 | **mindmap** | `/mindmap [topic]` | Generate mind map images from a topic |
 | **extract-diagrams** | `/extract-diagrams [file]` | Extract CeTZ diagrams to SVG from Typst files |
@@ -98,32 +97,17 @@ Simple chart (< 3 series)?      ->  cetz-plot (native, font-matching)
 Real photo or logo?              ->  /image-search
 Mind map or concept tree?        ->  /mindmap
 Structured diagram?              ->  Native packages (fletcher, chronos, timeliney)
-Complex chart (4+ series)?      ->  matplotlib
-Conceptual illustration?         ->  /nano-banana
+Complex chart (4+ series)?      ->  lilaq (or matplotlib as last resort)
+Conceptual illustration?         ->  gemini-generate-image MCP
 ```
 
 Auto-detection is suppressed for quick edits (< 15 lines), documents that already have visuals, or when the user requests text-only output.
 
 ## Slash Command Reference
 
-### `/nano-banana` — AI image generation
+### AI image generation (Gemini MCP)
 
-```bash
-/nano-banana "a conceptual diagram of risk parity"
-/nano-banana "portfolio allocation banner" --aspect-ratio 21:9
-/nano-banana "make the background lighter" --edit images/diagram.png
-```
-
-| Flag | Default | What it does |
-|------|---------|-------------|
-| `--dir` | `images` | Where to save |
-| `--width` | `80%` | Typst image width |
-| `--edit` | — | Edit an existing image instead of creating one |
-| `--resolution` | `1K` | `1K` / `2K` / `4K` |
-| `--num` | `1` | Generate multiple variants |
-| `--aspect-ratio` | auto | `1:1`, `16:9`, `9:16`, `3:4`, `4:3`, `21:9` |
-
-**Models:** `gemini-3-pro` (default, best quality, ~$0.13/image) or `gemini-2.5-flash-image` (fast, ~$0.04/image).
+AI image generation uses the `gemini-generate-image` MCP tool directly — no slash command needed. Claude auto-invokes it for conceptual illustrations when writing Typst documents. For multi-turn editing, use `gemini-start-image-edit`.
 
 ### `/mindmap` — Mind map generation
 
@@ -166,7 +150,6 @@ All skills need [uv](https://docs.astral.sh/uv/) (`brew install uv`).
 | Skill | Additional requirements |
 |-------|----------------------|
 | **typst** | [Typst CLI](https://github.com/typst/typst) (`brew install typst`) |
-| **nano-banana** | `GEMINI_API_KEY` ([get one](https://ai.google.dev/), paid tier required) |
 | **image-search** | `SERPAPI_KEY` optional ([get one](https://serpapi.com/)); DuckDuckGo fallback is free |
 | **mindmap** | Node.js (`brew install node`) |
 | **google-tasks** | `gtasks` CLI installed separately |
@@ -200,9 +183,6 @@ skills/
 ├── proofread/SKILL.md               # Grammar and consistency
 ├── devils-advocate/SKILL.md         # Adversarial content challenge
 ├── validate-bib/SKILL.md            # Bibliography validation
-├── nano-banana/
-│   ├── SKILL.md                     # AI image generation
-│   └── scripts/gemini_imagen.py
 ├── image-search/
 │   ├── SKILL.md                     # Web image search & download
 │   └── scripts/image_search.py

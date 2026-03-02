@@ -156,9 +156,9 @@ Replace an image with a Typst table/block when:
 
 Keep as PNG when:
 - The image has **arrows, flow paths, or spatial layout** (flowcharts, causal diagrams)
-- The chart needs **grouped bars, complex annotations, or precise axis formatting** that cetz-plot can't handle
+- The chart needs **grouped bars, complex annotations, or precise axis formatting** — lilaq can handle grouped bars natively
 
-Use **cetz-plot** (not matplotlib) when:
+Use **cetz-plot or lilaq** (not external tools) when:
 - The chart is a **filled-area distribution plot** — `cplot.add(fill: true, ...)` handles shaded regions cleanly
 - The chart is a **simple line/scatter/area plot** with < 3 series
 - You want the chart to match document fonts and be resolution-independent

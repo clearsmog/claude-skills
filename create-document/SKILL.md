@@ -3,7 +3,7 @@ name: create-document
 description: Create new documents in any format — Beamer slides, Typst documents, or Quarto slides. Autonomous pipeline from prompt to publication-quality output.
 disable-model-invocation: true
 argument-hint: "[Topic name]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
+allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task", "mcp__gemini__gemini-generate-image", "mcp__gemini__gemini-start-image-edit", "mcp__gemini__gemini-continue-image-edit", "mcp__gemini__gemini-end-image-edit"]
 context: fork
 ---
 
@@ -86,7 +86,7 @@ Run all of these silently before drafting:
   - Actionable advice → `#tip[...]`
   - Common mistake → `#trap[...]`
   - Memory aid → `#memorize[...]`
-- **Visual auto-detection** (proactive): as content is drafted, match patterns to the best tool. Follow priority: Typst native → cetz-plot → `/image-search` → `/mindmap` → native packages → matplotlib → `/nano-banana`.
+- **Visual auto-detection** (proactive): as content is drafted, match patterns to the best tool. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); charts → cetz-plot (simple) → lilaq (complex) → matplotlib (last resort); images → `/image-search` / `/mindmap` / `gemini-generate-image` MCP.
 
   | Content pattern | Visual | Tool |
   |-----------------|--------|------|
@@ -100,10 +100,10 @@ Run all of these silently before drafting:
   | Project schedule, phases | Gantt chart | `timeliney` |
   | Historical events, evolution | Timeline | `herodot` |
   | Data trend, distribution (< 3 series) | Line/area/scatter chart | `cetz-plot` |
-  | Complex chart (4+ series, annotations) | Publication chart | matplotlib/Python |
+  | Complex chart (4+ series, annotations) | Publication chart | `lilaq` |
   | Company logo, brand mark | Logo | `/image-search --logo` |
   | Real-world photo | Photo | `/image-search` |
-  | Conceptual illustration, metaphor | AI-generated image | `/nano-banana` |
+  | Conceptual illustration, metaphor | AI-generated image | `gemini-generate-image` MCP |
 
   See `typst/references/tool-routing.md` for full details, examples, and fallback chains.
 - Always add `alt:` text on all images
@@ -168,8 +168,8 @@ Deliver a summary:
 
 ## Figures & Code
 
-- Python scripts for data-driven content (matplotlib/seaborn/plotly)
-- Diagrams: TikZ in Beamer source, CeTZ/fletcher in Typst, SVG for Quarto
+- Python scripts for data-driven content (plotly for Quarto only; matplotlib as last resort for Typst)
+- Diagrams: TikZ in Beamer source, fletcher/chronos/timeliney/lilaq in Typst (NEVER Python), SVG for Quarto
 - Save outputs as `.png`/`.svg` for Typst embedding, `.parquet` for data persistence
 
 ---

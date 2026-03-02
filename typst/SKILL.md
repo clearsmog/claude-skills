@@ -12,7 +12,7 @@ license: MIT
 
 If you know nothing else, follow these rules:
 
-1. **Always** import `@local/qk:1.0.0` — `#import "@local/qk:1.0.0": *`
+1. **Always** import `@local/qk:2.0.0` — `#import "@local/qk:2.0.0": *`
 2. **Always** use `qk-doc` or `qk-report` preset (unless user specifies custom)
 3. **Always** use touying for presentations (not raw page dimensions) — see `references/touying-guide.md`
 4. **Always** `#set figure(placement: auto)` — prevents blank half-pages
@@ -21,7 +21,7 @@ If you know nothing else, follow these rules:
 7. **Default fonts**: Libertinus Serif (body), Inter (headings), New Computer Modern Math (math), Fira Code (code)
 8. **Default compile**: `typst compile --root .. Source/<file>.typ`
 9. **When in doubt** about template: Study Guide
-10. **When in doubt** about visual tool: Typst native first → cetz-plot → matplotlib
+10. **When in doubt** about visual tool: Typst native first → cetz-plot → lilaq
 11. **Always** scan project for existing `.typ` files and match their style (fonts, colors, qk preset) unless user specifies otherwise
 
 ## New Document Decision Tree
@@ -44,7 +44,7 @@ User request → scan for keywords:
 
 **Steps:**
 1. Auto-detect template from keywords above
-2. Import `@local/qk:1.0.0` at top
+2. Import `@local/qk:2.0.0` at top
 3. Use `qk-doc` or `qk-report` preset when applicable
 4. Auto-select template. State choice in Phase 3 summary. User can re-invoke with explicit type override if wrong.
 5. Build from `references/templates.md`
@@ -52,16 +52,30 @@ User request → scan for keywords:
 
 ## Visual Tool Routing (compact)
 
+**Diagrams** (always native Typst — NEVER Python):
+
 | Need | Tool |
 |------|------|
-| Tables, boxes, grids | Typst native |
 | Flowcharts, trees, ER, state diagrams | `fletcher` |
 | Sequence diagrams | `chronos` |
 | Gantt charts | `timeliney` |
+| Linear timelines | `herodot` |
+
+**Charts:**
+
+| Need | Tool |
+|------|------|
 | Simple charts (< 3 series) | cetz-plot |
-| Complex charts (4+ series) | matplotlib |
+| Complex charts (4+ series, grouped bars) | `lilaq` |
+| Extreme charts (3D, 10+ series) | matplotlib (last resort) |
+
+**Images & layout:**
+
+| Need | Tool |
+|------|------|
+| Tables, boxes, grids | Typst native |
 | Mind maps | `/mindmap` (auto-invoke) |
-| Conceptual illustrations | `/nano-banana` (auto-invoke) |
+| Conceptual illustrations | `gemini-generate-image` MCP (auto-invoke) |
 | Real photos, logos | `/image-search` (auto-invoke) |
 
 Detail and examples in `references/tool-routing.md`.
@@ -70,7 +84,7 @@ Detail and examples in `references/tool-routing.md`.
 
 ### Visual Auto-detection
 
-When writing Typst documents, automatically identify content that benefits from visuals. Do NOT wait for the user to request them. Follow priority: Typst native → cetz-plot → `/image-search` → `/mindmap` → native packages → matplotlib → `/nano-banana`.
+When writing Typst documents, automatically identify content that benefits from visuals. Do NOT wait for the user to request them. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot); charts → cetz-plot (simple) → lilaq (complex) → matplotlib (last resort); images → `/image-search` / `/mindmap` / `gemini-generate-image` MCP.
 
 | Content pattern | Visual to add | Tool |
 |-----------------|---------------|------|
@@ -85,10 +99,10 @@ When writing Typst documents, automatically identify content that benefits from 
 | Project schedule, phases | Gantt chart | `timeliney` |
 | Historical events, evolution | Timeline | `herodot` or `timeliney` |
 | Data trends, distributions (< 3 series) | Line/area/scatter chart | cetz-plot |
-| Complex charts (4+ series, annotations) | Publication chart | matplotlib/Python |
+| Complex charts (4+ series, annotations) | Publication chart | `lilaq` |
 | Company logo, brand mark | Logo image | `/image-search --logo` |
 | Real-world photograph | Photo | `/image-search` |
-| Concept with analogy, metaphor | AI illustration | `/nano-banana` |
+| Concept with analogy, metaphor | AI illustration | `gemini-generate-image` MCP |
 
 See `references/tool-routing.md` for full examples, fallback chains, and auto-invoke rules.
 
@@ -100,7 +114,7 @@ See `references/tool-routing.md` for full examples, fallback chains, and auto-in
 
 ### Component Library Auto-use
 
-When writing content, automatically convert matching patterns to `@local/qk:1.0.0` components:
+When writing content, automatically convert matching patterns to `@local/qk:2.0.0` components:
 
 | Content pattern | Use instead |
 |-----------------|-------------|
@@ -109,7 +123,12 @@ When writing content, automatically convert matching patterns to `@local/qk:1.0.
 | Tip or best practice | `tip[...]` |
 | Common mistake / trap | `trap[...]` |
 | Step-by-step procedure | `step-box("Title", [...])` |
+| Key equation / formula | `formula-box("Title", [...])` |
 | KPI or metric highlight | `stat-card("value", "label")` |
+| Frequency indicator | `freq-badge("HIGH")` / `freq-badge("MEDIUM")` / `freq-badge("LOW")` |
+| MCQ answer explanation | `answerbox("A", "why", "trap", "concept")` |
+| Analogy / intuition | `analogy[...]` |
+| "Why this matters" | `whycare[...]` |
 
 ### Cross-referencing
 
@@ -125,10 +144,11 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 
 | If this fails... | Try... |
 |------------------|--------|
-| `/nano-banana` | Placeholder rect with description text |
-| `/image-search` | `/nano-banana` with descriptive prompt |
+| `gemini-generate-image` MCP | Placeholder `#rect(width: 100%, height: 4cm, fill: luma(240))[Image placeholder]` |
+| `/image-search` | `gemini-generate-image` MCP with descriptive prompt |
 | `/mindmap` | `fletcher` tree diagram |
-| matplotlib | Check `.venv` → `uv venv .venv.nosync && ln -s .venv.nosync .venv` |
+| lilaq | cetz canvas draw primitives |
+| matplotlib | Last resort. Check `.venv` → `uv venv .venv.nosync && ln -s .venv.nosync .venv` |
 | `typst compile` | Isolate with `/* ... */`, compile incrementally |
 
 ## Reference File Index
@@ -136,7 +156,7 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 | When you need... | Read... |
 |------------------|---------|
 | Syntax, errors, special chars | `references/quick-ref.md` |
-| `@local/qk:1.0.0` API | `references/component-library.md` |
+| `@local/qk:2.0.0` API | `references/component-library.md` |
 | Visual tool details, examples, fallbacks | `references/tool-routing.md` |
 | Document preambles | `references/templates.md` |
 | Table patterns, show rules, large docs | `references/common-patterns.md` |

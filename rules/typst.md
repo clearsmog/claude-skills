@@ -6,6 +6,7 @@ paths:
 
 ## Diagrams
 - Use native Typst packages (fletcher, chronos, timeliney) instead of Mermaid.
+- NEVER use Python (graphviz, mermaid, matplotlib) for flowcharts — always fletcher.
 
 ## Compile After Editing
 - After any `.typ` edit, run `typst compile <file>` to catch errors early.
@@ -24,12 +25,12 @@ paths:
 
 When creating or substantially editing `.typ` documents, auto-detect content that benefits from visuals. Do NOT wait for the user to request images — invoke tools directly.
 
-**Priority:** Typst native → cetz-plot → /image-search → /mindmap → native packages → matplotlib → /nano-banana
+**Priority:** Diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); Charts → cetz-plot (simple) → lilaq (complex) → matplotlib (last resort); Images → /image-search / /mindmap / `gemini-generate-image` MCP
 
 **Auto-invoke triggers (no user prompt needed):**
 - Company/brand logos → invoke `/image-search --logo "Name" --typst`
 - Real photographs → invoke `/image-search "query" --typst`
-- Conceptual illustrations, metaphors → invoke `/nano-banana "prompt" --typst`
+- Conceptual illustrations, metaphors → call `gemini-generate-image` MCP, then copy to `images/` and write Typst `#figure(...)`
 - Mind maps, concept maps → invoke `/mindmap "topic" --typst`
 
 **When NOT to auto-invoke:**
