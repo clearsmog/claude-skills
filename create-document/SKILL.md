@@ -79,14 +79,14 @@ Run all of these silently before drafting:
 ### Phase 1: Draft (autonomous — full document at once)
 
 #### For Typst Documents (.typ):
-- Always import `@local/qk:1.0.0` and set smart defaults
+- Always import `@local/qk:2.0.0` and set smart defaults
 - Apply qk components per the typst skill's component auto-use table:
   - Warning paragraph → `#warning[...]`
   - Key takeaway → `#keypoint[...]`
   - Actionable advice → `#tip[...]`
   - Common mistake → `#trap[...]`
   - Memory aid → `#memorize[...]`
-- **Visual auto-detection** (proactive): as content is drafted, match patterns to the best tool. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); charts → cetz-plot (simple) → lilaq (complex) → matplotlib (last resort); images → `/image-search` / `/mindmap` / `gemini-generate-image` MCP.
+- **Visual auto-detection** (proactive): as content is drafted, match patterns to the best tool. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); charts → cetz-plot (simple, < 3 series) / plotnine (faceted/grammar) / matplotlib+seaborn (statistical/complex) — generate SVG, embed; images → `/image-search` / `/mindmap` / `gemini-generate-image` MCP.
 
   | Content pattern | Visual | Tool |
   |-----------------|--------|------|
@@ -99,8 +99,10 @@ Run all of these silently before drafting:
   | Request-response, API flows | Sequence diagram | `chronos` |
   | Project schedule, phases | Gantt chart | `timeliney` |
   | Historical events, evolution | Timeline | `herodot` |
-  | Data trend, distribution (< 3 series) | Line/area/scatter chart | `cetz-plot` |
-  | Complex chart (4+ series, annotations) | Publication chart | `lilaq` |
+  | Simple data chart (< 3 series, < 20 pts) | Line/bar/scatter chart | `cetz-plot` (Typst native, `qk-cycle`) |
+  | Statistical chart (violin, kde, heatmap) | Statistical plot | matplotlib+seaborn (`use()`, SVG) |
+  | Faceted / grammar-of-graphics chart | Layered plot | plotnine (`theme_qk()`, SVG) |
+  | Complex chart (4+ series, annotations) | Publication chart | matplotlib (full API, SVG) |
   | Company logo, brand mark | Logo | `/image-search --logo` |
   | Real-world photo | Photo | `/image-search` |
   | Conceptual illustration, metaphor | AI-generated image | `gemini-generate-image` MCP |
@@ -168,9 +170,9 @@ Deliver a summary:
 
 ## Figures & Code
 
-- Python scripts for data-driven content (plotly for Quarto only; matplotlib as last resort for Typst)
-- Diagrams: TikZ in Beamer source, fletcher/chronos/timeliney/lilaq in Typst (NEVER Python), SVG for Quarto
-- Save outputs as `.png`/`.svg` for Typst embedding, `.parquet` for data persistence
+- Python scripts for data-driven content (plotly for Quarto only; matplotlib/plotnine for Typst charts)
+- Diagrams: TikZ in Beamer source, fletcher/chronos/timeliney in Typst (NEVER Python), SVG for Quarto
+- Save outputs as `.svg` for Typst embedding (preferred), `.png` for raster, `.parquet` for data persistence
 
 ---
 

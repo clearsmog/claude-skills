@@ -6,9 +6,9 @@ Install from https://typst.app/universe/ — check for latest versions.
 
 | Package | Purpose | Import |
 |---------|---------|--------|
-| **cetz** | Core drawing (TikZ-inspired) + cetz-plot for charts | `#import "@preview/cetz:0.4.2"` |
+| **cetz** | Core drawing (TikZ-inspired) + cetz-plot for charts. Use `qk-plot.typ` for consistent qk palette colors. | `#import "@preview/cetz:0.4.2"` |
 | **fletcher** | Flowcharts, automata, arrows | `#import "@preview/fletcher:0.5.8"` |
-| **lilaq** | Data visualization (multi-series, bars, annotations). Import `as lq`. | `#import "@preview/lilaq:0.5.0" as lq` |
+| **lilaq** | Data visualization (emerging alternative — usable for basic charts, less mature). Import `as lq`. | `#import "@preview/lilaq:0.5.0" as lq` |
 | **chronos** | Sequence diagrams (Feb 2026, requires Typst 0.14.2) | `#import "@preview/chronos:0.3.0"` |
 
 ## Scientific & Units
@@ -92,11 +92,11 @@ After setup, fenced code blocks automatically get zebra striping and support lin
 
 ### cetz-plot (charts)
 
-cetz-plot is bundled with cetz. Use for distribution plots, simple line/area charts, and font-matching resolution-independent output. See `references/tool-routing.md` for detailed examples.
+cetz-plot is bundled with cetz. Use for simple charts (< 3 series, < 20 data points). Use `qk-plot.typ` from `~/Developer/Typst/MatplotlibStyle/` for consistent qk palette colors. See `references/tool-routing.md` for the chart decision tree.
 
 ### lilaq (complex charts)
 
-lilaq is a native Typst data visualization package. Use for 4+ series, grouped bars, annotations, and publication-quality charts that exceed cetz-plot's capabilities.
+lilaq is an emerging native Typst data visualization package. For complex charts, prefer matplotlib or plotnine (more mature). See tool-routing.md for the chart decision tree.
 
 ```typst
 #import "@preview/lilaq:0.5.0" as lq

@@ -19,9 +19,10 @@ When a Typst document needs a visual, identify what you're visualizing, then pic
 
 | Content | Tool | Notes |
 |---------|------|-------|
-| Simple charts (line, area, scatter, < 3 series) | **cetz-plot** | Native, font-matching, resolution-independent |
-| Complex charts (4+ series, grouped bars, annotations) | **lilaq** | Native Typst data visualization package |
-| Extreme charts (3D, 10+ series, exotic plot types) | **matplotlib** | Last resort — only when native tools genuinely can't handle it |
+| Simple chart (< 3 series, < 20 pts) | **cetz-plot** | Typst-native, font-matched, use `qk-cycle` colors from `qk-plot.typ` |
+| Statistical plots (violin, kde, pair, heatmap) | **matplotlib + seaborn** | `use()` from qk_style, SVG output |
+| Grammar-of-graphics / faceted plots | **plotnine** | `theme_qk() + scale_color_qk()`, SVG output |
+| Complex charts (4+ series, annotations) | **matplotlib** | Full API control, SVG output |
 
 ### Layout
 
@@ -49,9 +50,20 @@ What are you visualizing?
 LAYOUT       →  Typst native (tables, grids, boxes)
 DIAGRAMS     →  fletcher | chronos | timeliney | herodot
                NEVER Python — always native Typst
-CHARTS       →  cetz-plot (simple) → lilaq (complex) → matplotlib (extreme, last resort)
+CHARTS       →  See decision tree below
 MIND MAPS    →  /mindmap
 IMAGES       →  /image-search (photos/logos) | gemini-generate-image (illustrations)
+
+Chart decision tree:
+  < 3 series, < 20 data points, no computation?
+    YES → cetz-plot (Typst native, font-matched, qk-cycle colors)
+    NO  →
+      Statistical plot (violin, kde, pair, heatmap)?
+        YES → matplotlib + seaborn (use(), SVG)
+      Faceted / layered grammar?
+        YES → plotnine (theme_qk(), SVG)
+      Complex / custom?
+        YES → matplotlib (plt.style.use('qk'), SVG)
 ```
 
 ## Native Typst Diagram Packages
@@ -183,94 +195,48 @@ IMAGES       →  /image-search (photos/logos) | gemini-generate-image (illustra
 )
 ```
 
-### cetz-plot (charts)
+### matplotlib / plotnine (complex charts)
 
-cetz-plot is bundled with cetz. Use for distribution plots, simple line/area charts, and anywhere you want resolution-independent, font-matching output.
+Use matplotlib or plotnine for complex/statistical charts. Generate SVG, then embed.
 
-```typst
-#import "@preview/cetz:0.4.2": canvas
-#import "@preview/cetz:0.4.2": plot as cplot
+```python
+# matplotlib
+from qk_style import use
+use()  # or use("talk") for slides
+import matplotlib.pyplot as plt
 
-#figure(
-  canvas(length: 1cm, {
-    import draw: *
-    cplot.plot(size: (7, 4), xlabel: [Return], ylabel: [Density], {
-      cplot.add(domain: (-4, 4), samples: 80, fill: true,
-        style: (stroke: rgb("#1565c0") + 1.5pt, fill: rgb("#1565c0").lighten(80%)),
-        x => 0.399 * calc.exp(-0.5 * x * x))
-    })
-  }),
-  caption: [Normal distribution with filled area],
-)
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.plot([2020, 2021, 2022, 2023, 2024], [8.2, 12.1, -5.3, 15.7, 9.4], label="Fund A")
+ax.plot([2020, 2021, 2022, 2023, 2024], [6.1, 9.8, -2.1, 11.3, 7.6], label="Fund B")
+ax.set_xlabel("Year")
+ax.set_ylabel("Return (%)")
+ax.legend()
+fig.savefig("charts/performance.svg")
 ```
 
-**Key patterns:**
-- `fill: true` on `cplot.add` fills from curve to x-axis
-- Split domains to color regions differently
-- `cplot.add-vline` / `cplot.add-hline` for reference lines
-- For custom bar/waterfall charts, use `draw.rect` + `draw.content` in plain `canvas`
+```python
+# plotnine (grammar of graphics)
+from qk_plotnine import theme_qk, scale_color_qk
+from plotnine import ggplot, aes, geom_line, labs
 
-### lilaq (complex charts)
-
-lilaq is a native Typst data visualization package for charts that exceed cetz-plot's capabilities — multi-series, grouped bars, annotations, and publication-quality formatting.
-
-```typst
-#import "@preview/lilaq:0.5.0" as lq
-
-// Multi-series line chart
-#figure(
-  lq.diagram(
-    width: 10cm, height: 6cm,
-    xlabel: [Year], ylabel: [Return (%)],
-    lq.plot(
-      (2020, 2021, 2022, 2023, 2024),
-      (8.2, 12.1, -5.3, 15.7, 9.4),
-      label: [Fund A],
-    ),
-    lq.plot(
-      (2020, 2021, 2022, 2023, 2024),
-      (6.1, 9.8, -2.1, 11.3, 7.6),
-      label: [Fund B],
-    ),
-    lq.plot(
-      (2020, 2021, 2022, 2023, 2024),
-      (4.5, 7.2, -8.9, 18.2, 5.1),
-      label: [Fund C],
-    ),
-    lq.plot(
-      (2020, 2021, 2022, 2023, 2024),
-      (5.0, 8.0, -3.5, 12.0, 8.0),
-      label: [Benchmark],
-      stroke: (dash: "dashed"),
-    ),
-  ),
-  caption: [Four-series fund performance comparison],
-)
+p = (ggplot(df, aes("year", "return_pct", color="fund"))
+     + geom_line() + theme_qk() + scale_color_qk()
+     + labs(title="Fund Performance"))
+p.save("charts/performance.svg", width=8, height=5)
 ```
 
 ```typst
-// Bar chart
-#import "@preview/lilaq:0.5.0" as lq
-
 #figure(
-  lq.diagram(
-    width: 10cm, height: 5cm,
-    xlabel: [Asset Class], ylabel: [Allocation (%)],
-    lq.bar(
-      (0, 1, 2, 3),
-      (40, 25, 20, 15),
-      width: 0.6,
-    ),
-    xaxis: (subticks: none),  // custom tick labels via lq.tick-label ([Equities], [Bonds], [Real Estate], [Alternatives]),
-  ),
-  caption: [Portfolio allocation by asset class],
+  image("charts/performance.svg", width: 90%),
+  caption: [Fund performance comparison],
 )
 ```
 
-**When to use lilaq vs cetz-plot:**
-- cetz-plot: < 3 series, simple line/area/scatter, distribution curves
-- lilaq: 4+ series, grouped bars, bar charts with labels, publication-quality multi-panel
-- matplotlib: only as last resort for 3D plots, 10+ series, or exotic types lilaq can't handle
+**Three-tier chart system:**
+- **cetz-plot** (Typst native): Simple charts, font-matched, no external dependencies. Use `qk-cycle` colors.
+- **plotnine**: Grammar-of-graphics style, faceted layouts, ggplot2 composition. `theme_qk() + scale_color_qk()`.
+- **matplotlib**: Full API control, statistical plots via seaborn, complex annotations. `use()` from qk_style.
+- All Python tools output SVG with `svg.fonttype: path` for clean Typst embedding.
 
 ## Auto-invoke Rules
 
@@ -328,6 +294,6 @@ If the user explicitly requests a specific tool, use it even if the routing tabl
 | `gemini-generate-image` MCP | Placeholder `#rect(width: 100%, height: 4cm, fill: luma(240))[Image placeholder]` |
 | `/image-search` | `gemini-generate-image` MCP with descriptive prompt |
 | `/mindmap` | `fletcher` tree diagram |
-| lilaq | cetz canvas primitives (`draw.rect`, `draw.content`) for manual chart building |
-| matplotlib | Last resort for extreme chart complexity only. Check `.venv` exists → `uv venv .venv.nosync && ln -s .venv.nosync .venv` |
+| plotnine | matplotlib (same chart, different API) |
+| matplotlib | Check `.venv` exists → `uv venv .venv.nosync && ln -s .venv.nosync .venv` |
 | `typst compile` error | Isolate with `/* ... */`, compile incrementally |
