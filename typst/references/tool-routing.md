@@ -19,10 +19,11 @@ When a Typst document needs a visual, identify what you're visualizing, then pic
 
 | Content | Tool | Notes |
 |---------|------|-------|
-| Simple chart (< 3 series, < 20 pts) | **cetz-plot** | Typst-native, font-matched, use `qk-cycle` colors from `qk-plot.typ` |
-| Statistical plots (violin, kde, pair, heatmap) | **matplotlib + seaborn** | `use()` from qk_style, SVG output |
+| Very simple chart (1-2 series, no subplots) | **cetz-plot** | Typst-native, font-matched, use `qk-cycle` colors from `qk-plot.typ` |
+| Most charts (line, bar, scatter, box, violin, heatmap, contour, subplots) | **lilaq** | Typst native, font-matched, `as lq` |
+| Statistical plots (kde, pair plots) | **matplotlib + seaborn** | `use()` from qk_style, SVG output |
 | Grammar-of-graphics / faceted plots | **plotnine** | `theme_qk() + scale_color_qk()`, SVG output |
-| Complex charts (4+ series, annotations) | **matplotlib** | Full API control, SVG output |
+| Complex charts with Python data pipeline | **matplotlib** | Full API control, SVG output |
 
 ### Layout
 
@@ -39,6 +40,9 @@ When a Typst document needs a visual, identify what you're visualizing, then pic
 | Company/brand logos | **`/image-search --logo`** |
 | Real-world photos | **`/image-search`** |
 | Conceptual illustrations, metaphors, cover art | **`gemini-generate-image` MCP** |
+| Craft effective prompts for image generation | **`gemini-image-prompt` MCP** |
+| Video generation from text/image prompts | **`gemini-generate-video` MCP** |
+| Agentic deep research with citations | **`gemini-deep-research` MCP** |
 | Refine/iterate on generated image | **`gemini-start-image-edit` MCP** |
 | Verify image content | **`gemini-analyze-image` MCP** |
 
@@ -55,12 +59,14 @@ MIND MAPS    →  /mindmap
 IMAGES       →  /image-search (photos/logos) | gemini-generate-image (illustrations)
 
 Chart decision tree:
-  < 3 series, < 20 data points, no computation?
-    YES → cetz-plot (Typst native, font-matched, qk-cycle colors)
+  < 2 series, no subplots, no computation?
+    YES → cetz-plot (or lilaq)
     NO  →
-      Statistical plot (violin, kde, pair, heatmap)?
+      Native Typst chart needed (violin, heatmap, contour, subplots, bars)?
+        YES → lilaq (font-matched, no Python dependency)
+      Statistical (kde, pair plots)?
         YES → matplotlib + seaborn (use(), SVG)
-      Faceted / layered grammar?
+      Faceted / grammar?
         YES → plotnine (theme_qk(), SVG)
       Complex / custom?
         YES → matplotlib (plt.style.use('qk'), SVG)
@@ -232,10 +238,11 @@ p.save("charts/performance.svg", width=8, height=5)
 )
 ```
 
-**Three-tier chart system:**
-- **cetz-plot** (Typst native): Simple charts, font-matched, no external dependencies. Use `qk-cycle` colors.
+**Four-tier chart system:**
+- **cetz-plot** (Typst native): Very simple charts (1-2 series, basic axes), font-matched, no external dependencies. Use `qk-cycle` colors.
+- **lilaq** (Typst native): Most charts — line, bar, scatter, box, violin, heatmap, contour, subplots, dual axes, color bars. Font-matched, no Python dependency.
 - **plotnine**: Grammar-of-graphics style, faceted layouts, ggplot2 composition. `theme_qk() + scale_color_qk()`.
-- **matplotlib**: Full API control, statistical plots via seaborn, complex annotations. `use()` from qk_style.
+- **matplotlib**: Full API control, statistical plots (kde, pair) via seaborn, complex annotations. `use()` from qk_style.
 - All Python tools output SVG with `svg.fonttype: path` for clean Typst embedding.
 
 ## Auto-invoke Rules
@@ -272,6 +279,7 @@ When building prompts for `gemini-generate-image`, follow these rules:
 3. **Use white backgrounds for documents** — Add "on a clean white background" for images that will be embedded in Typst documents
 4. **Describe spatial layout** — "On the left... on the right..." helps Gemini compose multi-element scenes
 5. **Don't rely on text labels** — Gemini often misspells text in images; describe the concept visually instead of asking for labeled diagrams
+6. **Use `gemini-image-prompt` for complex scenes** — When unsure how to describe a visual, call `gemini-image-prompt` first to craft an effective prompt before calling `gemini-generate-image`
 
 Examples:
 ```

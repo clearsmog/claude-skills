@@ -1,17 +1,17 @@
 # Touying Presentation Guide
 
-> **Version:** touying 0.6.1 (requires Typst 0.14+)
-> **Import:** `#import "@preview/touying:0.6.1": *`
-> **CRITICAL:** The 0.6.x API differs completely from 0.3.x/0.4.x. Do NOT use `register()`, `utils.methods()`, or `utils.slides()` — those are the old API.
+> **Version:** touying 0.7.4 (compiler ≥0.12; verified on Typst 0.15.0)
+> **Import:** `#import "@preview/touying:0.7.4": *`
+> **CRITICAL:** The 0.6.x/0.7.x API differs completely from 0.3.x/0.4.x. Do NOT use `register()`, `utils.methods()`, or `utils.slides()` — those are the old API. The 0.6→0.7 change is incremental (same `theme.with(...)` system); see Version History for the two minor behavior changes.
 
 ---
 
 ## Quick Start (Metropolis)
 
 ```typst
-#import "@preview/touying:0.6.1": *
+#import "@preview/touying:0.7.4": *
 #import themes.metropolis: *
-#import "@local/qk:1.0.0": qk-slides, slide-callout, keypoint, tip
+#import "@local/qk:2.2.0": qk-slides, slide-callout, keypoint, tip
 
 #show: metropolis-theme.with(
   aspect-ratio: "16-9",
@@ -178,17 +178,19 @@ More left content.
 Right column content (appears with "Left column content").
 ```
 
-### Progressive show
+### Progressive list reveal
 
-For lists that reveal item by item:
+For lists that reveal item by item, put `#pause` between items (robust across themes):
 
 ```typst
-#components.progressive-show(
-  [- First item],
-  [- Second item],
-  [- Third item],
-)
+- First item
+#pause
+- Second item
+#pause
+- Third item
 ```
+
+> **0.7.x note:** `components.progressive-show` (the old 0.6.x helper) was removed. The compact equivalent is now `utils.item-by-item`, but it needs the slide's `self` and must be wrapped (`touying-fn-wrapper(self => utils.item-by-item(self: self)[...])`). For everyday decks the `#pause`-between-items form above is simpler and always works.
 
 **Usage guideline:** Use `#pause` sparingly — 2-3 per slide maximum. Overuse makes presentations feel sluggish.
 
@@ -217,6 +219,8 @@ To enable speaker notes display:
 )
 ```
 
+**0.7.3 change:** `#speaker-note[]` now always attaches to the slide *above* it, and `receive-body-for-new-*-slide-fn` defaults to `false`. If you relied on prose written directly under a `= Section` heading being absorbed into the section slide, set `receive-body-for-new-section-slide-fn: true` in `config-common(...)`.
+
 ---
 
 ## Appendix
@@ -240,7 +244,7 @@ This slide has a separate numbering.
 Use `slide-callout` to render qk callout boxes at slide-appropriate sizing:
 
 ```typst
-#import "@local/qk:1.0.0": slide-callout, keypoint, tip, trap
+#import "@local/qk:2.2.0": slide-callout, keypoint, tip, trap
 
 == Important Concepts
 
@@ -259,7 +263,7 @@ Use `slide-callout` to render qk callout boxes at slide-appropriate sizing:
 
 | Pitfall | Problem | Fix |
 |---------|---------|-----|
-| Using 0.3.x/0.4.x API | `register()`, `utils.methods()` don't exist in 0.6.x | Use `#show: theme-name.with(...)` |
+| Using 0.3.x/0.4.x API | `register()`, `utils.methods()` don't exist in 0.6.x/0.7.x | Use `#show: theme-name.with(...)` |
 | Missing theme import | `themes.metropolis` not found | Add `#import themes.metropolis: *` after touying import |
 | Empty title slide | No metadata shown | Populate `config-info(...)` |
 | Too many pauses | Presentation feels sluggish | Max 2-3 `#pause` per slide |
@@ -272,9 +276,12 @@ Use `slide-callout` to render qk callout boxes at slide-appropriate sizing:
 
 | Version | Breaking Changes |
 |---------|-----------------|
-| 0.6.x | Current API: `#show: theme.with(...)`, `config-info`, `config-common` |
+| 0.7.4 | `lazy-layout` defaults to `false` for `cols` |
+| 0.7.3 | `#speaker-note[]` always attaches to previous slide; `receive-body-for-new-*-slide-fn` defaults to `false` (see Speaker Notes) |
+| 0.7.x | Same API as 0.6.x (`#show: theme.with(...)`, `config-info`, `config-common`) — incremental, no theme-system rewrite |
+| 0.6.x | Established API: `#show: theme.with(...)`, `config-info`, `config-common` |
 | 0.5.x | Transitional: introduced `theme.with()` pattern |
 | 0.4.x | Old API: `register()` + `utils.methods()` |
 | 0.3.x | Original API: `register()` + `utils.slides()` |
 
-**Always use 0.6.1** — it's the only version compatible with Typst 0.14+.
+**Use 0.7.4** — current release, verified compatible with Typst 0.15.0. The 0.6.x API patterns in this guide all carry over unchanged.

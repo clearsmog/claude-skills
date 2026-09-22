@@ -5,6 +5,7 @@ disable-model-invocation: true
 argument-hint: "[Topic name]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task", "mcp__gemini__gemini-generate-image", "mcp__gemini__gemini-start-image-edit", "mcp__gemini__gemini-continue-image-edit", "mcp__gemini__gemini-end-image-edit"]
 context: fork
+background: false
 ---
 
 # Document Creation Workflow
@@ -79,7 +80,7 @@ Run all of these silently before drafting:
 ### Phase 1: Draft (autonomous — full document at once)
 
 #### For Typst Documents (.typ):
-- Always import `@local/qk:2.0.0` and set smart defaults
+- Always import `@local/qk:2.2.0` and set smart defaults
 - Apply qk components per the typst skill's component auto-use table:
   - Warning paragraph → `#warning[...]`
   - Key takeaway → `#keypoint[...]`

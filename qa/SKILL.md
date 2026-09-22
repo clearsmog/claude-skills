@@ -4,6 +4,7 @@ description: Adversarial quality audit loop. Critic finds issues, fixer applies 
 argument-hint: "[filename]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
 context: fork
+background: false
 ---
 
 # Adversarial Quality Audit Workflow

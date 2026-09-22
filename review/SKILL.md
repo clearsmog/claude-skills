@@ -4,6 +4,7 @@ description: Universal file review — auto-detects format and launches appropri
 argument-hint: "[filename]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 context: fork
+background: false
 ---
 
 # Universal Review
@@ -31,12 +32,12 @@ For `.typ` files, also detect document type from content:
 |-----------|-------------------|-----------|
 | `.tex` | proofreader + document-auditor + pedagogy-reviewer | Always |
 | `.tex` | + diagram-reviewer | If TikZ found (`\begin{tikzpicture}`) |
-| `.qmd` | proofreader + document-auditor | Always |
+| `.qmd` | proofreader + document-auditor + writing-style-critic | Always |
 | `.qmd` | + quality-critic | If `.tex` sibling exists |
-| `.typ` | typst-reviewer + proofreader | Always |
+| `.typ` | typst-reviewer + proofreader + writing-style-critic | Always |
 | `.typ` | + pedagogy-reviewer | If slide format detected |
 | `.py` | python-pro (subagent) | Always |
-| `.md` | proofreader | Always |
+| `.md` | proofreader + writing-style-critic | Always |
 
 ## Steps
 

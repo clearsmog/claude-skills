@@ -68,17 +68,17 @@ When inspecting rendered PNGs, check for:
 
 ## Structural Validation
 
-For deeper structural checks, use `typst query`:
+For deeper structural checks, use `typst eval` (supersedes `typst query` as of 0.15; `query` still works on older binaries):
 
 ```bash
 # Count headings
-typst query doc.typ "heading"
+typst eval doc.typ "heading"
 
 # Count figures
-typst query doc.typ "figure"
+typst eval doc.typ "figure"
 
 # Check page count
-typst query doc.typ "page" --field "body"
+typst eval doc.typ "page" --field "body"
 ```
 
 ---

@@ -10,7 +10,7 @@
 **Use when:** "analysis", "research", "review", "sector", "evaluation" | **Skip when:** <2 pages, slides, CVs
 
 ```typst
-#import "@local/qk:1.0.0": *
+#import "@local/qk:2.2.0": *
 
 #show: qk-report.with(
   title: "Report Title",
@@ -27,12 +27,12 @@
 ## 2. Presentation (touying — Metropolis)
 **Use when:** "slides", "presentation", "deck", "pitch" | **Skip when:** text-heavy docs, reports, essays
 
-> Uses touying 0.6.1 theme system. See `references/touying-guide.md` for full API.
+> Uses touying 0.7.4 theme system. See `references/touying-guide.md` for full API.
 
 ```typst
-#import "@preview/touying:0.6.1": *
+#import "@preview/touying:0.7.4": *
 #import themes.metropolis: *
-#import "@local/qk:1.0.0": qk-slides, slide-callout, keypoint, tip, trap
+#import "@local/qk:2.2.0": qk-slides, slide-callout, keypoint, tip, trap
 
 #show: metropolis-theme.with(
   aspect-ratio: "16-9",
@@ -66,9 +66,9 @@ Revealed on click.
 **Use when:** "lecture", "class", "academic talk" | **Skip when:** corporate/pitch decks, short docs
 
 ```typst
-#import "@preview/touying:0.6.1": *
+#import "@preview/touying:0.7.4": *
 #import themes.university: *
-#import "@local/qk:1.0.0": qk-slides, slide-callout, keypoint, tip, trap
+#import "@local/qk:2.2.0": qk-slides, slide-callout, keypoint, tip, trap
 
 #show: university-theme.with(
   aspect-ratio: "16-9",
@@ -218,7 +218,7 @@ $ E[R_p] = sum_(i=1)^n w_i E[R_i] $
 **Use when:** "report", "brief", "visit prep", "client", "branded" | **Skip when:** academic papers, slides, CVs
 
 ```typst
-#import "@local/qk:1.0.0": *
+#import "@local/qk:2.2.0": *
 
 // Brand overrides on top of qk-report
 #let brand-primary = rgb("#0033a0")
@@ -258,7 +258,7 @@ $ E[R_p] = sum_(i=1)^n w_i E[R_i] $
 **Use when:** "study guide", "revision", "cheatsheet", "exam", "formula sheet" | **Skip when:** formal papers, client docs, slides
 
 ```typst
-#import "@local/qk:1.0.0": *
+#import "@local/qk:2.2.0": *
 
 #show: qk-doc.with(
   title: "Study Guide Title",
@@ -281,7 +281,7 @@ $ E[R_p] = sum_(i=1)^n w_i E[R_i] $
 > Dense, information-rich layout. A4 landscape, small text, minimal margins, colored section bars.
 
 ```typst
-#import "@local/qk:1.0.0": *
+#import "@local/qk:2.2.0": *
 
 #set page(paper: "a4", flipped: true, margin: (x: 1cm, y: 1cm))
 #set text(font: "New Computer Modern", size: 8pt)
@@ -312,7 +312,7 @@ $ E[R_p] = sum_(i=1)^n w_i E[R_i] $
 > Uses qk academic components. Numbered questions with answer space. Optional answer key toggle.
 
 ```typst
-#import "@local/qk:1.0.0": *
+#import "@local/qk:2.2.0": *
 
 #let show-answers = false  // Toggle to true for answer key version
 
@@ -365,7 +365,7 @@ $ E[R_p] = sum_(i=1)^n w_i E[R_i] $
 > Alternating question/answer cards on half-pages. Suitable for print-and-cut.
 
 ```typst
-#import "@local/qk:1.0.0": *
+#import "@local/qk:2.2.0": *
 
 #set page(paper: "a4", margin: (x: 1.5cm, y: 1.5cm))
 #set text(font: "New Computer Modern", size: 11pt)

@@ -6,13 +6,13 @@ license: MIT
 
 # Typst Skill
 
-**Current version**: Typst 0.14.2 (Dec 2025)
+**Current version**: Typst 0.15.0 (June 2026)
 
 ## Smart Defaults
 
 If you know nothing else, follow these rules:
 
-1. **Always** import `@local/qk:2.1.0` — `#import "@local/qk:2.1.0": *`
+1. **Always** import `@local/qk:2.2.0` — `#import "@local/qk:2.2.0": *`
 2. **Always** use `qk-doc` or `qk-report` preset (unless user specifies custom)
 3. **Always** use touying for presentations (not raw page dimensions) — see `references/touying-guide.md`
 4. **Always** `#set figure(placement: auto)` — prevents blank half-pages
@@ -21,7 +21,7 @@ If you know nothing else, follow these rules:
 7. **Default fonts**: Libertinus Serif (body), Inter (headings), New Computer Modern Math (math), Fira Code (code)
 8. **Default compile**: `typst compile --root .. Source/<file>.typ`
 9. **When in doubt** about template: Study Guide
-10. **When in doubt** about visual tool: diagrams → fletcher; charts → see decision tree (simple → cetz-plot, statistical → matplotlib+seaborn, grammar → plotnine, complex → matplotlib)
+10. **When in doubt** about visual tool: diagrams → fletcher; charts → see decision tree (simple → lilaq or cetz-plot; most charts → lilaq; statistical kde/pair → matplotlib+seaborn; grammar → plotnine; complex with Python data → matplotlib)
 11. **Always** scan project for existing `.typ` files and match their style (fonts, colors, qk preset) unless user specifies otherwise
 
 ## New Document Decision Tree
@@ -44,7 +44,7 @@ User request → scan for keywords:
 
 **Steps:**
 1. Auto-detect template from keywords above
-2. Import `@local/qk:2.1.0` at top
+2. Import `@local/qk:2.2.0` at top
 3. Use `qk-doc` or `qk-report` preset when applicable
 4. Auto-select template. State choice in Phase 3 summary. User can re-invoke with explicit type override if wrong.
 5. Build from `references/templates.md`
@@ -65,10 +65,11 @@ User request → scan for keywords:
 
 | Need | Tool |
 |------|------|
-| Simple charts (< 3 series, < 20 pts) | **cetz-plot** (Typst native, `qk-cycle` colors) |
-| Statistical plots (violin, kde, pair, heatmap) | **matplotlib + seaborn** (`use()`, SVG) |
+| Very simple charts (1-2 series, basic axes) | **cetz-plot** (Typst native, `qk-cycle` colors) |
+| Most charts (line, bar, scatter, violin, heatmap, contour, subplots) | **lilaq** (Typst native, font-matched, `as lq`) |
+| Statistical plots (kde, pair plots) | **matplotlib + seaborn** (`use()`, SVG) |
 | Grammar-of-graphics / faceted plots | **plotnine** (`theme_qk()`, SVG) |
-| Complex charts (4+ series, annotations) | **matplotlib** (full API, SVG) |
+| Complex charts with Python data pipeline | **matplotlib** (full API, SVG) |
 
 **Images & layout:**
 
@@ -99,8 +100,10 @@ When writing Typst documents, automatically identify content that benefits from 
 | Request-response, API flows | Sequence diagram | `chronos` |
 | Project schedule, phases | Gantt chart | `timeliney` |
 | Historical events, evolution | Timeline | `herodot` or `timeliney` |
-| Simple data chart (< 3 series, < 20 pts) | Line/bar/scatter chart | cetz-plot (Typst native) |
-| Statistical/complex chart | Violin/kde/heatmap/faceted chart | matplotlib+seaborn or plotnine |
+| Very simple data chart (1-2 series, basic) | Line/bar/scatter chart | cetz-plot (Typst native) |
+| Most charts (multi-series, subplots, violin, heatmap, contour) | Data visualization | lilaq (Typst native, font-matched) |
+| Statistical chart (kde, pair plots) | Statistical plot | matplotlib+seaborn (SVG) |
+| Faceted / grammar chart | Layered plot | plotnine (SVG) |
 | Company logo, brand mark | Logo image | `/image-search --logo` |
 | Real-world photograph | Photo | `/image-search` |
 | Concept with analogy, metaphor | AI illustration | `gemini-generate-image` MCP |
@@ -115,7 +118,7 @@ See `references/tool-routing.md` for full examples, fallback chains, and auto-in
 
 ### Component Library Auto-use
 
-When writing content, automatically convert matching patterns to `@local/qk:2.1.0` components:
+When writing content, automatically convert matching patterns to `@local/qk:2.2.0` components:
 
 | Content pattern | Use instead |
 |-----------------|-------------|
@@ -156,7 +159,7 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 | When you need... | Read... |
 |------------------|---------|
 | Syntax, errors, special chars | `references/quick-ref.md` |
-| `@local/qk:2.1.0` API | `references/component-library.md` |
+| `@local/qk:2.2.0` API | `references/component-library.md` |
 | Visual tool details, examples, fallbacks | `references/tool-routing.md` |
 | Document preambles | `references/templates.md` |
 | Table patterns, show rules, large docs | `references/common-patterns.md` |
@@ -169,10 +172,16 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 | Data-driven generation (JSON, CSV, batch, variants) | `references/data-driven.md` |
 | `sym.*` symbols | `references/symbols.md` |
 
-## Version Notes (0.13–0.14)
+## Version Notes (0.13–0.15)
 
 | Feature | Ver | Description |
 |---------|-----|-------------|
+| Variable fonts | 0.15 | Supported at last — axis selection via `text(variations: (...))`; Apple variable fonts (`New York`, `SF NS`) now load |
+| `within` selector | 0.15 | Match elements inside a container — simplifies introspection |
+| `divider` element | 0.15 | Thematic break (templates can customize) |
+| Multiple bibliographies | 0.15 | Independent bibliographies via `bibliography(target:, group:)` |
+| MathML HTML export | 0.15 | Equations export to web (was a hard limitation before) |
+| `typst eval` | 0.15 | General CLI introspection — supersedes `typst query` |
 | Tagged PDFs, PDF/UA-1 | 0.14 | Accessible PDFs by default |
 | `figure.alt` / `image(alt:)` | 0.14 | Alt text for screen readers |
 | `pdf.attach` | 0.14 | Attach files (replaces `pdf.embed`) |
@@ -180,9 +189,11 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 | Multiple table headers | 0.14 | Hierarchical headers repeat across pages |
 | `curve` function | 0.13 | Bezier drawing (replaces `path`) |
 
-**Deprecated**: `path` → `curve` · `pdf.embed` → `pdf.attach` · `image.decode` → pass bytes directly · polylux:0.3.1 → `polylux:0.4.0` or `touying`
+**Removed in 0.15** (were deprecated, now gone): `path` element → use `curve` · `pdf.embed` → `pdf.attach` · `image.decode` / scoped decode fns → pass bytes directly · `pattern` type → `tiling`
+**Other migrations**: polylux:0.3.1 → `polylux:0.4.0` or `touying`
+**Breaking (0.15)**: file paths must use forward slashes only (no backslashes)
 
-| touying 0.6.1 | 0.6 | Presentation framework — `#show: theme.with(...)` API (NOT the old `register()` pattern) |
+| touying 0.6.3 | 0.6 | Presentation framework — `#show: theme.with(...)` API (NOT the old `register()` pattern) |
 
 ## CLI Commands
 
@@ -192,7 +203,8 @@ typst compile document.typ --root ..           # Set project root
 typst compile document.typ out.pdf --pages 1-5 # Specific pages
 typst watch document.typ                       # Watch and recompile
 typst fonts                                    # List available fonts
-typst query doc.typ "heading.where(level: 1)"  # Query document structure
+typst eval doc.typ "heading.where(level: 1)"   # Introspect structure (supersedes `typst query`)
+typst query doc.typ "heading.where(level: 1)"  # Older form — still works
 ```
 
 **`--root` flag:** When a `.typ` file uses `#import` or `#image()` with paths outside its directory, set `--root` to the project root.
@@ -214,7 +226,7 @@ typst query doc.typ "heading.where(level: 1)"  # Query document structure
 | Georgia | Readable serif | Safe on macOS |
 | Helvetica Neue | Clean sans-serif | macOS only |
 
-**Variable font warning:** Apple system fonts (New York, SF Pro) are variable → "variable fonts are not currently supported." Install static `.otf`/`.ttf` versions or use alternatives.
+**Variable fonts (supported since 0.15):** Apple variable fonts and others now load directly — no need to install static `.otf`/`.ttf` versions. Select an axis with `#set text(font: "New York", variations: (wght: 600))`. The "Variable"/"Var"/"VF" suffix in a font's name is trimmed automatically, so reference the base family name. Note Apple's *exposed* family names differ from marketing names: San Francisco is `SF NS` (not "SF Pro"), and the serif is `New York` — run `typst fonts` to confirm. (On Typst ≤ 0.14 these failed with "variable fonts are not currently supported" — only relevant if pinned to an old binary.)
 
 **CJK fallback:** `#set text(font: ("New Computer Modern", "Songti SC"))`
 

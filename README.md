@@ -62,7 +62,6 @@ cp -r ~/.claude/skills/rules/*.md ~/.claude/rules/
 | **typst** | *(auto-loaded)* | Syntax guide, templates, component library, visual routing, packages |
 | **google-tasks** | *(auto-loaded)* | Google Tasks management via `gtasks` CLI |
 | **learn** | `/learn` | Extract reusable knowledge from the current session into a persistent skill |
-| **commit** | `/commit` | Git commit workflow |
 | **context-status** | `/context-status` | Check context usage and session health |
 | **deploy** | `/deploy` | Deployment workflow |
 
@@ -92,15 +91,14 @@ The skills form an integrated pipeline:
 When the companion rules are installed (`rules/typst.md` → `~/.claude/rules/`), Claude auto-detects visual needs whenever it edits any `.typ` file — no explicit skill invocation required. Without the rules, auto-detection only fires inside `/typst`, `/create-document`, or `/finish`.
 
 ```
-Can Typst draw it natively?           ->  Typst (tables, boxes, fletcher flowcharts)
-Simple chart (< 3 series, < 20 pts)? ->  cetz-plot (Typst native, qk-cycle colors)
-Statistical plot (violin, kde, ...)?  ->  matplotlib + seaborn (use(), SVG)
-Faceted / grammar-of-graphics?        ->  plotnine (theme_qk(), SVG)
-Complex chart (4+ series)?            ->  matplotlib (full API, SVG)
-Real photo or logo?                   ->  /image-search
-Mind map or concept tree?             ->  /mindmap
-Structured diagram?                   ->  Native packages (fletcher, chronos, timeliney)
-Conceptual illustration?              ->  gemini-generate-image MCP
+Can Typst draw it natively?      ->  Typst (tables, boxes, fletcher flowcharts)
+Simple chart (< 3 series)?      ->  cetz-plot (native, font-matching)
+Real photo or logo?              ->  /image-search
+Mind map or concept tree?        ->  /mindmap
+Structured diagram?              ->  Native packages (fletcher, chronos, timeliney)
+Most charts (multi-series, subplots)? ->  lilaq (native Typst, font-matched)
+Complex / Python data pipeline?  ->  matplotlib
+Conceptual illustration?         ->  gemini-generate-image MCP
 ```
 
 Auto-detection is suppressed for quick edits (< 15 lines), documents that already have visuals, or when the user requests text-only output.
@@ -173,7 +171,6 @@ export SERPAPI_KEY="your-key"
 ```
 skills/
 ├── rules/
-│   ├── matplotlib.md                # Chart quality rules (qk v2.2.0 style)
 │   └── typst.md                     # Companion rules (visual auto-detection)
 ├── create-document/SKILL.md         # Autonomous document creation pipeline
 ├── compile/SKILL.md                 # Format-detecting compilation
@@ -198,7 +195,7 @@ skills/
 │   ├── SKILL.md                     # Typst reference (auto-loaded)
 │   └── references/
 │       ├── quick-ref.md             # Syntax, errors, special characters
-│       ├── component-library.md     # @local/qk:2.1.0 API
+│       ├── component-library.md     # @local/qk:2.2.0 API
 │       ├── tool-routing.md          # Visual tool routing + examples
 │       ├── templates.md             # 10 document preambles
 │       ├── common-patterns.md       # Tables, show rules, large documents
@@ -212,7 +209,6 @@ skills/
 │       └── data-driven.md           # JSON/CSV generation patterns
 ├── translate/SKILL.md               # Document format translation
 ├── learn/SKILL.md                   # Session knowledge extraction
-├── commit/SKILL.md                  # Git commit workflow
 ├── deploy/SKILL.md                  # Deployment workflow
 ├── context-status/SKILL.md          # Context health monitoring
 └── google-tasks/SKILL.md            # Google Tasks CLI reference

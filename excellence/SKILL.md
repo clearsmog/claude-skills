@@ -4,6 +4,7 @@ description: Multi-agent document review (visual, pedagogy, proofreading, domain
 argument-hint: "[filename]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 context: fork
+background: false
 ---
 
 # Excellence Review
@@ -17,6 +18,7 @@ Determine file type from extension:
 - `.qmd` → Quarto RevealJS slides
 - `.typ` → Typst document (slides, docs, guides, CVs)
 - `.py` → Python script
+- `.md` → Markdown
 
 For `.typ` files, also detect document type from content.
 
@@ -37,6 +39,7 @@ For `.typ` files, also detect document type from content.
 | document-auditor | Overflow, font consistency, spacing, images | `[FILE]_visual_audit.md` |
 | pedagogy-reviewer | 13 patterns, narrative, pacing | `[FILE]_pedagogy_report.md` |
 | proofreader | Grammar, typos, consistency | `[FILE]_report.md` |
+| writing-style-critic | AI tropes across 6 categories | `[FILE]_tropes_review.md` |
 | quality-critic | Adversarial comparison vs .tex (only if sibling exists) | `[FILE]_parity_report.md` |
 
 ### For `.typ` files:
@@ -45,7 +48,14 @@ For `.typ` files, also detect document type from content.
 | typst-reviewer | Compilation, smart defaults, component usage, visual routing | `[FILE]_typst_review.md` |
 | document-auditor | Overflow, typography, component fatigue, spacing | `[FILE]_visual_audit.md` |
 | proofreader | Grammar, typos, consistency | `[FILE]_report.md` |
+| writing-style-critic | AI tropes across 6 categories | `[FILE]_tropes_review.md` |
 | pedagogy-reviewer | Narrative, pacing, notation (only if slides detected) | `[FILE]_pedagogy_report.md` |
+
+### For `.md` files:
+| Agent | What It Checks | Report |
+|-------|---------------|--------|
+| proofreader | Grammar, typos, consistency | `[FILE]_report.md` |
+| writing-style-critic | AI tropes across 6 categories | `[FILE]_tropes_review.md` |
 
 ### For `.py` files:
 | Agent | What It Checks | Report |

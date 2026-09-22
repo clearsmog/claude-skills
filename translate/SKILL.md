@@ -4,6 +4,7 @@ description: Multi-format document translation. Supports Typst ↔ Quarto. For B
 argument-hint: "[source_file] [target_format]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
 context: fork
+background: false
 ---
 
 # Multi-Format Translation Workflow

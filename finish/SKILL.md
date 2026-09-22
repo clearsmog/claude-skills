@@ -4,6 +4,7 @@ description: Master pipeline — compile, review, fix, and finalize any document
 argument-hint: "[filename]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
 context: fork
+background: false
 ---
 
 # Finish Document

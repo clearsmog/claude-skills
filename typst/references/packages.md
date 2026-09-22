@@ -6,9 +6,10 @@ Install from https://typst.app/universe/ — check for latest versions.
 
 | Package | Purpose | Import |
 |---------|---------|--------|
-| **cetz** | Core drawing (TikZ-inspired) + cetz-plot for charts. Use `qk-plot.typ` for consistent qk palette colors. | `#import "@preview/cetz:0.4.2"` |
+| **cetz** | Core drawing (TikZ-inspired). Use `qk-plot.typ` for consistent qk palette colors. | `#import "@preview/cetz:0.5.2"` |
+| **cetz-plot** | Charts on top of cetz (separate package, pair with cetz 0.5.x). | `#import "@preview/cetz-plot:0.1.4"` |
 | **fletcher** | Flowcharts, automata, arrows | `#import "@preview/fletcher:0.5.8"` |
-| **lilaq** | Data visualization (emerging alternative — usable for basic charts, less mature). Import `as lq`. | `#import "@preview/lilaq:0.5.0" as lq` |
+| **lilaq** | Native Typst data visualization — line, scatter, bar, box, violin, heatmap, contour, subplots, dual axes, color bars, themes, datetime. Import `as lq`. | `#import "@preview/lilaq:0.6.0" as lq` |
 | **chronos** | Sequence diagrams (Feb 2026, requires Typst 0.14.2) | `#import "@preview/chronos:0.3.0"` |
 
 ## Scientific & Units
@@ -16,22 +17,22 @@ Install from https://typst.app/universe/ — check for latest versions.
 | Package | Purpose | Import |
 |---------|---------|--------|
 | **physica** | Math constructs for physics/engineering | `#import "@preview/physica:0.9.8"` |
-| **unify** | SI units, monetary, binary formatting | `#import "@preview/unify:0.7.1"` |
+| **unify** | SI units, monetary, binary formatting | `#import "@preview/unify:0.8.1"` |
 
 ## Code & Text
 
 | Package | Purpose | Import |
 |---------|---------|--------|
 | **codly** | Code blocks with line numbers | `#import "@preview/codly:1.3.0"` |
-| **zebraw** | Code listings with annotations | `#import "@preview/zebraw:0.6.1"` |
-| **lovelace** | Pseudocode / algorithms | `#import "@preview/lovelace:0.3.0"` |
-| **gentle-clues** | Callouts, tips, admonitions | `#import "@preview/gentle-clues:1.3.0"` |
+| **zebraw** | Code listings with annotations | `#import "@preview/zebraw:0.6.3"` |
+| **lovelace** | Pseudocode / algorithms (supports `title-inset` parameter) | `#import "@preview/lovelace:0.3.1"` |
+| **gentle-clues** | Callouts, tips, admonitions | `#import "@preview/gentle-clues:1.3.1"` |
 
 ## Presentations & Layout
 
 | Package | Purpose | Import |
 |---------|---------|--------|
-| **touying** | Presentations (Typst 0.14+). **Use 0.6.x API** (`#show: theme.with(...)`), NOT the old 0.3.x `register()` pattern. See `references/touying-guide.md`. | `#import "@preview/touying:0.6.1"` |
+| **touying** | Presentations. **Use 0.6.x/0.7.x API** (`#show: theme.with(...)`), NOT the old 0.3.x `register()` pattern. See `references/touying-guide.md`. | `#import "@preview/touying:0.7.4"` |
 | **tablem** | Markdown-like table syntax | `#import "@preview/tablem:0.3.0"` |
 | **showybox** | Customizable text boxes | `#import "@preview/showybox:2.0.4"` |
 
@@ -40,9 +41,9 @@ Install from https://typst.app/universe/ — check for latest versions.
 | Package | Purpose | Import |
 |---------|---------|--------|
 | **timeliney** | Gantt charts (native Typst) | `#import "@preview/timeliney:0.4.0"` |
-| **herodot** | Linear timelines | `#import "@preview/herodot:0.1.0"` |
+| **herodot** | Linear timelines (v1.0: `spanheight` moved to `eventspan()`, new params: `event-rotation`, `span-rotation`, `event-display`, `month-locale`, `event.offset`) | `#import "@preview/herodot:1.0.0"` |
 | **glossarium** | Glossary/terminology management | `#import "@preview/glossarium:0.5.10"` |
-| **cmarker** | Render Markdown inside Typst docs | `#import "@preview/cmarker:0.1.0"` |
+| **cmarker** | Render Markdown inside Typst docs (supports math via mitex, tables, footnotes, HTML handling, inline SVG, frontmatter parsing; `heading-label-case` renamed to `heading-labels` with values `"github"`/`"jupyter"`; new `render-with-metadata()`; requires Typst 0.15.0+ as of 0.1.9) | `#import "@preview/cmarker:0.1.9"` |
 
 Note: polylux:0.3.1 is incompatible with 0.14; use `polylux:0.4.0` or `touying` (more active).
 
@@ -51,11 +52,11 @@ Note: polylux:0.3.1 is incompatible with 0.14; use `polylux:0.4.0` or `touying` 
 ### gentle-clues (callouts)
 
 ```typst
-#import "@preview/gentle-clues:1.3.0": tip, warning, example, abstract
+#import "@preview/gentle-clues:1.3.1": tip, warning, example, abstract
 
 #tip[Use shrinkage estimators when T < N.]
 
-#warning[The path function is deprecated in Typst 0.13+. Use curve instead.]
+#warning[The path function was removed in Typst 0.15. Use curve instead.]
 
 #example[
   A 60/40 portfolio with monthly rebalancing achieved a Sharpe ratio of 0.8
@@ -66,7 +67,7 @@ Note: polylux:0.3.1 is incompatible with 0.14; use `polylux:0.4.0` or `touying` 
 ### lovelace (pseudocode)
 
 ```typst
-#import "@preview/lovelace:0.3.0": pseudocode-list
+#import "@preview/lovelace:0.3.1": pseudocode-list
 
 #pseudocode-list[
   + *Input:* views vector $q$, uncertainty $tau$
@@ -81,7 +82,7 @@ Note: polylux:0.3.1 is incompatible with 0.14; use `polylux:0.4.0` or `touying` 
 ### zebraw (annotated code blocks)
 
 ```typst
-#import "@preview/zebraw:0.6.1": *
+#import "@preview/zebraw:0.6.3": *
 #show: zebraw.with(
   background-color: luma(250),
   highlight-color: rgb("#e3f2fd"),
@@ -92,14 +93,14 @@ After setup, fenced code blocks automatically get zebra striping and support lin
 
 ### cetz-plot (charts)
 
-cetz-plot is bundled with cetz. Use for simple charts (< 3 series, < 20 data points). Use `qk-plot.typ` from `~/Developer/Typst/MatplotlibStyle/` for consistent qk palette colors. See `references/tool-routing.md` for the chart decision tree.
+cetz-plot is a separate package (`@preview/cetz-plot:0.1.4`, pair with `cetz:0.5.2`). Use for simple charts (< 3 series, < 20 data points). Use `qk-plot.typ` from `~/Developer/Typst-PDF/MatplotlibStyle/` for consistent qk palette colors (its `qk-plot-style`/`qk-bar-style` helpers are version-agnostic style dicts). See `references/tool-routing.md` for the chart decision tree.
 
-### lilaq (complex charts)
+### lilaq (native Typst charts)
 
-lilaq is an emerging native Typst data visualization package. For complex charts, prefer matplotlib or plotnine (more mature). See tool-routing.md for the chart decision tree.
+lilaq (0.6.0) is a native Typst data visualization package supporting line, scatter, bar, box, violin, heatmap, contour, and quiver plots with subplots via `lq.diagram` grids, dual axes, color bars, themes, and datetime support. See tool-routing.md for the chart decision tree.
 
 ```typst
-#import "@preview/lilaq:0.5.0" as lq
+#import "@preview/lilaq:0.6.0" as lq
 
 // Multi-series line chart
 #figure(
@@ -116,7 +117,7 @@ lilaq is an emerging native Typst data visualization package. For complex charts
 
 ```typst
 // Bar chart with labels
-#import "@preview/lilaq:0.5.0" as lq
+#import "@preview/lilaq:0.6.0" as lq
 
 #figure(
   lq.diagram(

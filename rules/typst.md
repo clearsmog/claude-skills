@@ -9,9 +9,11 @@ paths:
 - NEVER use Python (graphviz, mermaid, matplotlib) for flowcharts — always fletcher.
 
 ## Charts
-- Simple charts (< 3 series, < 20 data points, no computation): **cetz-plot** with `qk-cycle` colors from `qk-plot.typ`
-- Statistical/complex charts: **matplotlib** with `plt.style.use('qk')` or **plotnine** with `theme_qk()` — generate SVG, embed with `#figure(image(...))`
-- Lilaq: emerging alternative, usable for basic multi-series charts but less mature than the above
+- **Default choice**: Lilaq with `qk-lilaq-theme()` — handles line, bar, scatter, box, violin, heatmap, contour, subplots, dual axes natively in Typst
+- **Fall back to Python SVG** only when: kde plots, pair plots, faceted grammar (plotnine), or Python data pipeline already exists
+- **cetz-plot**: only for extremely simple charts where Lilaq would be overkill (rare — Lilaq is almost always better)
+- Lilaq + qk style: `#import "qk-plot.typ": *` then `#show: qk-lilaq-theme()`. Colorblind variant: `qk-lilaq-theme(colorblind: true)`.
+- SVG embedding: `#figure(image("chart.svg", width: 100%), caption: [...])`
 
 ## Compile After Editing
 - After any `.typ` edit, run `typst compile <file>` to catch errors early.
@@ -46,14 +48,18 @@ When creating or substantially editing `.typ` documents, auto-detect content tha
 See `skills/typst/references/tool-routing.md` for the full routing table and fallback chains.
 
 ## qk Component Library
-- Local package: `#import "@local/qk:2.1.0": *`
-- Source: ~/Library/Application Support/typst/packages/local/qk/2.1.0/
+- Local package: `#import "@local/qk:2.2.0": *`
+- Source: ~/Library/Application Support/typst/packages/local/qk/2.2.0/
+- 2.1.0 holds the same code (2.2.0 fixes backported), so existing documents pinned to it are fine — but use 2.2.0 for anything new
 - Components: callouts (15 variants, 5 styles), cards, tables, academic boxes, layout, presets
 - When creating Typst documents for the user, prefer qk components over raw Typst blocks
 - Presets: qk-doc (study guides), qk-report (corporate), qk-minimal (notes), qk-magazine (editorial), qk-exam (exams)
+- All five presets share the same core options, so swapping between them is safe: `title`, `header-text`, `footer-text`, `heading-numbering`, `margin`, `figure-placement`, `styled-lists`, `styled-captions`, `stata-theme`, `palette`, `theme-tokens`
 - Colors: Tailwind scales (`blue.at("600")`) or semantic aliases (`colors.navy`)
-- Theming: `#show: qk-theme.with(palette: "dark")` — palettes: default, dark, print, high-contrast, sepia
+- Theming: pass `palette:` to the **preset** — `#show: qk-doc.with(title: "…", palette: "dark")`. Palettes: default, dark, print, high-contrast, sepia
+- A standalone `#show: qk-theme.with(palette: ...)` written after a preset only reaches components, not page fill or heading colors — `set page(fill:)` needs the value before state resolves. Use `resolve-theme(palette:, tokens:)` for a color at `set`-time
 - `theme-get()` must be called inside `context { ... }`
+- `chart()` takes image data, not a path: `chart(read("f.png", encoding: none), "Cap")` or `chart(image("f.png"), "Cap")` — a path inside a package resolves against the package dir
 
 ## Display Pitfalls (Prevent Before They Happen)
 
