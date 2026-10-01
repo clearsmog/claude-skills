@@ -22,13 +22,9 @@ and preservation state.
 
 ## Workflow
 
-### Step 1: Check Context Monitor Cache
+### Step 1: Context usage
 
-Read the context monitor cache to get the current estimate:
-
-```bash
-cat ~/.claude/sessions/*/context-monitor-cache.json 2>/dev/null | head -20
-```
+There is no on-disk estimate. Claude Code's built-in `/context` shows actual usage; tell the user to run it for the number.
 
 ### Step 2: Find Active Plan
 
@@ -70,6 +66,6 @@ Preservation Check
 
 ## Notes
 
-- Context % is an estimate based on tool call count
+- Context usage comes from `/context`
 - Actual compaction is triggered by Claude Code automatically
 - All important state is saved to disk (plans, logs, MEMORY.md)

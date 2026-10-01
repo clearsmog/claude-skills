@@ -7,13 +7,13 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 
 # Proofread Documents
 
-Run the mandatory proofreading protocol on documents. This produces a report of all issues found WITHOUT editing any source files.
+Run the proofreading protocol on documents. Produce a report only; leave source files unedited, because fixes are applied separately after the user reviews the report.
 
 ## Steps
 
 1. **Identify files to review:**
    - If `$ARGUMENTS` is a specific filename: review that file only
-   - If `$ARGUMENTS` is "all": review all files in `Slides/`, `Quarto/`, and any `.typ` files
+   - If `$ARGUMENTS` is "all": review every `.tex`, `.qmd`, `.typ`, and `.md` document in the project
 
 2. **For each file, launch the proofreader agent** that checks for:
 
@@ -33,10 +33,7 @@ Run the mandatory proofreading protocol on documents. This produces a report of 
    - For `.tex` files: `quality_reports/FILENAME_report.md`
    - For `.qmd` files: `quality_reports/FILENAME_qmd_report.md`
 
-5. **IMPORTANT: Do NOT edit any source files.**
-   Only produce the report. Fixes are applied separately after user review.
-
-6. **Present summary** to the user:
+5. **Present summary** to the user:
    - Total issues found per file
    - Breakdown by category
    - Most critical issues highlighted

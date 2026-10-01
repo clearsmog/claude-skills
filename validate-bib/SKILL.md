@@ -37,14 +37,8 @@ Cross-reference all citations in lecture files against bibliography entries.
    - List of potential typos in citation keys
    - List of quality issues
 
-## Files to scan:
-```
-Slides/*.tex
-Quarto/*.qmd
-**/*.typ
-```
+## Files to scan
+All `.tex`, `.qmd`, and `.typ` files in the project.
 
-## Bibliography location:
-```
-Bibliography_base.bib  (repo root)
-```
+## Bibliography location
+Whatever the documents reference: `\bibliography{}` / `\addbibresource{}`, `bibliography:` in Quarto YAML, or `#bibliography(...)` in Typst. If nothing is referenced and several `.bib`/`.yml` files exist, ask which one.

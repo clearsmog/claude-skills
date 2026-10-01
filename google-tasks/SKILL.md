@@ -8,7 +8,7 @@ description: Manage Google Tasks via the `gtasks` CLI. Use when the user asks to
 `gtasks` is globally installed at `~/.local/bin/gtasks`. Use it via Bash to manage the user's Google Tasks.
 
 Source: `~/Developer/Tools/GoogleTasks/`
-Reinstall after edits: `uv tool install ~/Developer/Tools/GoogleTasks --force`
+Reinstall after edits: `uv tool install --reinstall ~/Developer/Tools/GoogleTasks`
 
 ## Commands
 

@@ -38,7 +38,7 @@ cp -r ~/.claude/skills/rules/*.md ~/.claude/rules/
 | Skill | Command | What it does |
 |-------|---------|-------------|
 | **finish** | `/finish [file]` | Master pipeline — compile, visual verify, auto-fix, review, fix, score |
-| **review** | `/review [file]` | Launch format-appropriate review agents in parallel |
+| **doc-review** | `/doc-review [file]` | Launch format-appropriate review agents in parallel |
 | **qa** | `/qa [file]` | Adversarial audit loop: critic finds issues, fixer applies fixes (max 5 rounds) |
 | **excellence** | `/excellence [file]` | Multi-agent review (visual + pedagogy + proofreading + domain) for milestones |
 | **visual-audit** | `/visual-audit [file]` | Check overflow, font consistency, component fatigue, spacing |
@@ -81,7 +81,7 @@ The skills form an integrated pipeline:
         v
   Want deeper review?
         |
-   /finish ──> /review + /qa loop ──> auto-fix ──> score
+   /finish ──> /doc-review + /qa loop ──> auto-fix ──> score
         |
    /excellence ──> 4 parallel agents ──> comprehensive report
 ```

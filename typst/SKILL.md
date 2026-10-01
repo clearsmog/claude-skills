@@ -6,23 +6,23 @@ license: MIT
 
 # Typst Skill
 
-**Current version**: Typst 0.15.0 (June 2026)
+**Current version**: Typst 0.15.x
 
 ## Smart Defaults
 
-If you know nothing else, follow these rules:
+Defaults, unless the user or the project's existing files say otherwise:
 
-1. **Always** import `@local/qk:2.2.0` — `#import "@local/qk:2.2.0": *`
-2. **Always** use `qk-doc` or `qk-report` preset (unless user specifies custom)
-3. **Always** use touying for presentations (not raw page dimensions) — see `references/touying-guide.md`
-4. **Always** `#set figure(placement: auto)` — prevents blank half-pages
-5. **Always** add `alt:` to images — `image("path.png", alt: "description")`
-6. **Always** escape `$` in content — scan for bare `$` before compiling
+1. Import `@local/qk:2.2.0` — `#import "@local/qk:2.2.0": *`
+2. Use the `qk-doc` or `qk-report` preset
+3. Use touying for presentations (not raw page dimensions) — see `references/touying-guide.md`
+4. `#set figure(placement: auto)` — prevents blank half-pages
+5. Add `alt:` to images — `image("path.png", alt: "description")`
+6. Escape `$` in content — scan for bare `$` before compiling
 7. **Default fonts**: Libertinus Serif (body), Inter (headings), New Computer Modern Math (math), Fira Code (code)
 8. **Default compile**: `typst compile --root .. Source/<file>.typ`
-9. **When in doubt** about template: Study Guide
-10. **When in doubt** about visual tool: diagrams → fletcher; charts → see decision tree (simple → lilaq or cetz-plot; most charts → lilaq; statistical kde/pair → matplotlib+seaborn; grammar → plotnine; complex with Python data → matplotlib)
-11. **Always** scan project for existing `.typ` files and match their style (fonts, colors, qk preset) unless user specifies otherwise
+9. Template when the request doesn't settle it: Study Guide
+10. Visual tool when the content doesn't settle it: diagrams → fletcher; charts → see decision tree (default → lilaq; extremely simple → cetz-plot (rare); statistical kde/pair → matplotlib+seaborn; grammar → plotnine; complex with Python data → matplotlib)
+11. Scan the project for existing `.typ` files and match their style (fonts, colors, qk preset)
 
 ## New Document Decision Tree
 
@@ -65,7 +65,7 @@ User request → scan for keywords:
 
 | Need | Tool |
 |------|------|
-| Very simple charts (1-2 series, basic axes) | **cetz-plot** (Typst native, `qk-cycle` colors) |
+| Extremely simple charts where lilaq is overkill (rare) | **cetz-plot** (Typst native, `qk-cycle` colors) |
 | Most charts (line, bar, scatter, violin, heatmap, contour, subplots) | **lilaq** (Typst native, font-matched, `as lq`) |
 | Statistical plots (kde, pair plots) | **matplotlib + seaborn** (`use()`, SVG) |
 | Grammar-of-graphics / faceted plots | **plotnine** (`theme_qk()`, SVG) |
@@ -86,7 +86,7 @@ Detail and examples in `references/tool-routing.md`.
 
 ### Visual Auto-detection
 
-When writing Typst documents, automatically identify content that benefits from visuals. Do NOT wait for the user to request them. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot); charts → cetz-plot (simple) / matplotlib or plotnine (complex) — generate SVG, embed; images → `/image-search` / `/mindmap` / `gemini-generate-image` MCP.
+When writing Typst documents, add a visual wherever it makes the content clearer, without waiting to be asked. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot); charts → follow the Charts table above (cetz-plot for very simple, lilaq for most, matplotlib/seaborn/plotnine for statistical or grammar-of-graphics) — generate SVG, embed; images → `/image-search` / `/mindmap` / `gemini-generate-image` MCP.
 
 | Content pattern | Visual to add | Tool |
 |-----------------|---------------|------|
@@ -100,7 +100,7 @@ When writing Typst documents, automatically identify content that benefits from 
 | Request-response, API flows | Sequence diagram | `chronos` |
 | Project schedule, phases | Gantt chart | `timeliney` |
 | Historical events, evolution | Timeline | `herodot` or `timeliney` |
-| Very simple data chart (1-2 series, basic) | Line/bar/scatter chart | cetz-plot (Typst native) |
+| Extremely simple chart where lilaq is overkill (rare) | Line/bar/scatter chart | cetz-plot (Typst native) |
 | Most charts (multi-series, subplots, violin, heatmap, contour) | Data visualization | lilaq (Typst native, font-matched) |
 | Statistical chart (kde, pair plots) | Statistical plot | matplotlib+seaborn (SVG) |
 | Faceted / grammar chart | Layered plot | plotnine (SVG) |
@@ -193,7 +193,7 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 **Other migrations**: polylux:0.3.1 → `polylux:0.4.0` or `touying`
 **Breaking (0.15)**: file paths must use forward slashes only (no backslashes)
 
-| touying 0.6.3 | 0.6 | Presentation framework — `#show: theme.with(...)` API (NOT the old `register()` pattern) |
+| touying 0.7.4 | 0.6+ | Presentation framework — `#show: theme.with(...)` API (not the old `register()` pattern) |
 
 ## CLI Commands
 

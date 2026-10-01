@@ -93,7 +93,7 @@ After setup, fenced code blocks automatically get zebra striping and support lin
 
 ### cetz-plot (charts)
 
-cetz-plot is a separate package (`@preview/cetz-plot:0.1.4`, pair with `cetz:0.5.2`). Use for simple charts (< 3 series, < 20 data points). Use `qk-plot.typ` from `~/Developer/Typst-PDF/MatplotlibStyle/` for consistent qk palette colors (its `qk-plot-style`/`qk-bar-style` helpers are version-agnostic style dicts). See `references/tool-routing.md` for the chart decision tree.
+cetz-plot is a separate package (`@preview/cetz-plot:0.1.4`, pair with `cetz:0.5.2`). Use only for extremely simple charts where lilaq is overkill (rare); lilaq is the default. Use `qk-plot.typ` from `~/Developer/Typst-PDF/MatplotlibStyle/` for consistent qk palette colors (its `qk-plot-style`/`qk-bar-style` helpers are version-agnostic style dicts). See `references/tool-routing.md` for the chart decision tree.
 
 ### lilaq (native Typst charts)
 

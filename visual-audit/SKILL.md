@@ -14,7 +14,7 @@ Perform a thorough visual layout audit of any supported document. Routes to the 
 1. **Read the file** specified in `$ARGUMENTS`
 
 2. **For Quarto (.qmd) files:**
-   - Render with `quarto render Quarto/$ARGUMENTS`
+   - Render with `quarto render $ARGUMENTS`
    - Open in browser to inspect each slide
 
 3. **For Beamer (.tex) files:**
@@ -28,7 +28,7 @@ Perform a thorough visual layout audit of any supported document. Routes to the 
 
    **OVERFLOW:** Content exceeding boundaries
    **FONT CONSISTENCY:** Inline font-size overrides, inconsistent sizes
-   **COMPONENT FATIGUE:** 2+ colored boxes/callouts on one slide/page, wrong types
+   **COMPONENT FATIGUE:** wrong callout types, transitional remarks boxed
    **SPACING:** Missing margins, missing alignment
    **LAYOUT:** Missing transitions, missing framing sentences, semantic colors
 

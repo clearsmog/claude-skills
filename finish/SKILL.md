@@ -81,7 +81,7 @@ If the visual spot-check caught simple issues, fix them now so review agents sta
 5. Max 2 mini-rounds, then proceed to Phase 2 regardless
 
 ### Phase 2: Parallel Review
-- Route to `/review` with the file
+- Route to `/doc-review` with the file
 - Collect all agent reports
 
 ### Phase 3: Fix Critical Issues (max 5 rounds)

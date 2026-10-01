@@ -49,7 +49,7 @@ Phase 0: Pre-flight → Phase 1: Critic audit → Phase 2: Fixer → Phase 3: Re
 
 ## Phase 1: Initial Audit
 
-Launch the `quality-critic` agent to audit the document. Report saved to `quality_reports/[FILENAME]_qa_critic_round1.md`.
+Launch the `quality-critic` agent to audit the document. Save the report it returns to `quality_reports/[FILENAME]_qa_critic_round1.md` (re-audits: `_round[N].md`) before launching the fixer.
 
 ## Phase 2: Fix Cycle
 

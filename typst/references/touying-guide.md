@@ -255,7 +255,6 @@ Use `slide-callout` to render qk callout boxes at slide-appropriate sizing:
 #slide-callout(trap)[Don't confuse correlation with causation in returns.]
 ```
 
-**Max 2 callout boxes per slide** — more causes component fatigue.
 
 ---
 

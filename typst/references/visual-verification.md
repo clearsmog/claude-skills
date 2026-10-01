@@ -60,7 +60,6 @@ When inspecting rendered PNGs, check for:
 
 ### Presentation-Specific
 - [ ] **Slide content density** — not too much text per slide
-- [ ] **Callout box count** — max 2 per slide
 - [ ] **Title consistency** — uniform title styling across slides
 - [ ] **Footer/header presence** — institutional info visible where expected
 

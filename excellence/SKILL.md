@@ -60,7 +60,7 @@ For `.typ` files, also detect document type from content.
 ### For `.py` files:
 | Agent | What It Checks | Report |
 |-------|---------------|--------|
-| python-pro (subagent) | Code quality, style, type safety, patterns | `[FILE]_python_review.md` |
+| general-purpose subagent (Python review brief) | Code quality, style, type safety, patterns | `[FILE]_python_review.md` |
 | domain-reviewer | Field-specific correctness (optional) | `[FILE]_substance_review.md` |
 
 ## Steps
@@ -68,7 +68,7 @@ For `.typ` files, also detect document type from content.
 1. **Parse `$ARGUMENTS`** for the filename, resolve path
 2. **Detect format** from extension
 3. **Launch all applicable agents in parallel** per dispatch table
-4. **Collect all reports** from `quality_reports/`
+4. **Save each agent's returned report** to `quality_reports/` at the path in the dispatch table (read-only agents return their report as text instead of writing it), then collect them
 5. **Synthesize combined summary**
 
 ## Combined Summary Format

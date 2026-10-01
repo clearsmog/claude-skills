@@ -11,7 +11,7 @@ background: false
 
 Translate documents between supported formats.
 
-**CRITICAL: The source file is the SINGLE SOURCE OF TRUTH.**
+The source file is authoritative: leave it unchanged, and make the target match it rather than improve on it.
 
 ---
 

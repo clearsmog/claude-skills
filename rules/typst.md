@@ -30,11 +30,11 @@ paths:
 
 ## Visual Auto-detection
 
-When creating or substantially editing `.typ` documents, auto-detect content that benefits from visuals. Do NOT wait for the user to request images — invoke tools directly.
+When creating or substantially editing `.typ` documents, add visuals where the content would clearly benefit, without waiting to be asked.
 
-**Priority:** Diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); Charts → cetz-plot (simple) / matplotlib or plotnine (complex) — generate SVG, embed with `#figure(image(...))`; Images → /image-search / /mindmap / `gemini-generate-image` MCP
+**Priority:** Diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); Charts → Lilaq (default) / Python SVG for kde, pair or faceted plots — embed with `#figure(image(...))`; Images → /image-search / /mindmap / `gemini-generate-image` MCP
 
-**Auto-invoke triggers (no user prompt needed):**
+**Triggers:**
 - Company/brand logos → invoke `/image-search --logo "Name" --typst`
 - Real photographs → invoke `/image-search "query" --typst`
 - Conceptual illustrations, metaphors → call `gemini-generate-image` MCP, then copy to `images/` and write Typst `#figure(...)`

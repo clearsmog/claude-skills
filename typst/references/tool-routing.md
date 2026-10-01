@@ -19,7 +19,7 @@ When a Typst document needs a visual, identify what you're visualizing, then pic
 
 | Content | Tool | Notes |
 |---------|------|-------|
-| Very simple chart (1-2 series, no subplots) | **cetz-plot** | Typst-native, font-matched, use `qk-cycle` colors from `qk-plot.typ` |
+| Extremely simple chart where lilaq is overkill (rare) | **cetz-plot** | Typst-native, font-matched, use `qk-cycle` colors from `qk-plot.typ` |
 | Most charts (line, bar, scatter, box, violin, heatmap, contour, subplots) | **lilaq** | Typst native, font-matched, `as lq` |
 | Statistical plots (kde, pair plots) | **matplotlib + seaborn** | `use()` from qk_style, SVG output |
 | Grammar-of-graphics / faceted plots | **plotnine** | `theme_qk() + scale_color_qk()`, SVG output |
@@ -59,16 +59,15 @@ MIND MAPS    →  /mindmap
 IMAGES       →  /image-search (photos/logos) | gemini-generate-image (illustrations)
 
 Chart decision tree:
-  < 2 series, no subplots, no computation?
-    YES → cetz-plot (or lilaq)
-    NO  →
-      Native Typst chart needed (violin, heatmap, contour, subplots, bars)?
-        YES → lilaq (font-matched, no Python dependency)
+  Default → lilaq (line, bar, scatter, box, violin, heatmap, contour, subplots, dual axes; font-matched, no Python dependency)
+  Exceptions:
+      Extremely simple, lilaq overkill (rare)?
+        YES → cetz-plot
       Statistical (kde, pair plots)?
         YES → matplotlib + seaborn (use(), SVG)
       Faceted / grammar?
         YES → plotnine (theme_qk(), SVG)
-      Complex / custom?
+      Data already produced by a Python pipeline, or a chart lilaq can't express?
         YES → matplotlib (plt.style.use('qk'), SVG)
 ```
 
@@ -201,9 +200,9 @@ Chart decision tree:
 )
 ```
 
-### matplotlib / plotnine (complex charts)
+### matplotlib / plotnine (exceptions to lilaq)
 
-Use matplotlib or plotnine for complex/statistical charts. Generate SVG, then embed.
+Use matplotlib or plotnine only for kde/pair plots, faceted grammar-of-graphics plots, data from an existing Python pipeline, or charts lilaq can't express. Generate SVG, then embed.
 
 ```python
 # matplotlib
@@ -239,8 +238,8 @@ p.save("charts/performance.svg", width=8, height=5)
 ```
 
 **Four-tier chart system:**
-- **cetz-plot** (Typst native): Very simple charts (1-2 series, basic axes), font-matched, no external dependencies. Use `qk-cycle` colors.
-- **lilaq** (Typst native): Most charts — line, bar, scatter, box, violin, heatmap, contour, subplots, dual axes, color bars. Font-matched, no Python dependency.
+- **cetz-plot** (Typst native): Only extremely simple charts where lilaq is overkill (rare). Use `qk-cycle` colors.
+- **lilaq** (Typst native, the default): Most charts — line, bar, scatter, box, violin, heatmap, contour, subplots, dual axes, color bars. Font-matched, no Python dependency.
 - **plotnine**: Grammar-of-graphics style, faceted layouts, ggplot2 composition. `theme_qk() + scale_color_qk()`.
 - **matplotlib**: Full API control, statistical plots (kde, pair) via seaborn, complex annotations. `use()` from qk_style.
 - All Python tools output SVG with `svg.fonttype: path` for clean Typst embedding.

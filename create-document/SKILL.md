@@ -35,15 +35,11 @@ Detect document type from user request keywords:
 
 ---
 
-## CONSTRAINTS (Non-Negotiable, All Formats)
+## Constraints
 
-1. **Read the knowledge base FIRST** — notation registry, narrative arc, applications database
-2. Every new symbol MUST be checked against the notation registry
-3. Motivation before formalism — no exceptions
-4. Worked example within 2 slides/pages of every definition
-5. Max 2 colored boxes/callouts per slide or page
-6. Transition slides at major conceptual pivots (for slide decks)
-7. All citations verified against the bibliography
+All formats: verify every citation against the bibliography.
+
+Teaching material (lectures, slides, study guides): first read the project's knowledge base in `.claude/rules/` (notation registry, narrative arc) and check each new symbol against it; motivation before formalism; a worked example within 2 slides/pages of each definition; transition slides at major conceptual pivots.
 
 ---
 
@@ -61,9 +57,9 @@ For everything else — proceed without asking. Template auto-selection is corre
 
 ## PIPELINE
 
-### Phase 0: Auto-Discover (silent — no pause)
+### Phase 0: Auto-Discover
 
-Run all of these silently before drafting:
+Run these before drafting, without stopping to confirm:
 
 1. **Scan project for related materials**
    - Glob for `*.pdf`, `*.md`, `*.typ`, `images/` in the project directory
@@ -87,28 +83,7 @@ Run all of these silently before drafting:
   - Actionable advice → `#tip[...]`
   - Common mistake → `#trap[...]`
   - Memory aid → `#memorize[...]`
-- **Visual auto-detection** (proactive): as content is drafted, match patterns to the best tool. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); charts → cetz-plot (simple, < 3 series) / plotnine (faceted/grammar) / matplotlib+seaborn (statistical/complex) — generate SVG, embed; images → `/image-search` / `/mindmap` / `gemini-generate-image` MCP.
-
-  | Content pattern | Visual | Tool |
-  |-----------------|--------|------|
-  | Comparison of 2+ items, attribute grids | Table or grid | Typst native |
-  | Callout boxes, styled layouts | `rect()`, `block()` | Typst native |
-  | Sequential process, decision logic | Flowchart / decision tree | `fletcher` |
-  | System architecture, ER diagrams | Block / entity diagram | `fletcher` |
-  | Hierarchy or taxonomy | Tree diagram | `fletcher` or `/mindmap` |
-  | Topic overview, concept map | Mind map | `/mindmap` |
-  | Request-response, API flows | Sequence diagram | `chronos` |
-  | Project schedule, phases | Gantt chart | `timeliney` |
-  | Historical events, evolution | Timeline | `herodot` |
-  | Simple data chart (< 3 series, < 20 pts) | Line/bar/scatter chart | `cetz-plot` (Typst native, `qk-cycle`) |
-  | Statistical chart (violin, kde, heatmap) | Statistical plot | matplotlib+seaborn (`use()`, SVG) |
-  | Faceted / grammar-of-graphics chart | Layered plot | plotnine (`theme_qk()`, SVG) |
-  | Complex chart (4+ series, annotations) | Publication chart | matplotlib (full API, SVG) |
-  | Company logo, brand mark | Logo | `/image-search --logo` |
-  | Real-world photo | Photo | `/image-search` |
-  | Conceptual illustration, metaphor | AI-generated image | `gemini-generate-image` MCP |
-
-  See `typst/references/tool-routing.md` for full details, examples, and fallback chains.
+- **Visuals**: add them as content is drafted, routed per the typst skill's "Visual Tool Routing (compact)" section and its "Visual Auto-detection" table (single source; details in `typst/references/tool-routing.md`).
 - Always add `alt:` text on all images
 - Always `#set figure(placement: auto)`
 - Write COMPLETE `.typ` file — not batches
@@ -164,14 +139,14 @@ Deliver a summary:
 
 **What could break:** [list risks]
 
-**Next steps:** `/review` for deep audit · `/finish` for full pipeline · `/excellence` for milestone
+**Next steps:** `/doc-review` for deep audit · `/finish` for full pipeline · `/excellence` for milestone
 ```
 
 ---
 
 ## Figures & Code
 
-- Python scripts for data-driven content (plotly for Quarto only; matplotlib/plotnine for Typst charts)
+- Python scripts for data-driven content (plotly for Quarto only; Typst charts use lilaq by default, matplotlib/plotnine only for kde, pair or faceted plots)
 - Diagrams: TikZ in Beamer source, fletcher/chronos/timeliney in Typst (NEVER Python), SVG for Quarto
 - Save outputs as `.svg` for Typst embedding (preferred), `.png` for raster, `.parquet` for data persistence
 
@@ -184,7 +159,6 @@ Deliver a summary:
 [ ] No overflow issues (verified via PNG)
 [ ] All citations resolve
 [ ] Every definition has motivation + worked example
-[ ] Max 2 colored boxes/callouts per slide/page
 [ ] 2-3 Socratic questions embedded (for slides)
 [ ] Transition slides between sections (for slides)
 [ ] Visual aids present where content benefits from them
@@ -197,7 +171,6 @@ Deliver a summary:
 
 ### Typst Pedagogical Constraints (for slides)
 - Motivation before formalism
-- Max 2 boxes/slide
 - Worked example within 2 slides of definition
 - Fragment reveals with `#pause` (touying) — max 2-3 per slide
 - Speaker notes with `#speaker-note[...]` for presenter context

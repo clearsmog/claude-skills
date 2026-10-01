@@ -2,7 +2,7 @@
 name: mindmap
 description: Generate mind map images using mind-elixir. Produces PNG or SVG files from plaintext input. Use when the user needs a mind map, concept map, or topic overview diagram.
 allowed-tools: Bash, Write, Read
-argument-hint: <topic or "plaintext content"> [--dir mindmaps] [--format png|svg] [--theme academic|latte|dark] [--direction side|right|left] [--typst] [--caption "..."]
+argument-hint: <topic or "plaintext content"> [-o path] [--format png|svg] [--theme academic|latte|dark] [--direction side|right|left] [--typst] [--caption "..."]
 ---
 
 Generate a mind map image from a topic or plaintext mind map content.
@@ -56,7 +56,7 @@ For node colors, arrows, and summaries, see [references/advanced-syntax.md](refe
 
 `-i` input, `-o` output, `-f png|svg`, `-t academic|latte|dark`, `-d side|right|left`, `-s` scale (default 3), `--typst`, `--caption "..."`, `--typst-width 90%`
 
-Defaults: `--dir mindmaps/`, auto-generates filename from topic.
+`-o` is required (the script has no `--dir` and no auto-naming): unless the user gives a path, use `mindmaps/<topic-slug>.png`.
 
 ## Example invocation
 

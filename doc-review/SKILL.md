@@ -1,5 +1,5 @@
 ---
-name: review
+name: doc-review
 description: Universal file review — auto-detects format and launches appropriate review agents in parallel. Use for quality review of any supported file type (.tex, .qmd, .typ, .py, .md).
 argument-hint: "[filename]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
@@ -36,7 +36,7 @@ For `.typ` files, also detect document type from content:
 | `.qmd` | + quality-critic | If `.tex` sibling exists |
 | `.typ` | typst-reviewer + proofreader + writing-style-critic | Always |
 | `.typ` | + pedagogy-reviewer | If slide format detected |
-| `.py` | python-pro (subagent) | Always |
+| `.py` | general-purpose subagent with a Python code-review brief | Always |
 | `.md` | proofreader + writing-style-critic | Always |
 
 ## Steps
@@ -45,7 +45,7 @@ For `.typ` files, also detect document type from content:
 2. **Detect format** from extension
 3. **For `.typ` files**, read file to detect document subtype
 4. **Launch agents in parallel** per routing table
-5. **Collect all reports** from `quality_reports/`
+5. **Save each agent's returned report** to `quality_reports/` at the path named in that agent's Output section (read-only agents return their report as text instead of writing it), then collect them
 6. **Synthesize** a consolidated summary table
 
 ## Output

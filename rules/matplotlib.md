@@ -11,7 +11,7 @@ paths:
 
 ## qk Style (MANDATORY for all plots)
 - Always apply before plotting: `plt.style.use('qk')` or `from qk_style import use; use()`
-- Style source: ~/Developer/Typst-PDF/MatplotlibStyle/ (v3.0.0, Tailwind CSS palette)
+- Style source: ~/Developer/Typst-PDF/MatplotlibStyle/ (Tailwind CSS palette)
 - Named colors: `from qk_style import QK_COLORS, CYCLE, CYCLE_CB, CYCLE_LIGHT, CYCLE_BAR` — use `CYCLE[:n]` for explicit bar/histogram colors
 - Light variants: `CYCLE_LIGHT` (75% lightened, area fills), `CYCLE_BAR` (30% lightened, bar fills), `lighten(hex, amount)` helper
 - Colorblind mode: `use(colorblind=True)` swaps to Okabe-Ito palette (`CYCLE_CB`)
@@ -64,8 +64,8 @@ When the user asks for a chart without specifying a tool, use this lookup.
 | Plot intent | Tool | Code pattern |
 |---|---|---|
 | Line/bar/scatter (any complexity) | Lilaq | `#show: qk-lilaq-theme()` then `lq.diagram(...)` |
-| Simple chart (< 3 series, < 20 pts) | cetz-plot | `plot-style: qk-plot-style` |
-| Statistical (violin, kde, pair) | Python SVG | seaborn/matplotlib, embed `#image("chart.svg")` |
+| Extremely simple chart where Lilaq is overkill (rare) | cetz-plot | `plot-style: qk-plot-style` |
+| Statistical (kde, pair) | Python SVG | seaborn/matplotlib, embed `#image("chart.svg")` |
 | Faceted grammar | Python SVG | plotnine, embed `#image("chart.svg")` |
 
 ### Tiebreakers
@@ -74,7 +74,7 @@ When the user asks for a chart without specifying a tool, use this lookup.
 - seaborn vs matplotlib: pick **seaborn** for statistical, **matplotlib** for custom layout
 
 ## SVG Font Rendering for Typst
-- `qk.mplstyle` v3.0.0 sets `svg.fonttype: path` by default — text becomes vector paths
+- `qk.mplstyle` sets `svg.fonttype: path` by default — text becomes vector paths
 - Without this, Typst cannot render SVG text when fonts (e.g. Inter) are missing from its cache
 - This is the #1 cause of broken chart text in Typst documents
 - Trade-off: text becomes non-editable vectors, but renders identically everywhere
