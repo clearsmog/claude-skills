@@ -15,7 +15,7 @@
 <p align="center">
   <img src="docs/images/demo.gif" alt="Terminal recording: Claude Code runs /qk-skills:diagram on a pull-request flowchart, writes the D2 source, renders it, checks the image and saves light and dark versions" width="100%">
 </p>
-<p align="center"><sub>A real, unedited run of <code>/qk-skills:diagram</code>, sped up. The finished diagram is shown at the end.</sub></p>
+<p align="center"><sub>A real run of <code>/qk-skills:diagram</code>, sped up 1.5× and cut after Claude's last line, with the finished diagram appended at the end. Recorded with <a href="docs/demo.tape"><code>docs/demo.tape</code></a>.</sub></p>
 
 ## Install
 
