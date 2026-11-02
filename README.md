@@ -12,11 +12,10 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748b?style=flat-square" alt="MIT license"></a>
 </p>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/mindmap-dark.png">
-  <img src="docs/images/mindmap.png" alt="Mind map of the skills, grouped into Write, Review, Draw, Research and Ship. Drawn by the mindmap skill." width="100%">
-</picture>
-<p align="center"><sub>The map above was drawn by <code>/mindmap</code>.</sub></p>
+<p align="center">
+  <img src="docs/images/demo.gif" alt="Terminal recording: Claude Code runs /qk-skills:diagram on a pull-request flowchart, writes the D2 source, renders it, checks the image and saves light and dark versions" width="100%">
+</p>
+<p align="center"><sub>A real, unedited run of <code>/qk-skills:diagram</code>, sped up. The finished diagram is shown at the end.</sub></p>
 
 ## Install
 
@@ -46,6 +45,20 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
 
 ## What's inside
 
+<table>
+  <tr>
+    <td width="33%"><img src="docs/images/mindmap-academic.png" alt="Skill map, academic theme"></td>
+    <td width="33%"><img src="docs/images/mindmap-latte.png" alt="Skill map, latte theme"></td>
+    <td width="33%"><img src="docs/images/mindmap-dark.png" alt="Skill map, dark theme"></td>
+  </tr>
+  <tr>
+    <td align="center"><code>--theme academic</code></td>
+    <td align="center"><code>--theme latte</code></td>
+    <td align="center"><code>--theme dark</code></td>
+  </tr>
+</table>
+<p align="center"><sub>The same skill map drawn by <code>/mindmap</code> in each of its three themes.</sub></p>
+
 ### Draw
 
 | Skill | What it does |
@@ -55,11 +68,19 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
 | **image-search** | Finds and downloads real photos, logos and license-clear stock images, with Typst embedding code |
 | **extract-diagrams** | Exports CeTZ diagrams from a Typst file to SVG |
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/images/causal-rate-hike.dark.png">
-  <img src="docs/images/causal-rate-hike.light.png" alt="D2 causal diagram: a policy rate rise raises the risk-free rate, which raises forward prices and call values, lowers put values and bond prices, and pays variation margin to a short bond-futures position" width="60%">
-</picture>
-<p><sub>A causal network from <code>/diagram</code>, using its bundled example. Labels can mix CJK, English and LaTeX.</sub></p>
+<table>
+  <tr>
+    <td width="33%" align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/gallery/sequence-futures-lifecycle.dark.png"><img src="docs/images/gallery/sequence-futures-lifecycle.light.png" alt="Sequence / swimlane diagram drawn by the diagram skill" width="100%"></picture><br><sub>Sequence / swimlane</sub></td>
+    <td width="33%" align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/gallery/flow-option-exercise.dark.png"><img src="docs/images/gallery/flow-option-exercise.light.png" alt="Flow / decision diagram drawn by the diagram skill" width="100%"></picture><br><sub>Flow / decision</sub></td>
+    <td width="33%" align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/gallery/causal-rate-hike.dark.png"><img src="docs/images/gallery/causal-rate-hike.light.png" alt="Causal network diagram drawn by the diagram skill" width="100%"></picture><br><sub>Causal network</sub></td>
+  </tr>
+  <tr>
+    <td width="33%" align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/gallery/state-swap-trade.dark.png"><img src="docs/images/gallery/state-swap-trade.light.png" alt="State machine diagram drawn by the diagram skill" width="100%"></picture><br><sub>State machine</sub></td>
+    <td width="33%" align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/images/gallery/layers-market-structure.dark.png"><img src="docs/images/gallery/layers-market-structure.light.png" alt="Layers / lanes diagram drawn by the diagram skill" width="100%"></picture><br><sub>Layers / lanes</sub></td>
+    <td width="33%" align="center"><img src="docs/images/gallery/steps-rate-transmission.gif" alt="Step walkthrough: a rate-transmission chain that grows one link per frame" width="100%"><br><sub>Step walkthrough (<code>--gif</code>)</sub></td>
+  </tr>
+</table>
+<p><sub>All six diagram types from <code>/diagram</code>, rendered from the examples bundled with the skill. Each comes in a light and a dark version; labels can mix CJK, English and LaTeX.</sub></p>
 
 ### Write
 
@@ -69,6 +90,14 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
 | **typst** | Typst reference loaded on demand: syntax, templates, a component library, visual-tool routing, and an offline API and package search |
 | **compile** | Compiles `.typ`, `.qmd` or `.py` with the right command for the format |
 | **translate** | Converts documents between Typst and Quarto |
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/typst-page-1.png" alt="Page 1 of a Typst primer on interest rate swaps: title, metric cards, key-point callout, formula box, styled table"></td>
+    <td width="50%"><img src="docs/images/typst-page-2.png" alt="Page 2: a lilaq rate chart, an embedded D2 lifecycle diagram, trap and example callouts"></td>
+  </tr>
+</table>
+<p><sub>A two-page primer written with the <code>typst</code> skill and its component library: metric cards, callouts, a formula box, a lilaq chart and an embedded D2 diagram. Source: <a href="docs/examples/swaps.typ"><code>docs/examples/swaps.typ</code></a>.</sub></p>
 
 ### Review
 
@@ -161,7 +190,7 @@ Every skill with scripts uses [uv](https://docs.astral.sh/uv/) (`brew install uv
 | Skill | Also needs |
 |---|---|
 | **diagram** | [D2](https://d2lang.com) (`brew install d2`) and Google Chrome |
-| **typst**, **compile** | [Typst CLI](https://github.com/typst/typst) (`brew install typst`) |
+| **typst**, **compile** | [Typst CLI](https://github.com/typst/typst) (`brew install typst`); the qk component library from [typst-component-library](https://github.com/clearsmog/typst-component-library), installed as `@local/qk` |
 | **mindmap** | Node.js; uses Puppeteer's Chrome, or your installed Chrome if that is missing |
 | **image-search** | `SERPAPI_KEY` optional (DuckDuckGo is the free fallback); `UNSPLASH_ACCESS_KEY` / `PEXELS_API_KEY` for `--stock` |
 | **sec-edgar** | `SEC_USER_AGENT`, an app name plus contact email (SEC rejects requests without one) |
