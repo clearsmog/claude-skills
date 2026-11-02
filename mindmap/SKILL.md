@@ -9,10 +9,10 @@ Generate a mind map image from a topic or plaintext mind map content.
 
 ## Setup (first run only)
 
-If `{baseDir}/scripts/node_modules` does not exist, run:
+If `${CLAUDE_SKILL_DIR}/scripts/node_modules` does not exist, run:
 
 ```bash
-cd {baseDir}/scripts && npm install
+cd ${CLAUDE_SKILL_DIR}/scripts && npm install
 ```
 
 ## Workflow
@@ -24,7 +24,7 @@ cd {baseDir}/scripts && npm install
 3. **Run the script** to render the mind map:
 
 ```bash
-node {baseDir}/scripts/generate_mindmap.mjs -i /tmp/mindmap-input.txt -o "<output-path>" [flags...]
+node ${CLAUDE_SKILL_DIR}/scripts/generate_mindmap.mjs -i /tmp/mindmap-input.txt -o "<output-path>" [flags...]
 ```
 
 4. **Print the script's stdout** to the user. Open the output file with `open <path>`.
@@ -63,7 +63,7 @@ For node colors, arrows, and summaries, see [references/advanced-syntax.md](refe
 For `/mindmap "Portfolio Theory"`:
 
 ```bash
-node {baseDir}/scripts/generate_mindmap.mjs \
+node ${CLAUDE_SKILL_DIR}/scripts/generate_mindmap.mjs \
   -i /tmp/mindmap-input.txt \
   -o "mindmaps/portfolio-theory.png"
 ```

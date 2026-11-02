@@ -30,7 +30,7 @@
 > Uses touying 0.7.4 theme system. See `references/touying-guide.md` for full API.
 
 ```typst
-#import "@preview/touying:0.7.4": *
+#import "@preview/touying:0.8.0": *
 #import themes.metropolis: *
 #import "@local/qk:2.2.0": qk-slides, slide-callout, keypoint, tip, trap
 
@@ -66,7 +66,7 @@ Revealed on click.
 **Use when:** "lecture", "class", "academic talk" | **Skip when:** corporate/pitch decks, short docs
 
 ```typst
-#import "@preview/touying:0.7.4": *
+#import "@preview/touying:0.8.0": *
 #import themes.university: *
 #import "@local/qk:2.2.0": qk-slides, slide-callout, keypoint, tip, trap
 

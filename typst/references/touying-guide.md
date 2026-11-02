@@ -1,15 +1,15 @@
 # Touying Presentation Guide
 
-> **Version:** touying 0.7.4 (compiler ≥0.12; verified on Typst 0.15.0)
-> **Import:** `#import "@preview/touying:0.7.4": *`
-> **CRITICAL:** The 0.6.x/0.7.x API differs completely from 0.3.x/0.4.x. Do NOT use `register()`, `utils.methods()`, or `utils.slides()` — those are the old API. The 0.6→0.7 change is incremental (same `theme.with(...)` system); see Version History for the two minor behavior changes.
+> **Version:** touying 0.8.0 (requires Typst ≥0.15; verified on Typst 0.15.1)
+> **Import:** `#import "@preview/touying:0.8.0": *`
+> **CRITICAL:** The 0.6+ API differs completely from 0.3.x/0.4.x. Do NOT use `register()`, `utils.methods()`, or `utils.slides()` — those are the old API. 0.6→0.7→0.8 keep the same `theme.with(...)` system; see "Migrating to 0.8" for the behavior changes.
 
 ---
 
 ## Quick Start (Metropolis)
 
 ```typst
-#import "@preview/touying:0.7.4": *
+#import "@preview/touying:0.8.0": *
 #import themes.metropolis: *
 #import "@local/qk:2.2.0": qk-slides, slide-callout, keypoint, tip
 
@@ -190,7 +190,17 @@ For lists that reveal item by item, put `#pause` between items (robust across th
 - Third item
 ```
 
-> **0.7.x note:** `components.progressive-show` (the old 0.6.x helper) was removed. The compact equivalent is now `utils.item-by-item`, but it needs the slide's `self` and must be wrapped (`touying-fn-wrapper(self => utils.item-by-item(self: self)[...])`). For everyday decks the `#pause`-between-items form above is simpler and always works.
+Compact form (0.8+): `#item-by-item` is a top-level animation function, no `self` wrapper needed. A later `#pause` lands after its last item.
+
+```typst
+#item-by-item[
+  - First item
+  - Second item
+  - Third item
+]
+```
+
+> `components.progressive-show` (0.6.x) no longer exists. In 0.7.x the equivalent needed `touying-fn-wrapper(self => utils.item-by-item(self: self)[...])`; don't copy that form into 0.8 decks.
 
 **Usage guideline:** Use `#pause` sparingly — 2-3 per slide maximum. Overuse makes presentations feel sluggish.
 
@@ -262,7 +272,7 @@ Use `slide-callout` to render qk callout boxes at slide-appropriate sizing:
 
 | Pitfall | Problem | Fix |
 |---------|---------|-----|
-| Using 0.3.x/0.4.x API | `register()`, `utils.methods()` don't exist in 0.6.x/0.7.x | Use `#show: theme-name.with(...)` |
+| Using 0.3.x/0.4.x API | `register()`, `utils.methods()` don't exist in 0.6+ | Use `#show: theme-name.with(...)` |
 | Missing theme import | `themes.metropolis` not found | Add `#import themes.metropolis: *` after touying import |
 | Empty title slide | No metadata shown | Populate `config-info(...)` |
 | Too many pauses | Presentation feels sluggish | Max 2-3 `#pause` per slide |
@@ -275,6 +285,7 @@ Use `slide-callout` to render qk callout boxes at slide-appropriate sizing:
 
 | Version | Breaking Changes |
 |---------|-----------------|
+| 0.8.0 | Requires Typst 0.15; `#pause` after `uncover`/`only`/`alternatives` no longer skips their reserved subslides; footnote bibliography is a boolean flag; `semi-transparent-cover` deprecated; `touying-recall(subslide:)` → `subslides:`; `utils.handout-only` removed (see Migrating to 0.8) |
 | 0.7.4 | `lazy-layout` defaults to `false` for `cols` |
 | 0.7.3 | `#speaker-note[]` always attaches to previous slide; `receive-body-for-new-*-slide-fn` defaults to `false` (see Speaker Notes) |
 | 0.7.x | Same API as 0.6.x (`#show: theme.with(...)`, `config-info`, `config-common`) — incremental, no theme-system rewrite |
@@ -283,4 +294,20 @@ Use `slide-callout` to render qk callout boxes at slide-appropriate sizing:
 | 0.4.x | Old API: `register()` + `utils.methods()` |
 | 0.3.x | Original API: `register()` + `utils.slides()` |
 
-**Use 0.7.4** — current release, verified compatible with Typst 0.15.0. The 0.6.x API patterns in this guide all carry over unchanged.
+**Use 0.8.0**: current release, verified on Typst 0.15.1. The `theme.with(...)` patterns in this guide carry over unchanged from 0.6/0.7.
+
+### Migrating to 0.8
+
+Old decks can keep their pinned version; upgrade only when editing. Check these when bumping a 0.7.x deck:
+
+| 0.7.x | 0.8.0 |
+|---|---|
+| `#uncover("2")[..] … #pause` jumped past subslide 2 | `#pause` advances by one; add an extra `#pause` / `#jump(n, relative: true)` if you relied on the old snap |
+| `config-common(show-bibliography-as-footnote: bibliography("ref.bib"))` + `magic.bibliography()` | `config-common(show-bibliography-as-footnote: true)` and a real `#bibliography("ref.bib")` in the deck (wrap in `hide(..)` to suppress the list) |
+| `config-methods(cover: utils.semi-transparent-cover)` | `utils.alpha-changing-cover` or `utils.color-changing-cover.with(color: gray)` (old one still compiles, but warns) |
+| `utils.handout-only[..]` | top-level `#handout-only[..]` |
+| `touying-recall(<label>, subslide: ..)` | `subslides: ..`, and `none`/`auto` swapped meaning (default behavior unchanged) |
+| `#only(-1)[..]` (silently ignored) | panics; use a `#waypoint(<w>)` + `get-last(<w>)` |
+| `touying-equation` | deprecated; `#pause`/`#uncover` now work inside normal math, including `frac`/`mat` |
+
+New in 0.8: article mode (same source compiles to a prose document), `touying-render`, `animate`, `.pdfpc` export as bundle asset.

@@ -163,7 +163,11 @@ try {
 // ---------------------------------------------------------------------------
 // Render with Puppeteer
 // ---------------------------------------------------------------------------
-const browser = await puppeteer.launch({ headless: true });
+// Puppeteer's own Chrome download is often missing (npm install skipped it, or the
+// cache was cleared); fall back to the locally installed Chrome stable.
+const browser = await puppeteer
+  .launch({ headless: true })
+  .catch(() => puppeteer.launch({ headless: true, channel: "chrome" }));
 const page = await browser.newPage();
 const scaleFactor = parseInt(args.scale ?? "3", 10);
 await page.setViewport({ width: vpWidth, height: vpHeight, deviceScaleFactor: scaleFactor });

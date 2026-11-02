@@ -236,7 +236,7 @@ Behaviour that changed. Do not emit the old forms.
 
 | Area | Old (broken / absent) | New |
 |------|----------------------|-----|
-| `chart` | `chart("figs/p.png", "Cap")` — a path inside a package resolves against the *package* dir, so this never worked | `chart(read("figs/p.png", encoding: none), "Cap")` or `chart(image("figs/p.png"), "Cap")` |
+| `chart` | `chart("figs/p.png", "Cap")` — a path inside a package resolves against the *package* dir, so this never worked | `chart(path("figs/p.png"), "Cap")`, `chart(read("figs/p.png", encoding: none), "Cap")` or `chart(image("figs/p.png"), "Cap")` |
 | `assert-contrast` | errored on **every** call, pass or fail | works; panics only on genuine failure |
 | `margin-note` / `sidenote` | ran off the paper edge; `side: "left"` was invisible | sized to the real page margin; `gutter:` and `width:` params added |
 | `comparison-table` | header text unreadable outside a preset | picks its own contrast; new `header-color:` param |

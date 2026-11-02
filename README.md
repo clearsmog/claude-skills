@@ -1,218 +1,176 @@
-# Claude Code Skills
+<h1 align="center">qk skills for Claude Code</h1>
 
-A collection of 21 custom skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — document authoring, quality pipelines, web image search, mind mapping, and more. AI image generation uses the Gemini MCP server directly.
+<p align="center">
+  24 skills that draw diagrams, write and review Typst documents, recover dead web pages,<br>
+  pull SEC filings, and check that work actually runs before Claude calls it done.
+</p>
 
-Built on the [Agent Skills](https://agentskills.io) open standard.
+<p align="center">
+  <img src="https://img.shields.io/badge/skills-24-2563eb?style=flat-square" alt="24 skills">
+  <img src="https://img.shields.io/badge/Claude%20Code-plugin-d97706?style=flat-square" alt="Claude Code plugin">
+  <img src="https://img.shields.io/badge/Agent%20Skills-standard-7c3aed?style=flat-square" alt="Agent Skills standard">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748b?style=flat-square" alt="MIT license"></a>
+</p>
 
-## Quick Start
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/mindmap-dark.png">
+  <img src="docs/images/mindmap.png" alt="Mind map of the skills, grouped into Write, Review, Draw, Research and Ship. Drawn by the mindmap skill." width="100%">
+</picture>
+<p align="center"><sub>The map above was drawn by <code>/mindmap</code>.</sub></p>
+
+## Install
+
+As a plugin (Claude Code 2.1.275 or later):
+
+```
+/plugin install qk-skills --marketplace clearsmog/claude-skills
+```
+
+On older versions, add the marketplace first:
+
+```
+/plugin marketplace add clearsmog/claude-skills
+/plugin install qk-skills@clearsmog
+```
+
+Plugin skills are namespaced, so `/diagram` becomes `/qk-skills:diagram`.
+
+Or clone the repo as your personal skills directory, which keeps the short names:
 
 ```bash
 git clone https://github.com/clearsmog/claude-skills.git ~/.claude/skills
+cp ~/.claude/skills/rules/*.md ~/.claude/rules/   # optional: always-on Typst and plotting rules
 ```
 
-That's it. Skills are available immediately — slash commands (`/create-document`, `/finish`, `/image-search`, etc.) appear in your command menu.
+If you already have a `~/.claude/skills` directory, clone elsewhere and symlink the skill folders you want.
 
-### Companion Rules (recommended)
+## What's inside
 
-The repo includes companion [rules](https://docs.anthropic.com/en/docs/claude-code/settings#rules) that enable always-on behaviors like visual auto-detection. Without them, visual tools only fire when you explicitly invoke `/typst` or `/create-document`.
+### Draw
 
-```bash
-# Copy (or symlink) the rules into place
-cp -r ~/.claude/skills/rules/*.md ~/.claude/rules/
-```
+| Skill | What it does |
+|---|---|
+| **diagram** | D2 diagrams with a light and a dark version: sequence and swimlane, flowcharts, causal networks, state machines, layered maps, step-by-step walkthroughs. Lints the source, renders SVG and PNG, and makes Claude look at the result before handing it over |
+| **mindmap** | Mind maps from a topic or an indented outline, as PNG or SVG, in three themes |
+| **image-search** | Finds and downloads real photos, logos and license-clear stock images, with Typst embedding code |
+| **extract-diagrams** | Exports CeTZ diagrams from a Typst file to SVG |
 
-> **Already have a `~/.claude/skills` directory?** Clone to a different path and symlink individual skill folders, or use the plugin method: `/plugins add https://github.com/clearsmog/claude-skills`
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/causal-rate-hike.dark.png">
+  <img src="docs/images/causal-rate-hike.light.png" alt="D2 causal diagram: a policy rate rise raises the risk-free rate, which raises forward prices and call values, lowers put values and bond prices, and pays variation margin to a short bond-futures position" width="60%">
+</picture>
+<p><sub>A causal network from <code>/diagram</code>, using its bundled example. Labels can mix CJK, English and LaTeX.</sub></p>
 
-## Skills Overview
+### Write
 
-### Document Creation
+| Skill | What it does |
+|---|---|
+| **create-document** | One prompt to a finished document: finds source material, copies the style of sibling files, drafts, compiles, checks the render and fixes what it finds |
+| **typst** | Typst reference loaded on demand: syntax, templates, a component library, visual-tool routing, and an offline API and package search |
+| **compile** | Compiles `.typ`, `.qmd` or `.py` with the right command for the format |
+| **translate** | Converts documents between Typst and Quarto |
 
-| Skill | Command | What it does |
-|-------|---------|-------------|
-| **create-document** | `/create-document [topic]` | One-prompt autonomous pipeline: auto-discovers materials, inherits sibling styles, drafts complete document, compiles, visually verifies, and auto-fixes |
-| **compile** | `/compile [file]` | Compile any supported format (`.typ`, `.qmd`, `.py`) |
-| **translate** | `/translate [file]` | Multi-format document translation (Typst <-> Quarto) |
+### Review
 
-### Quality Pipeline
+| Skill | What it does |
+|---|---|
+| **finish** | The full pipeline: compile, visual check, auto-fix, review, fix again, score |
+| **doc-review** | Picks reviewers for the file type and runs them in parallel |
+| **qa** | Critic and fixer loop, up to 5 rounds |
+| **excellence** | Four reviewers at once (visual, pedagogy, proofreading, domain) for milestone drafts |
+| **visual-audit** | Overflow, font consistency, repeated components, spacing |
+| **pedagogy-review** | Narrative arc, prerequisites, worked examples, notation, pacing |
+| **proofread** | Grammar, typos, consistency, academic style |
+| **devils-advocate** | Argues against the content to find weak claims |
+| **validate-bib** | Missing and unused bibliography entries |
 
-| Skill | Command | What it does |
-|-------|---------|-------------|
-| **finish** | `/finish [file]` | Master pipeline — compile, visual verify, auto-fix, review, fix, score |
-| **doc-review** | `/doc-review [file]` | Launch format-appropriate review agents in parallel |
-| **qa** | `/qa [file]` | Adversarial audit loop: critic finds issues, fixer applies fixes (max 5 rounds) |
-| **excellence** | `/excellence [file]` | Multi-agent review (visual + pedagogy + proofreading + domain) for milestones |
-| **visual-audit** | `/visual-audit [file]` | Check overflow, font consistency, component fatigue, spacing |
-| **pedagogy-review** | `/pedagogy-review [file]` | Narrative arc, prerequisites, worked examples, notation, pacing |
-| **proofread** | `/proofread [file]` | Grammar, typos, overflow, consistency, academic writing quality |
-| **devils-advocate** | `/devils-advocate [file]` | Adversarial content challenge |
-| **validate-bib** | `/validate-bib` | Find missing bibliography entries and unused references |
+### Research
 
-### Visual Tools
+| Skill | What it does |
+|---|---|
+| **wayback** | Recovers dead or changed pages from the Wayback Machine, Common Crawl and Arquivo.pt together; lists captures, fetches them as text, and word-diffs two versions |
+| **sec-edgar** | US company filings from SEC EDGAR's free APIs: 10-K/10-Q/8-K text, full-text search since 2001, XBRL financials |
 
-| Skill | Command | What it does |
-|-------|---------|-------------|
-| **image-search** | `/image-search [query]` | Find and download real-world images, logos, or stock photos |
-| **mindmap** | `/mindmap [topic]` | Generate mind map images from a topic |
-| **extract-diagrams** | `/extract-diagrams [file]` | Extract CeTZ diagrams to SVG from Typst files |
+### Ship
 
-### Reference & Utility
+| Skill | What it does |
+|---|---|
+| **verify** | Before a commit or "done": compiles changed files, runs the project's tests and build, and click-tests frontend changes in a real browser |
+| **deploy** | Deployment workflow |
+| **learn** | Turns something learned in the current session into a reusable skill |
+| **context-status** | Context usage and session health |
+| **google-tasks** | Google Tasks through the `gtasks` CLI |
 
-| Skill | Command | What it does |
-|-------|---------|-------------|
-| **typst** | *(auto-loaded)* | Syntax guide, templates, component library, visual routing, packages |
-| **google-tasks** | *(auto-loaded)* | Google Tasks management via `gtasks` CLI |
-| **learn** | `/learn` | Extract reusable knowledge from the current session into a persistent skill |
-| **context-status** | `/context-status` | Check context usage and session health |
-| **deploy** | `/deploy` | Deployment workflow |
-
-## How They Work Together
-
-The skills form an integrated pipeline:
+## How the document skills fit together
 
 ```
 /create-document "study guide on portfolio theory"
         |
         v
-  Phase 0: Auto-discover (scans for PDFs, .typ siblings, images)
-  Phase 1: Draft (full document, qk components, auto-visuals)
-  Phase 2: Compile + visual verify + auto-fix (max 3 rounds)
-  Phase 3: Present summary
+  find materials -> draft -> compile -> check render -> fix (up to 3 rounds)
         |
         v
-  Want deeper review?
+  want a deeper pass?
         |
-   /finish ──> /doc-review + /qa loop ──> auto-fix ──> score
+   /finish ──> /doc-review + /qa loop ──> fix ──> score
         |
-   /excellence ──> 4 parallel agents ──> comprehensive report
+   /excellence ──> 4 reviewers in parallel ──> report
 ```
 
-### Visual Tool Routing
-
-When the companion rules are installed (`rules/typst.md` → `~/.claude/rules/`), Claude auto-detects visual needs whenever it edits any `.typ` file — no explicit skill invocation required. Without the rules, auto-detection only fires inside `/typst`, `/create-document`, or `/finish`.
+With `rules/typst.md` installed, Claude picks a visual tool whenever it edits a `.typ` file:
 
 ```
-Can Typst draw it natively?      ->  Typst (tables, boxes, fletcher flowcharts)
-Simple chart (< 3 series)?      ->  cetz-plot (native, font-matching)
-Real photo or logo?              ->  /image-search
-Mind map or concept tree?        ->  /mindmap
-Structured diagram?              ->  Native packages (fletcher, chronos, timeliney)
-Most charts (multi-series, subplots)? ->  lilaq (native Typst, font-matched)
-Complex / Python data pipeline?  ->  matplotlib
-Conceptual illustration?         ->  gemini-generate-image MCP
+Can Typst draw it natively?            ->  Typst (tables, boxes, fletcher flowcharts)
+Structured diagram, 10 nodes or fewer? ->  fletcher, chronos, timeliney
+Bigger, multi-party or a network?      ->  /diagram (D2 SVG)
+Most charts?                           ->  lilaq (native Typst, font-matched)
+Simple chart (< 3 series)?             ->  cetz-plot
+Complex or Python data pipeline?       ->  matplotlib
+Real photo or logo?                    ->  /image-search
+Mind map or concept tree?              ->  /mindmap
 ```
 
-Auto-detection is suppressed for quick edits (< 15 lines), documents that already have visuals, or when the user requests text-only output.
-
-## Slash Command Reference
-
-### AI image generation (Gemini MCP)
-
-AI image generation uses the `gemini-generate-image` MCP tool directly — no slash command needed. Claude auto-invokes it for conceptual illustrations when writing Typst documents. For multi-turn editing, use `gemini-start-image-edit`.
-
-### `/mindmap` — Mind map generation
+## Usage examples
 
 ```bash
-/mindmap "Portfolio Theory"
-/mindmap "CAPM" --typst --caption "CAPM Overview"
+/diagram "settlement of an FX swap between two banks and a CLS member"
 /mindmap "Risk Parity" --theme dark --format svg
-```
-
-| Flag | Default | What it does |
-|------|---------|-------------|
-| `--dir` | `mindmaps` | Where to save |
-| `--format` | `png` | `png` or `svg` |
-| `--theme` | `academic` | `academic` (blue/orange), `latte` (pastel), `dark` |
-| `--direction` | `side` | `side`, `right`, or `left` |
-| `--typst` | — | Print Typst embedding code |
-
-### `/image-search` — Web image search
-
-```bash
-/image-search "golden gate bridge sunset"
 /image-search --logo "Stripe"
 /image-search --stock "sustainable energy" -n 2
-/image-search --url "https://example.com/chart.png" "quarterly chart"
+/wayback "what did https://example.com/careers say in 2023?"
 ```
 
-| Flag | Default | What it does |
-|------|---------|-------------|
-| `--logo` | off | Treat query as company name, fetch logo |
-| `--stock` | off | Search Unsplash/Pexels (license-clear) |
-| `--url` | — | Download from a specific URL |
+| `/mindmap` flag | Default | Effect |
+|---|---|---|
+| `--format` | `png` | `png` or `svg` |
+| `--theme` | `academic` | `academic`, `latte` or `dark` |
+| `--direction` | `side` | `side`, `right` or `left` |
+| `--typst` | off | Print Typst embedding code |
+
+| `/image-search` flag | Default | Effect |
+|---|---|---|
+| `--logo` | off | Treat the query as a company name and fetch its logo |
+| `--stock` | off | Search Unsplash and Pexels (license-clear) |
+| `--url` | none | Download from a given URL |
 | `-n` | `1` | Number of images |
-| `--size` | — | `large` / `medium` / `icon` |
-| `--type` | — | `photo` / `clipart` / `face` / `lineart` |
 
-## Setup
+## Requirements
 
-All skills need [uv](https://docs.astral.sh/uv/) (`brew install uv`).
+Every skill with scripts uses [uv](https://docs.astral.sh/uv/) (`brew install uv`).
 
-| Skill | Additional requirements |
-|-------|----------------------|
-| **typst** | [Typst CLI](https://github.com/typst/typst) (`brew install typst`) |
-| **image-search** | `SERPAPI_KEY` optional ([get one](https://serpapi.com/)); DuckDuckGo fallback is free |
-| **mindmap** | Node.js (`brew install node`) |
-| **google-tasks** | `gtasks` CLI installed separately |
+| Skill | Also needs |
+|---|---|
+| **diagram** | [D2](https://d2lang.com) (`brew install d2`) and Google Chrome |
+| **typst**, **compile** | [Typst CLI](https://github.com/typst/typst) (`brew install typst`) |
+| **mindmap** | Node.js; uses Puppeteer's Chrome, or your installed Chrome if that is missing |
+| **image-search** | `SERPAPI_KEY` optional (DuckDuckGo is the free fallback); `UNSPLASH_ACCESS_KEY` / `PEXELS_API_KEY` for `--stock` |
+| **sec-edgar** | `SEC_USER_AGENT`, an app name plus contact email (SEC rejects requests without one) |
+| **google-tasks** | The `gtasks` CLI |
 
-**Setting API keys:**
+## Credits
 
-```bash
-# fish
-set -Ux GEMINI_API_KEY "your-key"
-set -Ux SERPAPI_KEY "your-key"
-
-# bash / zsh
-export GEMINI_API_KEY="your-key"  # add to ~/.zshrc
-export SERPAPI_KEY="your-key"
-```
-
-## Repository Structure
-
-```
-skills/
-├── rules/
-│   └── typst.md                     # Companion rules (visual auto-detection)
-├── create-document/SKILL.md         # Autonomous document creation pipeline
-├── compile/SKILL.md                 # Format-detecting compilation
-├── finish/SKILL.md                  # Master quality pipeline
-├── review/SKILL.md                  # Universal file review
-├── qa/SKILL.md                      # Adversarial quality audit loop
-├── excellence/SKILL.md              # Multi-agent milestone review
-├── visual-audit/SKILL.md            # Visual layout auditing
-├── pedagogy-review/SKILL.md         # Educational content review
-├── proofread/SKILL.md               # Grammar and consistency
-├── devils-advocate/SKILL.md         # Adversarial content challenge
-├── validate-bib/SKILL.md            # Bibliography validation
-├── image-search/
-│   ├── SKILL.md                     # Web image search & download
-│   └── scripts/image_search.py
-├── mindmap/
-│   ├── SKILL.md                     # Mind map generation
-│   ├── references/advanced-syntax.md
-│   └── scripts/generate_mindmap.mjs
-├── extract-diagrams/SKILL.md        # CeTZ diagram extraction
-├── typst/
-│   ├── SKILL.md                     # Typst reference (auto-loaded)
-│   └── references/
-│       ├── quick-ref.md             # Syntax, errors, special characters
-│       ├── component-library.md     # @local/qk:2.2.0 API
-│       ├── tool-routing.md          # Visual tool routing + examples
-│       ├── templates.md             # 10 document preambles
-│       ├── common-patterns.md       # Tables, show rules, large documents
-│       ├── layout-patterns.md       # Spacing, figures, curve()
-│       ├── math-pitfalls.md         # Math mode edge cases
-│       ├── packages.md              # Popular packages with imports
-│       ├── symbols.md               # sym.* arrows and symbols
-│       ├── touying-guide.md         # Presentation framework
-│       ├── quality-gates.md         # Rubrics and iteration limits
-│       ├── visual-verification.md   # PNG rendering and spot-checks
-│       └── data-driven.md           # JSON/CSV generation patterns
-├── translate/SKILL.md               # Document format translation
-├── learn/SKILL.md                   # Session knowledge extraction
-├── deploy/SKILL.md                  # Deployment workflow
-├── context-status/SKILL.md          # Context health monitoring
-└── google-tasks/SKILL.md            # Google Tasks CLI reference
-```
+- The Typst API and package search scripts and indexes come from [lucifer1004/claude-skill-typst](https://github.com/lucifer1004/claude-skill-typst) (MIT); its license is in `typst/scripts/LICENSE`.
+- For literature search and citation work, see [K-Dense-AI/scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills).
 
 ## License
 

@@ -72,7 +72,7 @@ Apply document-wide styling with `#show:`:
 
 ```typst
 // Use a template
-#import "@preview/charged-ieee:0.1.0": ieee
+#import "@preview/charged-ieee:0.1.4": ieee
 #show: ieee.with(
   title: "My Paper",
   authors: ("Alice", "Bob"),

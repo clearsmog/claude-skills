@@ -172,6 +172,21 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 | Data-driven generation (JSON, CSV, batch, variants) | `references/data-driven.md` |
 | `sym.*` symbols | `references/symbols.md` |
 
+## Offline API and Package Search
+
+Look up the exact signature before writing an unfamiliar function or parameter; don't guess from memory. Index covers Typst 0.15.1 (the installed version).
+
+```bash
+python3 -I ${CLAUDE_SKILL_DIR}/scripts/search-api.py --name text            # exact: text, str.position, table.cell
+python3 -I ${CLAUDE_SKILL_DIR}/scripts/search-api.py "rotate content angle" --top 5
+python3 -I ${CLAUDE_SKILL_DIR}/scripts/search-packages.py "gantt chart" -n 5   # Typst Universe, filtered to installed compiler
+python3 -I ${CLAUDE_SKILL_DIR}/scripts/search-packages.py --category cv -n 5
+```
+
+Scripts and `data/` come from [lucifer1004/claude-skill-typst](https://github.com/lucifer1004/claude-skill-typst) (MIT). After a Typst upgrade, or to refresh the package index, copy `skills/typst/data/{api,api-bm25,packages,packages-bm25}.json` from that repo into `${CLAUDE_SKILL_DIR}/data/`.
+
+**Text-level check without rendering:** `typst compile doc.typ /dev/stdout -f html --features html 2>/dev/null` dumps headings, paragraphs and tables as HTML — cheaper than PNG when only content or structure needs checking.
+
 ## Version Notes (0.13–0.15)
 
 | Feature | Ver | Description |
@@ -193,7 +208,7 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 **Other migrations**: polylux:0.3.1 → `polylux:0.4.0` or `touying`
 **Breaking (0.15)**: file paths must use forward slashes only (no backslashes)
 
-| touying 0.7.4 | 0.6+ | Presentation framework — `#show: theme.with(...)` API (not the old `register()` pattern) |
+| touying 0.8.0 | 0.6+ | Presentation framework — `#show: theme.with(...)` API (not the old `register()` pattern) |
 
 ## CLI Commands
 

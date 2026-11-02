@@ -1,0 +1,15 @@
+# Type: state machine. Nodes are states (nouns), edges are the events that move between them.
+# Render with -l tala: it is the only engine that keeps a self-loop's label off the loop.
+direction: down
+
+new: 已成交\nExecuted {class: accent}
+cleared: 已清算\nCleared (novated)
+live: 存续\nLive
+terminated: 提前终止\nTerminated {class: warn}
+matured: 到期\nMatured {class: good}
+
+new -> cleared: 提交 CCP
+cleared -> live: 首个重置日 reset
+live -> live: 每期净额结算 net settlement
+live -> terminated: 违约 / 平仓 unwind {class: alert}
+live -> matured: 最后支付日

@@ -4,16 +4,17 @@
 
 When a Typst document needs a visual, identify what you're visualizing, then pick the tool:
 
-### Diagrams (always native Typst)
+### Diagrams
 
 | Content | Tool |
 |---------|------|
-| Flowcharts, decision trees, ER, state diagrams | **fletcher** |
-| Sequence diagrams (lifelines, messages) | **chronos** |
+| Small flowcharts, decision trees, ER, state diagrams (≤10 nodes, one actor, no forced crossings) | **fletcher** |
+| Larger flows, multi-party lifecycles / sequence / swimlane, causal or event networks, busy state machines, layered maps | **`diagram` skill** (D2 → SVG) |
+| Simple sequence diagram that must match body font | **chronos** |
 | Gantt charts, project schedules | **timeliney** |
 | Linear timelines, historical events | **herodot** |
 
-> **Hard rule — no Python for diagrams.** NEVER use graphviz, mermaid, matplotlib, or any Python tool for flowcharts, trees, ER diagrams, or state machines. Always use fletcher. Python diagram tools produce raster images that don't match document fonts, can't be edited in source, and break version control.
+> **Hard rule: no Python or raster diagram tools.** Never use graphviz-from-Python, mermaid or matplotlib for diagrams: they give raster output, mismatched fonts and no editable source. fletcher stays the default for small diagrams because it matches the document font. Past about 10 nodes, with several parties or with crossing edges, hand-placed fletcher coordinates collide, so use the `diagram` skill: it auto-lays out with D2, emits vector SVG, and keeps the `.d2` source beside the `.typ` for version control. The one cost is that the SVG uses its own embedded font, not the body font. Embed with `#figure(image("fig.light.svg", width: 100%), caption: [...])`.
 
 ### Charts
 
@@ -52,8 +53,9 @@ When a Typst document needs a visual, identify what you're visualizing, then pic
 What are you visualizing?
 
 LAYOUT       →  Typst native (tables, grids, boxes)
-DIAGRAMS     →  fletcher | chronos | timeliney | herodot
-               NEVER Python — always native Typst
+DIAGRAMS     →  fletcher (≤10 nodes) | diagram skill (bigger, multi-party, networks)
+               | chronos | timeliney | herodot
+               NEVER Python or raster
 CHARTS       →  See decision tree below
 MIND MAPS    →  /mindmap
 IMAGES       →  /image-search (photos/logos) | gemini-generate-image (illustrations)

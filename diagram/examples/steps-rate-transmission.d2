@@ -1,0 +1,20 @@
+# Type: step-by-step walkthrough. Each step adds to the board before it, so a transmission chain
+# can be read one link at a time. Renders to a PDF (one page per step) and, with --gif, an animation.
+direction: down
+
+hike: 央行加息 Policy rate ↑ {class: accent}
+
+steps: {
+  1: {
+    rf: 无风险利率 ↑
+    hike -> rf: 传导 pass-through
+  }
+  2: {
+    bond: 债券价格 ↓
+    rf -> bond: 久期 duration {class: neg}
+  }
+  3: {
+    vm: 国债期货空头收到 VM {class: good}
+    bond -> vm: 每日盯市 MTM
+  }
+}

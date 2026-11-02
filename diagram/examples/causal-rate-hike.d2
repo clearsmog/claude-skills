@@ -1,0 +1,35 @@
+# Type: causal / event network. One node per state change; the edge says why (mechanism), the
+# class gives the sign. A legend explains the encoding; a formula sits inside its node as LaTeX.
+# Source: CFA L1 Derivatives (cost-of-carry forward pricing; option rho; bond duration).
+direction: down
+
+vars: {
+  d2-legend: {
+    a: 触发 trigger {class: accent}
+    x: "" {shape: text}
+    y: "" {shape: text}
+    x -> y: 推高 raises {class: pos}
+    x -> y: 压低 lowers {class: neg}
+  }
+}
+
+hike: 央行加息\nPolicy rate ↑ {class: accent}
+rf: 无风险利率 ↑\nr ↑
+fwd: 远期价格 ↑ {
+  style.font-size: 16
+  f: |latex F_0 = S_0(1+r)^T | {shape: text}
+}
+call: 看涨期权价值 ↑\nrho > 0
+put: 看跌期权价值 ↓\nrho < 0
+bond: 债券价格 ↓
+vm: 国债期货空头\n收到变动保证金 {class: good}
+
+hike -> rf
+rf -> fwd: 持有成本 carry {class: pos}
+rf -> call: {class: pos}
+rf -> put: {class: neg}
+rf -> bond: 久期 duration {
+  class: neg
+  tooltip: CFA L1 Fixed Income — price falls as yield rises, scaled by duration
+}
+bond -> vm: 每日盯市 MTM

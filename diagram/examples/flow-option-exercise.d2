@@ -1,0 +1,22 @@
+# Type: flow / decision. Diamonds ask a question, edge labels answer it.
+# Two branches sharing one end node force a crossing; give each branch its own end nodes instead.
+direction: down
+
+title: 期权到期日的行权决策 {shape: text; near: top-center; style.font-size: 20}
+
+start: 到期日 Expiry {shape: oval}
+q1: 看涨还是看跌? {shape: diamond}
+qc: S_T > X ? {shape: diamond}
+qp: S_T < X ? {shape: diamond}
+cx: 行权 exercise\n收益 S_T − X {class: good}
+cl: 放弃 lapse\n损失 = 期权费 {class: muted}
+px: 行权 exercise\n收益 X − S_T {class: good}
+pl: 放弃 lapse\n损失 = 期权费 {class: muted}
+
+start -> q1
+q1 -> qc: call
+q1 -> qp: put
+qc -> cx: 是 ITM {class: pos}
+qc -> cl: 否 {class: weak}
+qp -> px: 是 ITM {class: pos}
+qp -> pl: 否 {class: weak}

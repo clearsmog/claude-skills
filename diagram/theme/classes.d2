@@ -1,0 +1,14 @@
+# Semantic classes, appended after the palette header. Use `class: accent` etc. in source.
+classes: {
+  # nodes
+  accent: {style: {fill: ${accent-fill}; stroke: ${accent}; stroke-width: 2}}
+  warn: {style: {fill: ${warn-fill}; stroke: ${warn}; stroke-width: 2}}
+  good: {style: {fill: ${good-fill}; stroke: ${good}; stroke-width: 2}}
+  muted: {style: {fill: ${group}; stroke: ${line}; stroke-dash: 4; font-color: ${soft}}}
+  lane: {style: {fill: ${group}; stroke: ${line}; stroke-dash: 3; font-color: ${soft}; bold: true}}
+  # edges
+  pos: {style: {stroke: ${good}; stroke-width: 2; font-color: ${good}}}
+  neg: {style: {stroke: ${warn}; stroke-width: 2; stroke-dash: 5; font-color: ${warn}}}
+  alert: {style: {stroke: ${warn}; stroke-dash: 4; font-color: ${warn}}}
+  weak: {style: {stroke: ${line}; stroke-dash: 3; font-color: ${soft}}}
+}

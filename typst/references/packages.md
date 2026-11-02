@@ -23,7 +23,7 @@ Install from https://typst.app/universe/ — check for latest versions.
 
 | Package | Purpose | Import |
 |---------|---------|--------|
-| **codly** | Code blocks with line numbers | `#import "@preview/codly:1.3.0"` |
+| **codly** | Code blocks with line numbers (2.0 API: `#import "@preview/codly:2.0.0" as codly` + `#show raw.where(block: true): codly.new`; style via `#show: codly.theme("github-light")` / `codly.set_(...)`. 1.x `codly-init` / `#codly(...)` no longer exist) | `#import "@preview/codly:2.0.0" as codly` |
 | **zebraw** | Code listings with annotations | `#import "@preview/zebraw:0.6.3"` |
 | **lovelace** | Pseudocode / algorithms (supports `title-inset` parameter) | `#import "@preview/lovelace:0.3.1"` |
 | **gentle-clues** | Callouts, tips, admonitions | `#import "@preview/gentle-clues:1.3.1"` |
@@ -32,7 +32,7 @@ Install from https://typst.app/universe/ — check for latest versions.
 
 | Package | Purpose | Import |
 |---------|---------|--------|
-| **touying** | Presentations. **Use 0.6.x/0.7.x API** (`#show: theme.with(...)`), NOT the old 0.3.x `register()` pattern. See `references/touying-guide.md`. | `#import "@preview/touying:0.7.4"` |
+| **touying** | Presentations. **Use 0.6+ API** (`#show: theme.with(...)`; 0.8.0 requires Typst 0.15), NOT the old 0.3.x `register()` pattern. See `references/touying-guide.md`. | `#import "@preview/touying:0.8.0"` |
 | **tablem** | Markdown-like table syntax | `#import "@preview/tablem:0.3.0"` |
 | **showybox** | Customizable text boxes | `#import "@preview/showybox:2.0.4"` |
 
@@ -43,7 +43,7 @@ Install from https://typst.app/universe/ — check for latest versions.
 | **timeliney** | Gantt charts (native Typst) | `#import "@preview/timeliney:0.4.0"` |
 | **herodot** | Linear timelines (v1.0: `spanheight` moved to `eventspan()`, new params: `event-rotation`, `span-rotation`, `event-display`, `month-locale`, `event.offset`) | `#import "@preview/herodot:1.0.0"` |
 | **glossarium** | Glossary/terminology management | `#import "@preview/glossarium:0.5.10"` |
-| **cmarker** | Render Markdown inside Typst docs (supports math via mitex, tables, footnotes, HTML handling, inline SVG, frontmatter parsing; `heading-label-case` renamed to `heading-labels` with values `"github"`/`"jupyter"`; new `render-with-metadata()`; requires Typst 0.15.0+ as of 0.1.9) | `#import "@preview/cmarker:0.1.9"` |
+| **cmarker** | Render Markdown inside Typst docs (supports math via mitex, tables, footnotes, HTML handling, inline SVG, frontmatter parsing; `heading-label-case` renamed to `heading-labels` with values `"github"`/`"jupyter"`; new `render-with-metadata()`; requires Typst 0.15.0+ since 0.1.9) | `#import "@preview/cmarker:0.1.10"` |
 
 Note: polylux:0.3.1 is incompatible with 0.14; use `polylux:0.4.0` or `touying` (more active).
 

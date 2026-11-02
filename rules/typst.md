@@ -6,13 +6,15 @@ paths:
 
 ## Diagrams
 - Use native Typst packages (fletcher, chronos, timeliney) instead of Mermaid.
-- NEVER use Python (graphviz, mermaid, matplotlib) for flowcharts — always fletcher.
+- Never draw diagrams with Python or raster tools (graphviz via Python, mermaid, matplotlib).
+- Flowcharts with at most 10 nodes, one actor and no forced crossings: fletcher. Anything larger, multi-party (sequence, swimlane, lifecycle), causal/event networks or state machines with many edges: the `diagram` skill (D2 to SVG, `.d2` source kept beside the `.typ`, embedded with `image("fig.light.svg")`).
 
 ## Charts
 - **Default choice**: Lilaq with `qk-lilaq-theme()` — handles line, bar, scatter, box, violin, heatmap, contour, subplots, dual axes natively in Typst
 - **Fall back to Python SVG** only when: kde plots, pair plots, faceted grammar (plotnine), or Python data pipeline already exists
 - **cetz-plot**: only for extremely simple charts where Lilaq would be overkill (rare — Lilaq is almost always better)
 - Lilaq + qk style: `#import "qk-plot.typ": *` then `#show: qk-lilaq-theme()`. Colorblind variant: `qk-lilaq-theme(colorblind: true)`.
+- cetz-plot + qk style: `set-style(content: qk-cetz-content)` in the canvas, `x-format`/`y-format: qk-tick-format` (Inter ticks instead of math font), `mark-style: qk-plot-style` + `mark: qk-marks.at(i)` per series
 - SVG embedding: `#figure(image("chart.svg", width: 100%), caption: [...])`
 
 ## Compile After Editing
@@ -49,17 +51,18 @@ See `skills/typst/references/tool-routing.md` for the full routing table and fal
 
 ## qk Component Library
 - Local package: `#import "@local/qk:2.2.0": *`
-- Source: ~/Library/Application Support/typst/packages/local/qk/2.2.0/
-- 2.1.0 holds the same code (2.2.0 fixes backported), so existing documents pinned to it are fine — but use 2.2.0 for anything new
+- Source: ~/Library/Application Support/typst/packages/local/qk/2.2.0/ — the `qk/` dir is a git repo (local only); commit after changing qk, and regression-compile dependent docs (70+ in ~/Documents) before committing
 - Components: callouts (15 variants, 5 styles), cards, tables, academic boxes, layout, presets
 - When creating Typst documents for the user, prefer qk components over raw Typst blocks
 - Presets: qk-doc (study guides), qk-report (corporate), qk-minimal (notes), qk-magazine (editorial), qk-exam (exams)
-- All five presets share the same core options, so swapping between them is safe: `title`, `header-text`, `footer-text`, `heading-numbering`, `margin`, `figure-placement`, `styled-lists`, `styled-captions`, `stata-theme`, `palette`, `theme-tokens`
+- All five presets share the same core options, so swapping between them is safe: `title`, `header-text`, `footer-text`, `heading-numbering`, `margin`, `figure-placement`, `styled-lists`, `styled-captions`, `stata-theme`, `code-theme`, `palette`, `theme-tokens`
 - Colors: Tailwind scales (`blue.at("600")`) or semantic aliases (`colors.navy`)
 - Theming: pass `palette:` to the **preset** — `#show: qk-doc.with(title: "…", palette: "dark")`. Palettes: default, dark, print, high-contrast, sepia
 - A standalone `#show: qk-theme.with(palette: ...)` written after a preset only reaches components, not page fill or heading colors — `set page(fill:)` needs the value before state resolves. Use `resolve-theme(palette:, tokens:)` for a color at `set`-time
 - `theme-get()` must be called inside `context { ... }`
-- `chart()` takes image data, not a path: `chart(read("f.png", encoding: none), "Cap")` or `chart(image("f.png"), "Cap")` — a path inside a package resolves against the package dir
+- `chart()` takes `path("f.png")`, image bytes, or content — not a plain string (a string inside a package resolves against the package dir)
+- Code blocks: presets style language-tagged fences (```` ```python ````) with codly 2.0 by default (`code-theme: true`): frame, line numbers, language badge, dark-palette syntax colors. Stata and unlabelled fences (program output) are left alone. Standalone: `#show: qk-code.with(resolve-theme())`
+- `styled-table(columns: n, ...)` wraps the first n cells in `table.header` automatically (repeats across page breaks); pass your own `table.header(...)` to override
 
 ## Display Pitfalls (Prevent Before They Happen)
 

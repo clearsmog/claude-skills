@@ -1,0 +1,13 @@
+{
+  "name": "clearsmog",
+  "owner": { "name": "Qiankun Zhu", "url": "https://github.com/clearsmog" },
+  "description": "Skills for diagrams, Typst documents, research and verification in Claude Code",
+  "plugins": [
+    {
+      "name": "qk-skills",
+      "source": "./",
+      "category": "productivity",
+      "tags": ["typst", "diagrams", "research"]
+    }
+  ]
+}

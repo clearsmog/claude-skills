@@ -1,0 +1,30 @@
+# Type: lifecycle / sequence. Actors are columns, time runs down, groups are phases.
+# Spans (actor.span -> ...) mark the stretch an actor is busy; notes are unconnected children.
+# Source: CFA L1 Derivatives, futures daily settlement (initial margin 4,950, maintenance 4,500;
+# a balance below maintenance must be topped back up to the initial margin).
+shape: sequence_diagram
+
+long: 多头 Long
+cm: 结算会员\nClearing member
+ccp: CCP\n中央对手方
+short: 空头 Short
+
+成交 T0: {
+  long -> ccp: 成交 trade
+  short -> ccp: 成交 trade
+  ccp -> long: 更替 novation
+  ccp -> short: 更替 novation
+  long -> cm: 初始保证金 IM 4,950
+  cm -> ccp: 转交 IM
+}
+价格下跌日 T+1: {
+  ccp.mtm -> long: 盯市 MTM：付 VM 500
+  ccp.mtm -> short: 收 VM 500
+  long.check: "余额 4,450 < 维持保证金 4,500" {class: warn}
+  cm.call -> long.call: 追加保证金 margin call {class: alert}
+  long.call -> cm.call: 存入 500，回到 IM 4,950 {class: alert}
+}
+结束: {
+  long -> ccp: 对冲平仓 offsetting
+  ccp -> long: 现金交割 / 实物交割 {class: weak}
+}

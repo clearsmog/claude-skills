@@ -14,14 +14,14 @@ Pass `--typst` when generating images for Typst documents (the typical case). If
 Run exactly one command:
 
 ```bash
-SERPAPI_KEY="$SERPAPI_KEY" uv run --script {baseDir}/scripts/image_search.py "<query>" --typst [other flags...]
+SERPAPI_KEY="$SERPAPI_KEY" uv run --script ${CLAUDE_SKILL_DIR}/scripts/image_search.py "<query>" --typst [other flags...]
 ```
 
 If SERPAPI_KEY is empty in this shell, read it directly from fish universal variables (avoids shell greeting pollution): `` `printf '%b' "$(sed -n 's/.*SERPAPI_KEY://p' ~/.config/fish/fish_variables)"` ``.
 
 For `--stock` mode, also forward Unsplash/Pexels keys if available:
 ```bash
-SERPAPI_KEY="$SERPAPI_KEY" UNSPLASH_ACCESS_KEY="$UNSPLASH_ACCESS_KEY" PEXELS_API_KEY="$PEXELS_API_KEY" uv run --script {baseDir}/scripts/image_search.py "<query>" --stock --typst [other flags...]
+SERPAPI_KEY="$SERPAPI_KEY" UNSPLASH_ACCESS_KEY="$UNSPLASH_ACCESS_KEY" PEXELS_API_KEY="$PEXELS_API_KEY" uv run --script ${CLAUDE_SKILL_DIR}/scripts/image_search.py "<query>" --stock --typst [other flags...]
 ```
 
 Print the script's stdout to the user. Done.

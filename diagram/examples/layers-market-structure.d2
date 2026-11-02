@@ -1,0 +1,25 @@
+# Type: layered architecture / lanes. Every container becomes a lane through the glob below.
+# Order a lane's children in the direction their edges leave to avoid crossings.
+direction: right
+
+*: {&leaf: false; class: lane}
+
+exch: 交易所市场 Exchange-traded {
+  f: 期货 Futures
+  o: 场内期权 Listed options
+}
+otc: 场外市场 OTC {
+  sw: 互换 Swaps
+  oo: 场外期权 OTC options
+  fw: 远期 Forwards
+}
+post: 交易后 Post-trade {
+  ccp: CCP 中央清算 {class: accent}
+  bil: 双边清算 Bilateral\nISDA + CSA {class: muted}
+}
+
+exch.f -> post.ccp
+exch.o -> post.ccp
+otc.sw -> post.ccp: 强制清算 mandatory {class: weak}
+otc.fw -> post.bil
+otc.oo -> post.bil
