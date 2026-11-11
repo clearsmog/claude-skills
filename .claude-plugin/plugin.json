@@ -1,8 +1,8 @@
 {
   "name": "qk-skills",
   "displayName": "qk skills",
-  "version": "1.0.0",
-  "description": "24 Claude Code skills: D2 diagrams, Typst documents with review and QA pipelines, mind maps, web image search, Wayback page recovery, SEC EDGAR filings, and a verify-before-done check",
+  "version": "1.1.0",
+  "description": "10 Claude Code skills: D2 diagrams, Typst documents with a parallel review, mind maps, web image search, Wayback page recovery, SEC EDGAR filings, and a verify-before-done check",
   "author": { "name": "Qiankun Zhu", "url": "https://github.com/clearsmog" },
   "homepage": "https://github.com/clearsmog/claude-skills",
   "repository": "https://github.com/clearsmog/claude-skills",

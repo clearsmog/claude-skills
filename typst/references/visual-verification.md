@@ -67,22 +67,25 @@ When inspecting rendered PNGs, check for:
 
 ## Structural Validation
 
-For deeper structural checks, use `typst eval` (supersedes `typst query` as of 0.15; `query` still works on older binaries):
+For deeper structural checks, use `typst eval --in <file> '<expression>'` (0.15+; it replaces
+`typst query`, which still runs but prints a deprecation warning). The document goes in
+`--in`, and the expression calls `query(...)` itself:
 
 ```bash
-# Count headings
-typst eval doc.typ "heading"
+# Count headings / list their text
+typst eval --in doc.typ 'query(heading).len()'
+typst eval --in doc.typ 'query(heading).map(h => h.body)'
 
 # Count figures
-typst eval doc.typ "figure"
+typst eval --in doc.typ 'query(figure).len()'
 
-# Check page count
-typst eval doc.typ "page" --field "body"
+# Page count: read it from the compiled PDF
+pdfinfo doc.pdf | grep Pages
 ```
 
 ---
 
 ## Integration Points
 
-- **`/compile` skill:** After successful compilation, render sample pages to PNG and spot-check
+- **`verify` skill:** its `.typ` check compiles, renders the touched pages to PNG and spot-checks them with this file's checklist
 - **typst-reviewer agent:** Can request visual verification for flagged sections

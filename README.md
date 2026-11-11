@@ -1,12 +1,12 @@
 <h1 align="center">qk skills for Claude Code</h1>
 
 <p align="center">
-  24 skills that draw diagrams, write and review Typst documents, recover dead web pages,<br>
+  10 skills that draw diagrams, write and review Typst documents, recover dead web pages,<br>
   pull SEC filings, and check that work actually runs before Claude calls it done.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/skills-24-2563eb?style=flat-square" alt="24 skills">
+  <img src="https://img.shields.io/badge/skills-10-2563eb?style=flat-square" alt="10 skills">
   <img src="https://img.shields.io/badge/Claude%20Code-plugin-d97706?style=flat-square" alt="Claude Code plugin">
   <img src="https://img.shields.io/badge/Agent%20Skills-standard-7c3aed?style=flat-square" alt="Agent Skills standard">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748b?style=flat-square" alt="MIT license"></a>
@@ -66,7 +66,6 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
 | **diagram** | D2 diagrams with a light and a dark version: sequence and swimlane, flowcharts, causal networks, state machines, layered maps, step-by-step walkthroughs. Lints the source, renders SVG and PNG, and makes Claude look at the result before handing it over |
 | **mindmap** | Mind maps from a topic or an indented outline, as PNG or SVG, in three themes |
 | **image-search** | Finds and downloads real photos, logos and license-clear stock images, with Typst embedding code |
-| **extract-diagrams** | Exports CeTZ diagrams from a Typst file to SVG |
 
 <table>
   <tr>
@@ -88,8 +87,6 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
 |---|---|
 | **create-document** | One prompt to a finished document: finds source material, copies the style of sibling files, drafts, compiles, checks the render and fixes what it finds |
 | **typst** | Typst reference loaded on demand: syntax, templates, a component library, visual-tool routing, and an offline API and package search |
-| **compile** | Compiles `.typ`, `.qmd` or `.py` with the right command for the format |
-| **translate** | Converts documents between Typst and Quarto |
 
 <table>
   <tr>
@@ -99,12 +96,12 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
 </table>
 <p><sub>A two-page primer written with the <code>typst</code> skill and its component library: metric cards, callouts, a formula box, a lilaq chart and an embedded D2 diagram. Source: <a href="docs/examples/swaps.typ"><code>docs/examples/swaps.typ</code></a>.</sub></p>
 
-### Review
+### Check
 
 | Skill | What it does |
 |---|---|
-| **doc-review** | Picks reviewers for the file type and runs them in parallel |
-| **validate-bib** | Missing and unused bibliography entries |
+| **doc-review** | Picks reviewers by file type and content and runs them in parallel: Typst, proofreading, writing style, subject accuracy, and diagrams (fletcher, D2 and CeTZ, judged from the rendered page) |
+| **verify** | Before a commit or "done": compiles changed files and looks at the rendered pages, runs the project's tests and build, and click-tests frontend changes in a real browser |
 
 ### Research
 
@@ -113,14 +110,10 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
 | **wayback** | Recovers dead or changed pages from the Wayback Machine, Common Crawl and Arquivo.pt together; lists captures, fetches them as text, and word-diffs two versions |
 | **sec-edgar** | US company filings from SEC EDGAR's free APIs: 10-K/10-Q/8-K text, full-text search since 2001, XBRL financials |
 
-### Ship
+### Organise
 
 | Skill | What it does |
 |---|---|
-| **verify** | Before a commit or "done": compiles changed files, runs the project's tests and build, and click-tests frontend changes in a real browser |
-| **deploy** | Deployment workflow |
-| **learn** | Turns something learned in the current session into a reusable skill |
-| **context-status** | Context usage and session health |
 | **google-tasks** | Google Tasks through the `gtasks` CLI |
 
 ## How the document skills fit together
@@ -134,7 +127,7 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
         v
   want a deeper pass?
         |
-   /doc-review ──> reviewers picked by file type, in parallel ──> report
+   /doc-review ──> reviewers picked by file type and content, in parallel ──> report
 ```
 
 With `rules/typst.md` installed, Claude picks a visual tool whenever it edits a `.typ` file:
@@ -181,7 +174,7 @@ Every skill with scripts uses [uv](https://docs.astral.sh/uv/) (`brew install uv
 | Skill | Also needs |
 |---|---|
 | **diagram** | [D2](https://d2lang.com) (`brew install d2`) and Google Chrome |
-| **typst**, **compile** | [Typst CLI](https://github.com/typst/typst) (`brew install typst`); the qk component library from [typst-component-library](https://github.com/clearsmog/typst-component-library), installed as `@local/qk` |
+| **typst**, **verify**, **doc-review** | [Typst CLI](https://github.com/typst/typst) (`brew install typst`); the qk component library from [typst-component-library](https://github.com/clearsmog/typst-component-library), installed as `@local/qk` |
 | **mindmap** | Node.js; uses Puppeteer's Chrome, or your installed Chrome if that is missing |
 | **image-search** | `SERPAPI_KEY` optional (DuckDuckGo is the free fallback); `UNSPLASH_ACCESS_KEY` / `PEXELS_API_KEY` for `--stock` |
 | **sec-edgar** | `SEC_USER_AGENT`, an app name plus contact email (SEC rejects requests without one) |

@@ -40,7 +40,7 @@ When a Typst document needs a visual, identify what you're visualizing, then pic
 | Mind maps, concept maps, topic trees | **`/mindmap`** |
 | Company/brand logos | **`/image-search --logo`** |
 | Real-world photos | **`/image-search`** |
-| Conceptual illustrations, metaphors, cover art | No generator: the gemini MCP is denied in settings (`deniedMcpServers`). Use an anatomy figure or a diagram where one fits, otherwise a placeholder `#rect` and tell the user |
+| Conceptual illustrations, metaphors, cover art | No image generator is wired up. Use a diagram where one fits; if the `anatomy` skill is installed, suggest an isometric figure and wait for a yes (one takes up to an hour); otherwise leave a placeholder `#rect` and tell the user |
 
 ### Anatomy figures (isometric machines)
 

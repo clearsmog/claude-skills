@@ -18,7 +18,7 @@ paths:
 - SVG embedding: `#figure(image("chart.svg", width: 100%), caption: [...])`
 
 ## Compile After Editing
-- After any `.typ` edit, run `typst compile <file>` to catch errors early.
+- After any `.typ` edit the file must compile. Where the auto-compile hook is installed (`~/.claude/hooks/auto-compile-typst.sh`, PostToolUse on Edit/Write) it does this and reports a failure back to you, finding `--root` from a `typst.toml` above the file or the git top level; then compile by hand only for what it skips: partials (`_*.typ`, `*.body.typ`), files changed through Bash, or a project with its own flags. Without the hook, run `typst compile <file>` yourself.
 - Check for text overflow in columns — Typst silently truncates overflowing content.
 - PDF output lands in the same directory as the source file by default.
 
@@ -34,12 +34,12 @@ paths:
 
 When creating or substantially editing `.typ` documents, add visuals where the content would clearly benefit, without waiting to be asked.
 
-**Priority:** Diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); Charts → Lilaq (default) / Python SVG for kde, pair or faceted plots — embed with `#figure(image(...))`; Images → /image-search; mind maps → /mindmap
+**Priority:** Diagrams → native Typst (fletcher/chronos/timeliney/herodot) up to about 10 nodes, the `diagram` skill (D2) for larger, multi-party or network diagrams, NEVER Python; Charts → Lilaq (default) / Python SVG for kde, pair or faceted plots — embed with `#figure(image(...))`; Images → /image-search; mind maps → /mindmap
 
 **Triggers:**
 - Company/brand logos → invoke `/image-search --logo "Name" --typst`
 - Real photographs → invoke `/image-search "query" --typst`
-- Conceptual illustrations, metaphors → none available (the gemini MCP is denied in settings): use `/anatomy` or a diagram where one fits, otherwise leave a placeholder `#rect` and tell the user
+- Conceptual illustrations, metaphors → No image generator is wired up. Use a diagram where one fits; if the `anatomy` skill is installed, suggest an isometric figure and wait for a yes (one takes up to an hour); otherwise leave a placeholder `#rect` and tell the user
 - Mind maps, concept maps → invoke `/mindmap "topic" --typst`
 
 **When NOT to auto-invoke:**

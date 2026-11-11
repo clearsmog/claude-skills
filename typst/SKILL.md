@@ -77,7 +77,7 @@ User request → scan for keywords:
 |------|------|
 | Tables, boxes, grids | Typst native |
 | Mind maps | `/mindmap` (auto-invoke) |
-| Conceptual illustrations | No generator (gemini MCP denied): `/anatomy`, a diagram, or a placeholder `#rect` |
+| Conceptual illustrations | No generator: a diagram, or suggest an `anatomy` figure and wait for a yes, or a placeholder `#rect` |
 | Key mechanism drawn as a real machine (isometric, exact numbers) | `/anatomy` → `scripts/anatomy-to-typst.mjs` |
 | Real photos, logos | `/image-search` (auto-invoke) |
 
@@ -87,7 +87,7 @@ Detail and examples in `references/tool-routing.md`.
 
 ### Visual Auto-detection
 
-When writing Typst documents, add a visual wherever it makes the content clearer, without waiting to be asked. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot); charts → follow the Charts table above (cetz-plot for very simple, lilaq for most, matplotlib/seaborn/plotnine for statistical or grammar-of-graphics) — generate SVG, embed; images → `/image-search` / `/mindmap` / `gemini-generate-image` MCP.
+When writing Typst documents, add a visual wherever it makes the content clearer, without waiting to be asked. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot) up to about 10 nodes, the `diagram` skill (D2) for larger, multi-party or network diagrams; charts → follow the Charts table above (cetz-plot for very simple, lilaq for most, matplotlib/seaborn/plotnine for statistical or grammar-of-graphics) — generate SVG, embed; images → `/image-search` / `/mindmap`.
 
 | Content pattern | Visual to add | Tool |
 |-----------------|---------------|------|
@@ -219,8 +219,8 @@ typst compile document.typ --root ..           # Set project root
 typst compile document.typ out.pdf --pages 1-5 # Specific pages
 typst watch document.typ                       # Watch and recompile
 typst fonts                                    # List available fonts
-typst eval doc.typ "heading.where(level: 1)"   # Introspect structure (supersedes `typst query`)
-typst query doc.typ "heading.where(level: 1)"  # Older form — still works
+typst eval --in doc.typ 'query(heading.where(level: 1)).len()'   # Introspect structure
+typst query doc.typ "heading.where(level: 1)"  # Deprecated form — still runs, with a warning
 ```
 
 **`--root` flag:** When a `.typ` file uses `#import` or `#image()` with paths outside its directory, set `--root` to the project root.
