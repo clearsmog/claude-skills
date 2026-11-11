@@ -85,6 +85,4 @@ typst eval doc.typ "page" --field "body"
 ## Integration Points
 
 - **`/compile` skill:** After successful compilation, render sample pages to PNG and spot-check
-- **Verifier agent:** Add visual verification step after compilation pass
-- **`/finish` skill:** Re-render affected pages after each fix round
 - **typst-reviewer agent:** Can request visual verification for flagged sections

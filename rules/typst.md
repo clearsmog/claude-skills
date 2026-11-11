@@ -34,12 +34,12 @@ paths:
 
 When creating or substantially editing `.typ` documents, add visuals where the content would clearly benefit, without waiting to be asked.
 
-**Priority:** Diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); Charts → Lilaq (default) / Python SVG for kde, pair or faceted plots — embed with `#figure(image(...))`; Images → /image-search / /mindmap / `gemini-generate-image` MCP
+**Priority:** Diagrams → native Typst (fletcher/chronos/timeliney/herodot, NEVER Python); Charts → Lilaq (default) / Python SVG for kde, pair or faceted plots — embed with `#figure(image(...))`; Images → /image-search; mind maps → /mindmap
 
 **Triggers:**
 - Company/brand logos → invoke `/image-search --logo "Name" --typst`
 - Real photographs → invoke `/image-search "query" --typst`
-- Conceptual illustrations, metaphors → call `gemini-generate-image` MCP, then copy to `images/` and write Typst `#figure(...)`
+- Conceptual illustrations, metaphors → none available (the gemini MCP is denied in settings): use `/anatomy` or a diagram where one fits, otherwise leave a placeholder `#rect` and tell the user
 - Mind maps, concept maps → invoke `/mindmap "topic" --typst`
 
 **When NOT to auto-invoke:**

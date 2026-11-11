@@ -77,7 +77,8 @@ User request → scan for keywords:
 |------|------|
 | Tables, boxes, grids | Typst native |
 | Mind maps | `/mindmap` (auto-invoke) |
-| Conceptual illustrations | `gemini-generate-image` MCP (auto-invoke) |
+| Conceptual illustrations | No generator (gemini MCP denied): `/anatomy`, a diagram, or a placeholder `#rect` |
+| Key mechanism drawn as a real machine (isometric, exact numbers) | `/anatomy` → `scripts/anatomy-to-typst.mjs` |
 | Real photos, logos | `/image-search` (auto-invoke) |
 
 Detail and examples in `references/tool-routing.md`.
@@ -106,7 +107,8 @@ When writing Typst documents, add a visual wherever it makes the content clearer
 | Faceted / grammar chart | Layered plot | plotnine (SVG) |
 | Company logo, brand mark | Logo image | `/image-search --logo` |
 | Real-world photograph | Photo | `/image-search` |
-| Concept with analogy, metaphor | AI illustration | `gemini-generate-image` MCP |
+| Concept with analogy, metaphor | Illustration | `/anatomy` or a diagram; no AI image generator is available |
+| The document's central mechanism, where precise parts and true numbers matter (at most one or two per document; each takes up to an hour) | Isometric machine figure | `/anatomy`, then `scripts/anatomy-to-typst.mjs` |
 
 See `references/tool-routing.md` for full examples, fallback chains, and auto-invoke rules.
 
@@ -148,8 +150,7 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 
 | If this fails... | Try... |
 |------------------|--------|
-| `gemini-generate-image` MCP | Placeholder `#rect(width: 100%, height: 4cm, fill: luma(240))[Image placeholder]` |
-| `/image-search` | `gemini-generate-image` MCP with descriptive prompt |
+| `/image-search` | Placeholder `#rect(width: 100%, height: 4cm, fill: luma(240))[Image placeholder]` |
 | `/mindmap` | `fletcher` tree diagram |
 | matplotlib | Check `.venv` → `uv venv .venv.nosync && ln -s .venv.nosync .venv` |
 | `typst compile` | Isolate with `/* ... */`, compile incrementally |

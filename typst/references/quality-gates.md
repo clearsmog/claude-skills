@@ -46,18 +46,7 @@ Never loop indefinitely.
 
 ## Review Agent Dispatch Table
 
-The ONE authoritative routing table for file-type → agents:
-
-| Extension | Agents (parallel) | Condition |
-|-----------|-------------------|-----------|
-| `.typ` | typst-reviewer + proofreader + document-auditor | Always |
-| `.typ` | + pedagogy-reviewer | If slide format detected |
-| `.tex` | proofreader + document-auditor + pedagogy-reviewer | Always |
-| `.tex` | + diagram-reviewer | If TikZ found (`\begin{tikzpicture}`) |
-| `.qmd` | proofreader + document-auditor | Always |
-| `.qmd` | + quality-critic | If `.tex` sibling exists |
-| `.py` | python-pro (subagent) | Always |
-| `.md` | proofreader | Always |
+The routing table lives in one place: the `doc-review` skill (`~/.claude/skills/doc-review/SKILL.md`, "Routing Table").
 
 ---
 

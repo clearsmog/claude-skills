@@ -139,7 +139,7 @@ Deliver a summary:
 
 **What could break:** [list risks]
 
-**Next steps:** `/doc-review` for deep audit · `/finish` for full pipeline · `/excellence` for milestone
+**Next steps:** `/doc-review` for deep audit
 ```
 
 ---

@@ -1,6 +1,6 @@
 ---
 name: diagram
-description: Draw structural diagrams with D2 — process lifecycles and sequence/swimlane diagrams (who does what, in what order), flowcharts and decision trees, causal/event networks (what drives what), state machines, layered or market-structure maps, and step-by-step walkthroughs — rendered in the qk palette to light and dark SVG + PNG (plus PDF/GIF) for Typst, HTML, Markdown, slides or standalone use. Use whenever the user wants a 流程图, 时序图, 泳道图, 生命周期图, 拓扑图, 因果图, 传导链, 关系图, state diagram, or asks to "visualize how X works / how A affects B / the steps of X", in any project — even without the word "diagram". Not for data charts (dataviz), mind maps (/mindmap) or dated timelines (Typst herodot/timeliney).
+description: Draw structural diagrams with D2 — process lifecycles and sequence/swimlane diagrams (who does what, in what order), flowcharts and decision trees, causal/event networks (what drives what), state machines, layered or market-structure maps, and step-by-step walkthroughs — rendered in the qk palette to light and dark SVG + PNG (plus PDF/GIF) for Typst, HTML, Markdown, slides or standalone use. Use whenever the user wants a 流程图, 时序图, 泳道图, 生命周期图, 拓扑图, 因果图, 传导链, 关系图, state diagram, or asks to "visualize how X works / how A affects B / the steps of X", in any project — even without the word "diagram". Not for data charts (dataviz), mind maps (/mindmap), dated timelines (Typst herodot/timeliney) or a concept drawn as an isometric physical machine (anatomy).
 argument-hint: "<what to draw> [-o outdir]"
 allowed-tools: Read, Write, Edit, Bash
 ---
@@ -40,7 +40,8 @@ fact from it, or does it only name boxes?
 
 Not here: data charts → `dataviz`; mind maps / topic trees → `/mindmap`; timelines on a real date
 axis → Typst herodot/timeliney; a Typst flowchart of 10 nodes or fewer with no crossings →
-fletcher (see `typst/references/tool-routing.md`).
+fletcher (see `typst/references/tool-routing.md`); a mechanism drawn as a real, working object
+(isometric, interactive) → `anatomy`.
 
 **Size.** 5–15 nodes reads well. Past 15, split by phase or zoom level, or turn it into a step
 walkthrough. Don't shrink the text.

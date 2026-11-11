@@ -1,6 +1,6 @@
 ---
 name: doc-review
-description: Universal file review — auto-detects format and launches appropriate review agents in parallel. Use for quality review of any supported file type (.tex, .qmd, .typ, .py, .md).
+description: Universal file review — auto-detects format and launches appropriate review agents in parallel. Use for quality review of any supported file type (.typ, .md, .py, .tex, .qmd).
 argument-hint: "[filename]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 context: fork
@@ -30,14 +30,13 @@ For `.typ` files, also detect document type from content:
 
 | Extension | Agents (parallel) | Condition |
 |-----------|-------------------|-----------|
-| `.tex` | proofreader + document-auditor + pedagogy-reviewer | Always |
-| `.tex` | + diagram-reviewer | If TikZ found (`\begin{tikzpicture}`) |
-| `.qmd` | proofreader + document-auditor + writing-style-critic | Always |
-| `.qmd` | + quality-critic | If `.tex` sibling exists |
 | `.typ` | typst-reviewer + proofreader + writing-style-critic | Always |
 | `.typ` | + pedagogy-reviewer | If slide format detected |
-| `.py` | general-purpose subagent with a Python code-review brief | Always |
+| `.typ` | + diagram-reviewer | If CeTZ is imported (`@preview/cetz`) |
 | `.md` | proofreader + writing-style-critic | Always |
+| `.py` | general-purpose subagent with a Python code-review brief | Always |
+| `.tex`, `.qmd` | proofreader + writing-style-critic | Always (prose only: no LaTeX or Quarto toolchain is installed, so nothing is compiled) |
+| `.tex` | + pedagogy-reviewer, + diagram-reviewer if TikZ found (`\begin{tikzpicture}`) | If Beamer slides |
 
 ## Steps
 
@@ -70,10 +69,9 @@ For `.typ` files, also detect document type from content:
 
 ## Quality Score Rubric
 
-See `typst/references/quality-gates.md` for the authoritative score rubric, severity definitions, and dispatch table.
+See `typst/references/quality-gates.md` for the authoritative score rubric and severity definitions.
 
 ## Important
 
 - This is a **read-only** review — no fixes applied
-- For review + fix, use `/finish` instead
 - For format-specific deep review, use the individual agents directly

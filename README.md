@@ -103,14 +103,7 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
 
 | Skill | What it does |
 |---|---|
-| **finish** | The full pipeline: compile, visual check, auto-fix, review, fix again, score |
 | **doc-review** | Picks reviewers for the file type and runs them in parallel |
-| **qa** | Critic and fixer loop, up to 5 rounds |
-| **excellence** | Four reviewers at once (visual, pedagogy, proofreading, domain) for milestone drafts |
-| **visual-audit** | Overflow, font consistency, repeated components, spacing |
-| **pedagogy-review** | Narrative arc, prerequisites, worked examples, notation, pacing |
-| **proofread** | Grammar, typos, consistency, academic style |
-| **devils-advocate** | Argues against the content to find weak claims |
 | **validate-bib** | Missing and unused bibliography entries |
 
 ### Research
@@ -141,9 +134,7 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
         v
   want a deeper pass?
         |
-   /finish ──> /doc-review + /qa loop ──> fix ──> score
-        |
-   /excellence ──> 4 reviewers in parallel ──> report
+   /doc-review ──> reviewers picked by file type, in parallel ──> report
 ```
 
 With `rules/typst.md` installed, Claude picks a visual tool whenever it edits a `.typ` file:
