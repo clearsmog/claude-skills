@@ -177,10 +177,17 @@ def fetch_logo(domain: str, output_path: str) -> str | None:
     from PIL import Image as PILImage
     from io import BytesIO
 
-    url = f"https://img.logo.dev/{domain}?size=200&format=png"
+    # Logo.dev answers 401 without a publishable key (checked 2026-11-11).
+    token = os.environ.get("LOGO_DEV_TOKEN")
+    if not token:
+        print("LOGO_DEV_TOKEN is not set, skipping Logo.dev", file=sys.stderr)
+        return None
+    url = f"https://img.logo.dev/{domain}?size=200&format=png&token={token}"
     try:
         resp = httpx.get(url, timeout=15, follow_redirects=True)
-        if resp.status_code == 200 and len(resp.content) > 100:
+        if resp.status_code != 200:
+            print(f"Logo.dev answered HTTP {resp.status_code}", file=sys.stderr)
+        elif len(resp.content) > 100:
             img = PILImage.open(BytesIO(resp.content))
             out = Path(output_path)
             out.parent.mkdir(parents=True, exist_ok=True)
@@ -225,6 +232,20 @@ def download_image(url: str, output_path: str) -> str | None:
     except Exception as e:
         print(f"Failed to download {url}: {e}", file=sys.stderr)
         return None
+
+
+def download_first(urls: list[str], num: int, base: str) -> list[str]:
+    """Download until `num` images are saved, moving to the next candidate on a failure."""
+    saved: list[str] = []
+    bp = Path(base)
+    for url in urls:
+        if len(saved) == num:
+            break
+        target = base if num == 1 else str(bp.parent / f"{bp.stem}_{len(saved) + 1}{bp.suffix}")
+        result = download_image(url, target)
+        if result:
+            saved.append(result)
+    return saved
 
 
 def print_typst_code(path: str, width: str, caption: str):
@@ -288,7 +309,7 @@ def main():
         if result:
             saved_paths.append(result)
         else:
-            print(f"Logo.dev failed, searching for logo...", file=sys.stderr)
+            print("Searching the web for the logo instead...", file=sys.stderr)
             urls = search_images(f"{args.query} logo transparent", num=1)
             for url in urls:
                 result = download_image(url, output_path)
@@ -302,16 +323,8 @@ def main():
     # --- Stock photo mode ---
     elif args.stock:
         urls = search_stock(args.query, num=args.num)
-        for i, url in enumerate(urls[:args.num]):
-            base = resolve_output(args.output, args.dir, args.query)
-            if args.num == 1:
-                output_path = base
-            else:
-                bp = Path(base)
-                output_path = str(bp.parent / f"{bp.stem}_{i + 1}{bp.suffix}")
-            result = download_image(url, output_path)
-            if result:
-                saved_paths.append(result)
+        saved_paths = download_first(
+            urls, args.num, resolve_output(args.output, args.dir, args.query))
         if not saved_paths:
             print("Error: no stock images downloaded", file=sys.stderr)
             sys.exit(1)
@@ -320,17 +333,8 @@ def main():
     else:
         urls = search_images(args.query, num=args.num, size=args.size,
                              type_filter=args.type_filter)
-        for i, url in enumerate(urls[:args.num]):
-            base = resolve_output(args.output, args.dir, args.query)
-            if args.num == 1:
-                output_path = base
-            else:
-                bp = Path(base)
-                output_path = str(bp.parent / f"{bp.stem}_{i + 1}{bp.suffix}")
-            result = download_image(url, output_path)
-            if result:
-                saved_paths.append(result)
-            # Try next URL if download failed
+        saved_paths = download_first(
+            urls, args.num, resolve_output(args.output, args.dir, args.query))
         if not saved_paths:
             print("Error: no images downloaded", file=sys.stderr)
             sys.exit(1)

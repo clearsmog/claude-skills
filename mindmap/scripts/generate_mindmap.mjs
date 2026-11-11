@@ -17,8 +17,8 @@
  */
 
 import puppeteer from "puppeteer";
-import { readFileSync, writeFileSync } from "fs";
-import { resolve, dirname } from "path";
+import { readFileSync, writeFileSync, mkdirSync, statSync } from "fs";
+import { resolve, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { parseArgs } from "util";
 
@@ -31,7 +31,7 @@ const { values: args } = parseArgs({
   options: {
     input:     { type: "string",  short: "i" },
     output:    { type: "string",  short: "o" },
-    format:    { type: "string",  short: "f", default: "png" },
+    format:    { type: "string",  short: "f" },
     theme:     { type: "string",  short: "t", default: "academic" },
     direction: { type: "string",  short: "d", default: "side" },
     width:     { type: "string",  short: "w", default: "2400" },
@@ -44,9 +44,15 @@ const { values: args } = parseArgs({
   strict: true,
 });
 
-const format    = args.format ?? "png";
-const theme     = args.theme ?? "latte";
-const direction = args.direction ?? "side";
+const theme     = args.theme;
+const direction = args.direction;
+
+function fail(message) {
+  console.error(`Error: ${message}`);
+  process.exit(2);
+}
+if (!["academic", "latte", "dark"].includes(theme)) fail(`unknown theme "${theme}" (academic, latte, dark)`);
+if (!["side", "right", "left"].includes(direction)) fail(`unknown direction "${direction}" (side, right, left)`);
 const vpWidth   = parseInt(args.width ?? "2400", 10);
 const vpHeight  = parseInt(args.height ?? "1400", 10);
 
@@ -73,6 +79,13 @@ if (!args.output) {
   process.exit(1);
 }
 const outputPath = resolve(args.output);
+
+// The format follows the file extension unless -f says otherwise; the two must agree,
+// so a .svg file never holds PNG bytes.
+const ext = extname(outputPath).toLowerCase();
+const format = args.format ?? (ext === ".svg" ? "svg" : "png");
+if (!["png", "svg"].includes(format)) fail(`unknown format "${format}" (png, svg)`);
+if (ext !== `.${format}`) fail(`output "${args.output}" does not end in .${format}`);
 
 // ---------------------------------------------------------------------------
 // Load mind-elixir assets
@@ -168,21 +181,17 @@ try {
 const browser = await puppeteer
   .launch({ headless: true })
   .catch(() => puppeteer.launch({ headless: true, channel: "chrome" }));
+try {
 const page = await browser.newPage();
 const scaleFactor = parseInt(args.scale ?? "3", 10);
 await page.setViewport({ width: vpWidth, height: vpHeight, deviceScaleFactor: scaleFactor });
 
-const tmpHtml = resolve(__dirname, ".tmp-mindmap.html");
-writeFileSync(tmpHtml, html);
-
-await page.goto(`file://${tmpHtml}`, { waitUntil: "networkidle0" });
+await page.setContent(html, { waitUntil: "networkidle0" });
 
 // Check for errors
 const initError = await page.evaluate(() => window.__mindElixirError);
 if (initError) {
-  console.error(`Error: mind-elixir init failed: ${initError}`);
-  await browser.close();
-  process.exit(1);
+  throw new Error(`mind-elixir init failed: ${initError}`);
 }
 
 const ready = await page.evaluate(() => window.__mindElixirReady);
@@ -239,9 +248,10 @@ const clip = bounds
 // ---------------------------------------------------------------------------
 // Export
 // ---------------------------------------------------------------------------
+mkdirSync(dirname(outputPath), { recursive: true });
 if (format === "svg") {
-  // For SVG: screenshot as PNG then note it, or extract DOM
-  // mind-elixir renders as DOM, not SVG, so we use foreignObject SVG wrapper
+  // mind-elixir renders as DOM, not SVG, so the .svg is a container around the PNG
+  // screenshot: it embeds anywhere an SVG does, but it is raster, not vector.
   const screenshotBuffer = await page.screenshot({ clip, type: "png", encoding: "base64" });
   const w = clip ? clip.width : vpWidth;
   const h = clip ? clip.height : vpHeight;
@@ -253,16 +263,13 @@ if (format === "svg") {
   await page.screenshot({ path: outputPath, clip, type: "png" });
 }
 
-await browser.close();
-
-// Cleanup temp
-import { unlinkSync } from "fs";
-try { unlinkSync(tmpHtml); } catch {}
+} finally {
+  await browser.close();
+}
 
 // ---------------------------------------------------------------------------
 // Output
 // ---------------------------------------------------------------------------
-const { statSync } = await import("fs");
 const size = statSync(outputPath).size;
 const sizeStr = size >= 1024 * 1024
   ? `${(size / (1024 * 1024)).toFixed(1)} MB`
@@ -275,7 +282,7 @@ if (args.typst) {
   const tw = args["typst-width"] || "90%";
   console.log(`\nTypst:`);
   console.log(`#figure(
-  image("${outputPath}", width: ${tw}),
+  image("${args.output}", width: ${tw}),
   caption: [${cap}],
 )`);
 }

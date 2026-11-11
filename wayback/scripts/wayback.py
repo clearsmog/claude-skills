@@ -15,7 +15,7 @@ shells (text shorter than --min-chars after cropping). Stdlib only; run with `py
 """
 
 import argparse, datetime, fnmatch, gzip, os, html, json, re, shutil, subprocess, sys, tempfile, time
-import urllib.error, urllib.parse, urllib.request, zlib
+import ssl, urllib.error, urllib.parse, urllib.request, zlib
 from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
 from pathlib import Path
@@ -26,6 +26,12 @@ CC_INDEX = "https://index.commoncrawl.org"
 CC_DATA = "https://data.commoncrawl.org/"
 CC_WORKERS = int(os.environ.get("WAYBACK_CC_WORKERS", 3))  # crawls looked up at once on data.commoncrawl.org
 CC_DEFAULT_CRAWLS = 12  # ~1 year of crawls when no --from is given
+
+
+def tls_refused(e):
+    """A refused TLS handshake (archive.org does this to some networks) will not get
+    better on a retry, unlike a timeout or a dropped connection."""
+    return isinstance(e, ssl.SSLError) or isinstance(getattr(e, "reason", None), ssl.SSLError)
 
 
 def get(url, tries=5, headers=None, raw=False):
@@ -44,7 +50,7 @@ def get(url, tries=5, headers=None, raw=False):
                 raise
             wait, why = int(e.headers.get("Retry-After") or 5 * 2**i), f"HTTP {e.code}"
         except (urllib.error.URLError, TimeoutError) as e:
-            if i == tries - 1:
+            if i == tries - 1 or tls_refused(e):
                 raise
             wait, why = 5 * 2**i, type(e).__name__
         print(f"{why}, retry in {wait}s ...", file=sys.stderr)
@@ -450,7 +456,7 @@ def save(url, tries=3):
                 break
             wait = int(e.headers.get("Retry-After") or 20 * 2**i)
         except (urllib.error.URLError, TimeoutError) as e:
-            if i == tries - 1:
+            if i == tries - 1 or tls_refused(e):
                 print(
                     f"save failed: {type(e).__name__}; falling back to the latest existing capture",
                     file=sys.stderr,
@@ -463,7 +469,13 @@ def save(url, tries=3):
     if m := re.search(r"/web/(\d{14})", final):
         ts = m.group(1)
     else:
-        rows = ia_captures(url, limit=1)
+        try:
+            rows = ia_captures(url, limit=1)
+        except (urllib.error.URLError, TimeoutError) as e:
+            sys.exit(
+                f"archive.org is unreachable from this network ({type(e).__name__}): nothing "
+                "was saved. Save the page with archive.ph in Chrome instead."
+            )
         if not rows:
             sys.exit("no capture exists and Save Page Now did not create one")
         ts = rows[-1][1]

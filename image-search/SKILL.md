@@ -44,3 +44,4 @@ Zero API keys required — works via DuckDuckGo by default. Each key unlocks a b
 | `SERPAPI_KEY` | Google Images (best quality) |
 | `UNSPLASH_ACCESS_KEY` | Stock photos via Unsplash |
 | `PEXELS_API_KEY` | Stock photos via Pexels |
+| `LOGO_DEV_TOKEN` | `--logo` via Logo.dev (publishable key). Without it `--logo` goes straight to a web image search for "<name> logo", so check the result is the right company's mark |

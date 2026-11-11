@@ -24,7 +24,7 @@ Script: `${CLAUDE_SKILL_DIR}/scripts/wayback.py` (stdlib only; run with `python3
 
 | Source | What it adds | Limits |
 |---|---|---|
-| `ia` Wayback Machine | densest history; the only one with scripted `save` | sites can opt out; archive.org is sometimes unreachable (TLS refused, 2026-10-31) |
+| `ia` Wayback Machine | densest history; the only one with scripted `save` | sites can opt out; archive.org sometimes refuses TLS from this network (seen 2026-10-31 and 2026-11-11): the script then drops `ia` at once and reports it, and `save` exits telling you to use archive.ph in Chrome |
 | `cc` Common Crawl | pages Wayback missed or that excluded archive.org; still answers when archive.org is down | monthly samples, not every page every crawl; robots.txt honoured and many news/corporate sites block CCBot since 2023; a crawler, so no `save` exists |
 | `pt` Arquivo.pt | a third independent copy, older pages; covers many non-.pt sites too (osttra.com, nomura.com have captures) | sparser than Wayback; its ArchivePageNow is a web form with a consent checkbox, and captures join the archive later, so no scripted save |
 

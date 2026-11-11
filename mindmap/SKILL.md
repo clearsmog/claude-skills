@@ -54,7 +54,9 @@ For node colors, arrows, and summaries, see [references/advanced-syntax.md](refe
 
 ## Flags
 
-`-i` input, `-o` output, `-f png|svg`, `-t academic|latte|dark`, `-d side|right|left`, `-s` scale (default 3), `--typst`, `--caption "..."`, `--typst-width 90%`
+`-i` input, `-o` output (`.png` or `.svg`; the format follows the extension), `-f png|svg`, `-t academic|latte|dark`, `-d side|right|left`, `-s` scale (default 3), `--typst`, `--caption "..."`, `--typst-width 90%`
+
+The `.svg` output is the PNG render inside an SVG container (mind-elixir draws DOM, not SVG): it is raster, so prefer `.png` with a higher `-s` unless a file must end in `.svg`. `--typst` prints the path exactly as passed to `-o`, so pass it relative to the `.typ` file.
 
 `-o` is required (the script has no `--dir` and no auto-naming): unless the user gives a path, use `mindmaps/<topic-slug>.png`.
 
