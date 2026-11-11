@@ -97,6 +97,8 @@ This is a citation @einstein1905.
 #bibliography("references.bib")
 ```
 
+Before adding or editing an entry in `references.bib`, run it through the `citation-management` skill (DOI/arXiv/PMID or title lookup via Crossref, OpenAlex, PubMed) and copy authors, year and venue from that record. If the work cannot be found, mark the entry `note = {[unverified]}` and tell the user instead of guessing.
+
 ## Large Documents (500+ lines)
 
 ### File Organization

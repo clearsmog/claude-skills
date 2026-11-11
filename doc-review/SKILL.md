@@ -72,7 +72,7 @@ the pictures.
 
 - `.typ`: compile the pages to PNG in a temp directory, with the same `--root` and
   `--font-path` flags the project compiles with:
-  `typst compile --format png --ppi 110 <file>.typ "$(mktemp -d)/p-{p}.png"`.
+  `typst compile --format png --ppi 110 <file>.typ "$(mktemp -d)/p-{0p}.png"`.
   Give the reviewer the PNG paths, the `.typ` path, and the line numbers of each
   diagram. For an embedded D2 image, add its `.d2` source path.
 - `.d2`: pass the source and the `<name>.light.png` beside it. If there is none, or it is

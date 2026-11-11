@@ -150,8 +150,7 @@ Scripts and `data/` come from [lucifer1004/claude-skill-typst](https://github.co
 **Removed in 0.15** (were deprecated, now gone): `path` element → use `curve` · `pdf.embed` → `pdf.attach` · `image.decode` / scoped decode fns → pass bytes directly · `pattern` type → `tiling`
 **Other migrations**: polylux:0.3.1 → `polylux:0.4.0` or `touying`
 **Breaking (0.15)**: file paths must use forward slashes only (no backslashes)
-
-| touying 0.8.0 | 0.6+ | Presentation framework — `#show: theme.with(...)` API (not the old `register()` pattern) |
+**touying 0.8.0**: themes use `#show: theme.with(...)` (the API since touying 0.6), not the old `register()` pattern
 
 ## CLI Commands
 

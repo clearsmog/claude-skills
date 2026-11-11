@@ -32,7 +32,7 @@ Detect document type from user request keywords:
 
 ## Constraints
 
-All formats: verify every citation against the bibliography.
+All formats: verify every citation against the bibliography, and verify the bibliography itself: before an entry is written to or changed in a `.bib`/Hayagriva file, invoke the `citation-management` skill to confirm the work exists and take its metadata from that record. An entry that cannot be confirmed gets `[unverified]` in its note field and is reported to the user; never fill one in from memory.
 
 Teaching material (lectures, slides, study guides): first read the project's knowledge base in `.claude/rules/` (notation registry, narrative arc) and check each new symbol against it; motivation before formalism; a worked example within 2 slides/pages of each definition; transition slides at major conceptual pivots.
 
@@ -59,7 +59,7 @@ Run these before drafting, without stopping to confirm:
 1. **Scan project for related materials**
    - Glob for `*.pdf`, `*.md`, `*.typ`, `images/` in the project directory
    - If PDFs found → check for `.parsed.md` next to each; read if exists
-   - If no `.parsed.md` → parse using PDF handling rules (background for large files)
+   - If no `.parsed.md` → parse using PDF handling rules (background for large files); with several PDF/DOCX/PPTX/XLSX sources, invoke the `parse` skill to convert them in one parallel batch
 2. **Detect document type** from keywords + project context (see Document type above)
 3. **Auto-select template** — no confirmation needed
 4. **Style inheritance**: if sibling `.typ` files exist in the project:
@@ -85,8 +85,8 @@ Run these before drafting, without stopping to confirm:
 
 ### Phase 2: Verify + Auto-Fix (autonomous — max 3 rounds)
 
-1. **Compile**: `typst compile FILE.typ`
-   - Hard gate: exit code must be 0
+1. **Compile**: `typst compile FILE.typ`; add `--root <project root>` when the file uses `/...` or `../` paths (see the typst skill's "CLI Commands")
+   - Hard gate: exit code must be 0; fix any `warning:` lines as well
 2. **Render sample PNGs**:
    - Documents <=3 pages → all pages
    - Documents >3 pages → page 1, middle page, last page

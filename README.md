@@ -176,7 +176,7 @@ Every skill with scripts uses [uv](https://docs.astral.sh/uv/) (`brew install uv
 | **diagram** | [D2](https://d2lang.com) (`brew install d2`) and Google Chrome |
 | **typst**, **verify**, **doc-review** | [Typst CLI](https://github.com/typst/typst) (`brew install typst`); the qk component library from [typst-component-library](https://github.com/clearsmog/typst-component-library), installed as `@local/qk` |
 | **mindmap** | Node.js; uses Puppeteer's Chrome, or your installed Chrome if that is missing |
-| **image-search** | `SERPAPI_KEY` optional (DuckDuckGo is the free fallback); `UNSPLASH_ACCESS_KEY` / `PEXELS_API_KEY` for `--stock` |
+| **image-search** | `SERPAPI_KEY` optional (DuckDuckGo is the free fallback); `UNSPLASH_ACCESS_KEY` / `PEXELS_API_KEY` for `--stock`; `LOGO_DEV_TOKEN` for `--logo` |
 | **sec-edgar** | `SEC_USER_AGENT`, an app name plus contact email (SEC rejects requests without one) |
 | **google-tasks** | The `gtasks` CLI |
 
