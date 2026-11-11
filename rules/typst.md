@@ -4,18 +4,19 @@ paths:
 ---
 # Typst
 
-## Diagrams
-- Use native Typst packages (fletcher, chronos, timeliney) instead of Mermaid.
-- Never draw diagrams with Python or raster tools (graphviz via Python, mermaid, matplotlib).
-- Flowcharts with at most 10 nodes, one actor and no forced crossings: fletcher. Anything larger, multi-party (sequence, swimlane, lifecycle), causal/event networks or state machines with many edges: the `diagram` skill (D2 to SVG, `.d2` source kept beside the `.typ`, embedded with `image("fig.light.svg")`).
+## Visuals
 
-## Charts
-- **Default choice**: Lilaq with `qk-lilaq-theme()` — handles line, bar, scatter, box, violin, heatmap, contour, subplots, dual axes natively in Typst
-- **Fall back to Python SVG** only when: kde plots, pair plots, faceted grammar (plotnine), or Python data pipeline already exists
-- **cetz-plot**: only for extremely simple charts where Lilaq would be overkill (rare — Lilaq is almost always better)
-- Lilaq + qk style: `#import "qk-plot.typ": *` then `#show: qk-lilaq-theme()`. Colorblind variant: `qk-lilaq-theme(colorblind: true)`.
-- cetz-plot + qk style: `set-style(content: qk-cetz-content)` in the canvas, `x-format`/`y-format: qk-tick-format` (Inter ticks instead of math font), `mark-style: qk-plot-style` + `mark: qk-marks.at(i)` per series
-- SVG embedding: `#figure(image("chart.svg", width: 100%), caption: [...])`
+When creating or substantially editing a `.typ` document, add visuals where the content clearly benefits, without waiting to be asked. Skip this for quick edits (fewer than 15 lines changed), when the document already has suitable visuals, or when the user asked for text only.
+
+- **Diagrams**: flowcharts, trees, ER and state diagrams with at most about 10 nodes, one actor and no forced crossings: fletcher. Small sequence diagrams: chronos. Gantt: timeliney. Timelines: herodot. Anything larger, multi-party (sequence, swimlane, lifecycle), causal/event networks or state machines with many edges: the `diagram` skill (D2 to SVG, `.d2` source kept beside the `.typ`, embedded with `image("fig.light.svg")`). NEVER Mermaid, Python (graphviz, matplotlib) or raster tools for diagrams.
+- **Charts**: Lilaq by default (line, bar, scatter, box, violin, heatmap, contour, subplots, dual axes, all native Typst). cetz-plot only for a very simple chart where Lilaq is more than needed (rare). Python SVG only for kde plots, pair plots, faceted grammar (plotnine), or when a Python data pipeline already exists.
+- **Photos and logos**: invoke `/image-search "query" --typst` (add `--logo` for a company or brand mark).
+- **Mind maps, concept maps**: invoke `/mindmap "topic" --typst`.
+- **Conceptual illustrations, metaphors**: no image generator is available. Use a diagram where one fits; if the `anatomy` skill is installed, suggest an isometric figure and wait for a yes (one takes up to an hour); otherwise leave a placeholder `#rect` and tell the user.
+- Embed any SVG with `#figure(image("chart.svg", width: 100%), caption: [...])`.
+- qk chart style: `#import "qk-plot.typ": *` then `#show: qk-lilaq-theme()` (colorblind: `qk-lilaq-theme(colorblind: true)`); for cetz-plot, `set-style(content: qk-cetz-content)`, `x-format`/`y-format: qk-tick-format`, `mark-style: qk-plot-style`, `mark: qk-marks.at(i)`. `qk-plot.typ` is not in the `@local/qk` package and has to be copied into the project first.
+
+The detailed source is the typst skill's `references/tool-routing.md` (`skills/typst/references/tool-routing.md`): full tables, content patterns, examples, fallbacks, and how to get `qk-plot.typ` and `qk_style`. Read it before adding a visual when the skill is installed.
 
 ## Compile After Editing
 - After any `.typ` edit the file must compile. Where the auto-compile hook is installed (`~/.claude/hooks/auto-compile-typst.sh`, PostToolUse on Edit/Write) it does this and reports a failure back to you, finding `--root` from a `typst.toml` above the file or the git top level; then compile by hand only for what it skips: partials (`_*.typ`, `*.body.typ`), files changed through Bash, or a project with its own flags. Without the hook, run `typst compile <file>` yourself.
@@ -29,25 +30,6 @@ paths:
 ## Figure Paths
 - Use paths relative to the `.typ` file location, not the working directory.
 - Prefer `image("figures/name.png")` over absolute paths for portability.
-
-## Visual Auto-detection
-
-When creating or substantially editing `.typ` documents, add visuals where the content would clearly benefit, without waiting to be asked.
-
-**Priority:** Diagrams → native Typst (fletcher/chronos/timeliney/herodot) up to about 10 nodes, the `diagram` skill (D2) for larger, multi-party or network diagrams, NEVER Python; Charts → Lilaq (default) / Python SVG for kde, pair or faceted plots — embed with `#figure(image(...))`; Images → /image-search; mind maps → /mindmap
-
-**Triggers:**
-- Company/brand logos → invoke `/image-search --logo "Name" --typst`
-- Real photographs → invoke `/image-search "query" --typst`
-- Conceptual illustrations, metaphors → No image generator is wired up. Use a diagram where one fits; if the `anatomy` skill is installed, suggest an isometric figure and wait for a yes (one takes up to an hour); otherwise leave a placeholder `#rect` and tell the user
-- Mind maps, concept maps → invoke `/mindmap "topic" --typst`
-
-**When NOT to auto-invoke:**
-- Quick edits (< 15 lines changed) — don't add visuals to minor fixes
-- The document already has appropriate visuals for the content
-- The user explicitly said no images or text-only
-
-See `skills/typst/references/tool-routing.md` for the full routing table and fallback chains.
 
 ## qk Component Library
 - Local package: `#import "@local/qk:2.2.0": *`

@@ -6,7 +6,7 @@ Install from https://typst.app/universe/ — check for latest versions.
 
 | Package | Purpose | Import |
 |---------|---------|--------|
-| **cetz** | Core drawing (TikZ-inspired). Use `qk-plot.typ` for consistent qk palette colors. | `#import "@preview/cetz:0.5.2"` |
+| **cetz** | Core drawing (TikZ-inspired). For qk palette colors use `qk-plot.typ` (see `tool-routing.md`, "qk Plot Style"). | `#import "@preview/cetz:0.5.2"` |
 | **cetz-plot** | Charts on top of cetz (separate package, pair with cetz 0.5.x). | `#import "@preview/cetz-plot:0.1.4"` |
 | **fletcher** | Flowcharts, automata, arrows | `#import "@preview/fletcher:0.5.8"` |
 | **lilaq** | Native Typst data visualization — line, scatter, bar, box, violin, heatmap, contour, subplots, dual axes, color bars, themes, datetime. Import `as lq`. | `#import "@preview/lilaq:0.6.0" as lq` |
@@ -93,11 +93,11 @@ After setup, fenced code blocks automatically get zebra striping and support lin
 
 ### cetz-plot (charts)
 
-cetz-plot is a separate package (`@preview/cetz-plot:0.1.4`, pair with `cetz:0.5.2`). Use only for extremely simple charts where lilaq is overkill (rare); lilaq is the default. Use `qk-plot.typ` from `~/Developer/Typst-PDF/MatplotlibStyle/` for consistent qk palette colors (its `qk-plot-style`/`qk-bar-style` helpers are version-agnostic style dicts). See `references/tool-routing.md` for the chart decision tree.
+cetz-plot is a separate package (`@preview/cetz-plot:0.1.4`, pair with `cetz:0.5.2`). Use only for extremely simple charts where lilaq is overkill (rare); lilaq is the default. For qk palette colors use the `qk-plot-style`/`qk-bar-style` helpers from `qk-plot.typ` (version-agnostic style dicts). The file is not in `@local/qk`; `references/tool-routing.md`, "qk Plot Style", says how to get it and has the chart routing table.
 
 ### lilaq (native Typst charts)
 
-lilaq (0.6.0) is a native Typst data visualization package supporting line, scatter, bar, box, violin, heatmap, contour, and quiver plots with subplots via `lq.diagram` grids, dual axes, color bars, themes, and datetime support. See tool-routing.md for the chart decision tree.
+lilaq (0.6.0) is a native Typst data visualization package supporting line, scatter, bar, box, violin, heatmap, contour, and quiver plots with subplots via `lq.diagram` grids, dual axes, color bars, themes, and datetime support. See tool-routing.md for the chart routing table.
 
 ```typst
 #import "@preview/lilaq:0.6.0" as lq

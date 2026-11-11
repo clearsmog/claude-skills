@@ -77,7 +77,7 @@ Run these before drafting, without stopping to confirm:
   - Actionable advice → `#tip[...]`
   - Common mistake → `#trap[...]`
   - Memory aid → `#memorize[...]`
-- **Visuals**: add them as content is drafted, routed per the typst skill's "Visual Tool Routing (compact)" section and its "Visual Auto-detection" table (single source; details in its `references/tool-routing.md`).
+- **Visuals**: add them as content is drafted, routed per the typst skill's `references/tool-routing.md` (the single source: routing tables, content patterns, and when not to add one; the skill's "Visual Tool Routing" section is the short version).
 - Always add `alt:` text on all images
 - Always `#set figure(placement: auto)`
 - Write COMPLETE `.typ` file — not batches

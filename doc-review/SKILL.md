@@ -104,7 +104,7 @@ the pictures.
 |-----------|-------|----------|-------|-------|---------|
 | [varies] | [agent name] | N | N | N | [status] |
 
-## Overall: [EXCELLENT / GOOD / NEEDS WORK / POOR]
+## Overall: [APPROVED / NEEDS REVISION / REJECTED]
 
 ## Critical Issues (if any)
 [List top issues requiring immediate attention]
@@ -118,9 +118,9 @@ the pictures.
 - [agent]: [reason, e.g. "no diagrams detected"]
 ```
 
-## Quality Score Rubric
+## Severity and Verdicts
 
-See `${CLAUDE_SKILL_DIR}/../typst/references/quality-gates.md` for the authoritative score rubric and severity definitions.
+Use the severity definitions and verdict rules in `${CLAUDE_SKILL_DIR}/../typst/references/quality-gates.md`. The overall verdict is the worst one: any CRITICAL or MAJOR finding from any agent makes it NEEDS REVISION; APPROVED needs zero of both. Where an agent reports in its own scale, apply the rules to its Critical / Major / Minor counts.
 
 ## Important
 

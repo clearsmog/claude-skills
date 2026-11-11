@@ -18,10 +18,10 @@ Defaults, unless the user or the project's existing files say otherwise:
 4. `#set figure(placement: auto)` — prevents blank half-pages
 5. Add `alt:` to images — `image("path.png", alt: "description")`
 6. Escape `$` in content — scan for bare `$` before compiling
-7. **Default fonts**: Libertinus Serif (body), Inter (headings), New Computer Modern Math (math), Fira Code (code)
-8. **Default compile**: `typst compile --root .. Source/<file>.typ`
+7. **Default fonts** (qk presets): Libertinus Serif (body), Inter (headings), New Computer Modern Math (math), Fira Code (code). Typst's own defaults, with no preset, are Libertinus Serif, New Computer Modern Math and DejaVu Sans Mono
+8. **Default compile**: `typst compile <file>.typ`. Add `--root <project root>` only when the file uses root-relative paths (leading `/`) or reaches into a parent directory (`../`); see "CLI Commands"
 9. Template when the request doesn't settle it: Study Guide
-10. Visual tool when the content doesn't settle it: diagrams → fletcher; charts → see decision tree (default → lilaq; extremely simple → cetz-plot (rare); statistical kde/pair → matplotlib+seaborn; grammar → plotnine; complex with Python data → matplotlib)
+10. Visual tool when the content doesn't settle it: see "Visual Tool Routing" below
 11. Scan the project for existing `.typ` files and match their style (fonts, colors, qk preset)
 
 ## New Document Decision Tree
@@ -46,71 +46,22 @@ User request → scan for keywords:
 1. Auto-detect template from keywords above
 2. Import `@local/qk:2.2.0` at top
 3. Use `qk-doc` or `qk-report` preset when applicable
-4. Auto-select template. State choice in Phase 3 summary. User can re-invoke with explicit type override if wrong.
+4. Auto-select template. User can re-invoke with explicit type override if wrong.
 5. Build from `references/templates.md`
 6. Custom styles are fine — templates are starting points, not constraints
 
-## Visual Tool Routing (compact)
+## Visual Tool Routing
 
-**Diagrams** (always native Typst — NEVER Python):
+Add a visual wherever it makes the content clearer, without waiting to be asked. Read `references/tool-routing.md` before adding any visual: it has the size limits, the content-pattern table, examples, and the cases where no visual should be added.
 
-| Need | Tool |
-|------|------|
-| Flowcharts, trees, ER, state diagrams | `fletcher` |
-| Sequence diagrams | `chronos` |
-| Gantt charts | `timeliney` |
-| Linear timelines | `herodot` |
+Priority order:
 
-**Charts** (generate SVG, embed with `#figure(image(...))`):
-
-| Need | Tool |
-|------|------|
-| Extremely simple charts where lilaq is overkill (rare) | **cetz-plot** (Typst native, `qk-cycle` colors) |
-| Most charts (line, bar, scatter, violin, heatmap, contour, subplots) | **lilaq** (Typst native, font-matched, `as lq`) |
-| Statistical plots (kde, pair plots) | **matplotlib + seaborn** (`use()`, SVG) |
-| Grammar-of-graphics / faceted plots | **plotnine** (`theme_qk()`, SVG) |
-| Complex charts with Python data pipeline | **matplotlib** (full API, SVG) |
-
-**Images & layout:**
-
-| Need | Tool |
-|------|------|
-| Tables, boxes, grids | Typst native |
-| Mind maps | `/mindmap` (auto-invoke) |
-| Conceptual illustrations | No generator: a diagram, or suggest an `anatomy` figure and wait for a yes, or a placeholder `#rect` |
-| Key mechanism drawn as a real machine (isometric, exact numbers) | `/anatomy` → `scripts/anatomy-to-typst.mjs` |
-| Real photos, logos | `/image-search` (auto-invoke) |
-
-Detail and examples in `references/tool-routing.md`.
+- Diagrams: native Typst (fletcher, chronos, timeliney, herodot) up to about 10 nodes and one actor; the `diagram` skill (D2) for larger, multi-party or network diagrams. Never Mermaid, Python or raster tools.
+- Charts: lilaq by default; cetz-plot only for very simple ones; Python SVG (matplotlib/seaborn/plotnine) only for kde, pair or faceted plots, or an existing Python pipeline.
+- Photos and logos: `/image-search`. Mind maps: `/mindmap`.
+- Conceptual illustrations: there is no image generator. Use a diagram, or suggest an `anatomy` figure and wait for a yes, or leave a placeholder `#rect`.
 
 ## Proactive Behaviors
-
-### Visual Auto-detection
-
-When writing Typst documents, add a visual wherever it makes the content clearer, without waiting to be asked. Route by content type: diagrams → native Typst (fletcher/chronos/timeliney/herodot) up to about 10 nodes, the `diagram` skill (D2) for larger, multi-party or network diagrams; charts → follow the Charts table above (cetz-plot for very simple, lilaq for most, matplotlib/seaborn/plotnine for statistical or grammar-of-graphics) — generate SVG, embed; images → `/image-search` / `/mindmap`.
-
-| Content pattern | Visual to add | Tool |
-|-----------------|---------------|------|
-| Comparison grids, attribute tables | Styled table | Typst native |
-| Callout boxes, styled layouts | `rect()` / `block()` | Typst native |
-| Sequential steps, decision logic | Flowchart / decision tree | `fletcher` |
-| Process with inputs/outputs | Workflow diagram | `fletcher` |
-| System architecture, ER diagrams | Block / entity diagram | `fletcher` |
-| Hierarchy or taxonomy | Tree diagram | `fletcher` or `/mindmap` |
-| Topic overview, concept map | Mind map | `/mindmap` |
-| Request-response, API flows | Sequence diagram | `chronos` |
-| Project schedule, phases | Gantt chart | `timeliney` |
-| Historical events, evolution | Timeline | `herodot` or `timeliney` |
-| Extremely simple chart where lilaq is overkill (rare) | Line/bar/scatter chart | cetz-plot (Typst native) |
-| Most charts (multi-series, subplots, violin, heatmap, contour) | Data visualization | lilaq (Typst native, font-matched) |
-| Statistical chart (kde, pair plots) | Statistical plot | matplotlib+seaborn (SVG) |
-| Faceted / grammar chart | Layered plot | plotnine (SVG) |
-| Company logo, brand mark | Logo image | `/image-search --logo` |
-| Real-world photograph | Photo | `/image-search` |
-| Concept with analogy, metaphor | Illustration | `/anatomy` or a diagram; no AI image generator is available |
-| The document's central mechanism, where precise parts and true numbers matter (at most one or two per document; each takes up to an hour) | Isometric machine figure | `/anatomy`, then `scripts/anatomy-to-typst.mjs` |
-
-See `references/tool-routing.md` for full examples, fallback chains, and auto-invoke rules.
 
 ### Content Structure
 
@@ -146,22 +97,13 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 - Semantic heading hierarchy — don't skip levels
 - `table.header()` for repeating headers — improves PDF/UA accessibility
 
-## Fallback Chains
-
-| If this fails... | Try... |
-|------------------|--------|
-| `/image-search` | Placeholder `#rect(width: 100%, height: 4cm, fill: luma(240))[Image placeholder]` |
-| `/mindmap` | `fletcher` tree diagram |
-| matplotlib | Check `.venv` → `uv venv .venv.nosync && ln -s .venv.nosync .venv` |
-| `typst compile` | Isolate with `/* ... */`, compile incrementally |
-
 ## Reference File Index
 
 | When you need... | Read... |
 |------------------|---------|
 | Syntax, errors, special chars | `references/quick-ref.md` |
 | `@local/qk:2.2.0` API | `references/component-library.md` |
-| Visual tool details, examples, fallbacks | `references/tool-routing.md` |
+| Visual tool routing, examples, qk plot style setup, fallbacks | `references/tool-routing.md` |
 | Document preambles | `references/templates.md` |
 | Table patterns, show rules, large docs | `references/common-patterns.md` |
 | Page layout, spacing, figures, curves | `references/layout-patterns.md` |
@@ -169,7 +111,7 @@ Add `<label>` + `@ref` for recurring concepts across sections.
 | Package imports | `references/packages.md` |
 | Touying presentations (themes, slides, speaker notes) | `references/touying-guide.md` |
 | Visual verification (PNG rendering, spot-checks) | `references/visual-verification.md` |
-| Quality gates, rubrics, dispatch table | `references/quality-gates.md` |
+| Severity definitions and review verdict rules | `references/quality-gates.md` |
 | Data-driven generation (JSON, CSV, batch, variants) | `references/data-driven.md` |
 | `sym.*` symbols | `references/symbols.md` |
 
@@ -215,7 +157,7 @@ Scripts and `data/` come from [lucifer1004/claude-skill-typst](https://github.co
 
 ```bash
 typst compile document.typ                     # Compile to PDF
-typst compile document.typ --root ..           # Set project root
+typst compile --root . Source/document.typ     # From the project root, for "/..." or "../" paths
 typst compile document.typ out.pdf --pages 1-5 # Specific pages
 typst watch document.typ                       # Watch and recompile
 typst fonts                                    # List available fonts
@@ -223,14 +165,16 @@ typst eval --in doc.typ 'query(heading.where(level: 1)).len()'   # Introspect st
 typst query doc.typ "heading.where(level: 1)"  # Deprecated form — still runs, with a warning
 ```
 
-**`--root` flag:** When a `.typ` file uses `#import` or `#image()` with paths outside its directory, set `--root` to the project root.
+**`--root` flag:** The root defaults to the directory of the input file, which is enough when every import and image path stays inside that directory. A path with a leading `/` resolves against the root, and a `../` path that leaves the root fails with "would escape the project root". In both cases pass `--root <project root>` (the directory that contains everything the file reaches), not its parent.
+
+**When a compile fails:** isolate the failing part with `/* ... */` and compile incrementally.
 
 **Batch compile:** `for f in *.typ; do typst compile "$f"; done`
 
 ## Conventions
 
 - Source files in `Source/`, compiled PDFs in `PDFs/`
-- Compile with `--root ..` when `.typ` references parent directory assets
+- From the project root, compile with `typst compile --root . Source/<file>.typ` when a file in `Source/` uses `/...` or `../` paths; otherwise plain `typst compile Source/<file>.typ`
 - For multi-file projects: `main.typ` + `#include` sections + shared `lib.typ`
 - File naming: lowercase-kebab-case (e.g., `portfolio-theory-guide.typ`)
 
@@ -238,13 +182,14 @@ typst query doc.typ "heading.where(level: 1)"  # Deprecated form — still runs,
 
 | Font | Style | Notes |
 |------|-------|-------|
-| New Computer Modern | Academic serif | Default; bundled with Typst |
+| Libertinus Serif | Text serif | Typst's default body font; bundled with Typst |
+| New Computer Modern | Academic serif | Bundled with Typst; its Math companion is the default math font |
 | Georgia | Readable serif | Safe on macOS |
 | Helvetica Neue | Clean sans-serif | macOS only |
 
 **Variable fonts (supported since 0.15):** Apple variable fonts and others now load directly — no need to install static `.otf`/`.ttf` versions. Select an axis with `#set text(font: "New York", variations: (wght: 600))`. The "Variable"/"Var"/"VF" suffix in a font's name is trimmed automatically, so reference the base family name. Note Apple's *exposed* family names differ from marketing names: San Francisco is `SF NS` (not "SF Pro"), and the serif is `New York` — run `typst fonts` to confirm. (On Typst ≤ 0.14 these failed with "variable fonts are not currently supported" — only relevant if pinned to an old binary.)
 
-**CJK fallback:** `#set text(font: ("New Computer Modern", "Songti SC"))`
+**CJK fallback:** `#set text(font: ("Libertinus Serif", "Songti SC"))`
 
 ## Documentation
 

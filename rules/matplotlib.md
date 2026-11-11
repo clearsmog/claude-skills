@@ -1,17 +1,18 @@
 ---
 paths:
   - "**/charts/**/*.py"
+  - "**/figures/**/*.py"
+  - "**/plots/**/*.py"
   - "**/*chart*.py"
   - "**/*plot*.py"
-  - "**/*fig*.py"
-  - "**/figures/**/*.py"
-  - "**/generate_*.py"
+  - "**/fig_*.py"
+  - "**/*figure*.py"
 ---
 # Matplotlib Chart Quality
 
 ## qk Style (MANDATORY for all plots)
 - Always apply before plotting: `plt.style.use('qk')` or `from qk_style import use; use()`
-- Style source: ~/Developer/Typst-PDF/MatplotlibStyle/ (Tailwind CSS palette)
+- Style source: ~/Developer/Typst-PDF/MatplotlibStyle/ (Tailwind CSS palette). `qk_style` and `qk_plotnine` are plain modules there, not an installed package, so the import fails in a project venv until that directory is on `PYTHONPATH`; the working command is in the typst skill's `references/tool-routing.md`, "qk Plot Style". `plt.style.use('qk')` needs no path (rcParams only, no helpers)
 - Named colors: `from qk_style import QK_COLORS, CYCLE, CYCLE_CB, CYCLE_LIGHT, CYCLE_BAR` — use `CYCLE[:n]` for explicit bar/histogram colors
 - Light variants: `CYCLE_LIGHT` (75% lightened, area fills), `CYCLE_BAR` (30% lightened, bar fills), `lighten(hex, amount)` helper
 - Colorblind mode: `use(colorblind=True)` swaps to Okabe-Ito palette (`CYCLE_CB`)
@@ -61,15 +62,9 @@ When the user asks for a chart without specifying a tool, use this lookup.
 
 ### Typst documents
 
-| Plot intent | Tool | Code pattern |
-|---|---|---|
-| Line/bar/scatter (any complexity) | Lilaq | `#show: qk-lilaq-theme()` then `lq.diagram(...)` |
-| Extremely simple chart where Lilaq is overkill (rare) | cetz-plot | `plot-style: qk-plot-style` |
-| Statistical (kde, pair) | Python SVG | seaborn/matplotlib, embed `#image("chart.svg")` |
-| Faceted grammar | Python SVG | plotnine, embed `#image("chart.svg")` |
+Charts inside a Typst document follow the typst skill's `references/tool-routing.md` (Lilaq by default; Python SVG only for kde, pair or faceted plots, or an existing Python pipeline).
 
 ### Tiebreakers
-- Lilaq vs cetz-plot: pick **Lilaq** (richer API)
 - seaborn vs plotnine: pick **seaborn** unless faceting is needed
 - seaborn vs matplotlib: pick **seaborn** for statistical, **matplotlib** for custom layout
 
