@@ -56,7 +56,6 @@ The detailed source is the typst skill's `references/tool-routing.md` (`skills/t
 ### Font Sizes for Print Readability
 - Minimum body text in custom layouts: 8pt (7.5pt and below fails in print)
 - Labels in diagrams/zones: match surrounding text size, minimum 8.5pt
-- When overriding font sizes for space, never go below 7pt
 
 ### Content Overflow Prevention
 - Typst SILENTLY truncates overflowing content — no warnings, no errors

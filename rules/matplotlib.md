@@ -81,8 +81,6 @@ Charts inside a Typst document follow the typst skill's `references/tool-routing
 ## Minimum Font Sizes for Print
 - Chart labels/annotations: minimum 8pt (7pt and below are unreadable in print)
 - Axis tick labels: minimum 9pt
-- Flowchart box text: minimum 8pt for body, 9pt for titles
-- Use weight="medium" for body text in flow diagrams (default "regular" too thin)
 
 ## Text Contrast on Colored Patches
 - Text color must be based on FILL color brightness, never edge color.
@@ -100,16 +98,6 @@ Charts inside a Typst document follow the typst skill's `references/tool-routing
 - `tight_layout()` + `bbox_inches="tight"` clips arrows and annotations near figure edges
 - Expand axis limits 0.5 units beyond outermost elements to prevent label truncation
 - After saving, verify no elements are clipped at figure edges
-
-## Flowchart Layout
-- Side branches (decision sub-flows) need their own vertical space — 2-3 y-units per branching level. Never squeeze into the main spine's y-range.
-- Set axis limits with 0.5-unit margin beyond the outermost elements.
-
-## Z-Ordering
-- Box/diamond patches: `zorder=3`
-- Text labels: `zorder=4`
-- Arrows/connectors: default (~2) or explicit `zorder=2`
-- This ensures text is always readable above patches and arrows.
 
 ## After Generating Charts
 - Visually verify ALL text is readable in the output — especially boxes with colored fills.

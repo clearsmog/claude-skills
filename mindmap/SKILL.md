@@ -1,6 +1,6 @@
 ---
 name: mindmap
-description: Generate mind map images using mind-elixir. Produces PNG or SVG files from plaintext input. Use when the user needs a mind map, concept map, or topic overview diagram.
+description: Generate mind map images using mind-elixir. Produces PNG or SVG files from plaintext input. Use when the user needs a mind map, concept map, or topic overview drawn as a radial tree. Not for flowcharts, sequence, causal, relationship or state diagrams (diagram).
 allowed-tools: Bash, Write, Read
 argument-hint: <topic or "plaintext content"> [-o path] [--format png|svg] [--theme academic|latte|dark] [--direction side|right|left] [--typst] [--caption "..."]
 ---
@@ -12,19 +12,19 @@ Generate a mind map image from a topic or plaintext mind map content.
 If `${CLAUDE_SKILL_DIR}/scripts/node_modules` does not exist, run:
 
 ```bash
-cd ${CLAUDE_SKILL_DIR}/scripts && npm install
+cd ${CLAUDE_SKILL_DIR}/scripts && bun install
 ```
 
 ## Workflow
 
 1. **Generate plaintext mind map content** from `$ARGUMENTS`. If the user provides a short topic, expand it into a full mind map tree (3-4 branches, 3-5 leaves each). If the user provides plaintext content, use it directly.
 
-2. **Write the plaintext** to a temp file at `/tmp/mindmap-input.txt`.
+2. **Write the plaintext** to `mindmap-input.txt` in the session scratchpad directory (`<scratchpad>` below). A fixed `/tmp` path gets overwritten by parallel sessions.
 
 3. **Run the script** to render the mind map:
 
 ```bash
-node ${CLAUDE_SKILL_DIR}/scripts/generate_mindmap.mjs -i /tmp/mindmap-input.txt -o "<output-path>" [flags...]
+node ${CLAUDE_SKILL_DIR}/scripts/generate_mindmap.mjs -i "<scratchpad>/mindmap-input.txt" -o "<output-path>" [flags...]
 ```
 
 4. **Print the script's stdout** to the user. Open the output file with `open <path>`.
@@ -66,6 +66,6 @@ For `/mindmap "Portfolio Theory"`:
 
 ```bash
 node ${CLAUDE_SKILL_DIR}/scripts/generate_mindmap.mjs \
-  -i /tmp/mindmap-input.txt \
+  -i "<scratchpad>/mindmap-input.txt" \
   -o "mindmaps/portfolio-theory.png"
 ```

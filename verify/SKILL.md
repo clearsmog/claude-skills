@@ -17,9 +17,9 @@ In a git repo: `git diff --name-only HEAD` plus `git diff --name-only --cached`,
 | Changed | Check |
 |---|---|
 | `.typ` | `typst compile` the entry file with the project's flags (`--root`, `--font-path`); any warning counts. Then render to PNG in a temp directory, `typst compile --format png --ppi 110 <file> "$(mktemp -d)/p-{0p}.png"`, and Read the pages touched (slides: every slide; long documents: also the first and last page) for overflow, blank pages and missing figures. Full checklist: the `typst` skill's `references/visual-verification.md` |
-| `.qmd` | `quarto render` the file |
+| `.qmd` | `quarto render` the file; if `quarto` is not installed, skip and report it as unverified |
 | `.py` | `uv run python -I -m py_compile <file>`; when the script writes output files, confirm they exist and are not empty; run `uv run pytest` if the project has tests; run the script itself if it is an entry point and safe to run |
-| `.R` | `Rscript <file>` when it is a standalone script |
+| `.R` | `Rscript <file>` when it is a standalone script; if `Rscript` is not installed, skip and report it as unverified |
 | `.html`, `.tsx`, `.jsx`, `.css`, `.vue` | `bun run build` and `bun run test` if defined (`biome check` when `biome.json` exists); then open the page with Claude in Chrome (load the `claude-in-chrome` skill) and click through the changed flow, checking the console for errors |
 | `.md` with images or diagrams | render it in the target viewer and confirm the images load |
 | `.xlsx` | recalculate and scan for `#REF!`, `#DIV/0!`, `#VALUE!` |

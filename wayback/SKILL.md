@@ -1,6 +1,6 @@
 ---
 name: wayback
-description: Use the Wayback Machine (web.archive.org), Common Crawl and Arquivo.pt (all three queried together), to recover dead or changed pages and to compare versions of the same page over time — list distinct captures, fetch one as clean text, and word-diff two versions (or an old capture against a page saved today). Use whenever a link 404s or a page was changed or removed, or when the task asks what a job ad, team page, product page, policy, prospectus or company site said before, or how it changed between years — even if the user never says "Wayback" or "archive". Also use when Wayback is down, blocked or has no capture of the page.
+description: Use the Wayback Machine (web.archive.org), Common Crawl and Arquivo.pt (all three queried together), to recover dead or changed pages and to compare versions of the same page over time — list distinct captures, fetch one as clean text, and word-diff two versions (or an old capture against a page saved today). Use whenever a link 404s or a page was changed or removed, or when the task asks what a job ad, team page, product page, policy, prospectus or company site said before, or how it changed between years — even if the user never says "Wayback" or "archive". Also use when Wayback is down, blocked or has no capture of the page. Not for reddit.com threads, removed ones included (reddit skill).
 ---
 # Wayback Machine (+ Common Crawl, Arquivo.pt)
 
