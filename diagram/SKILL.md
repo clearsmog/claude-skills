@@ -1,6 +1,6 @@
 ---
 name: diagram
-description: Draw structural diagrams with D2 — process lifecycles and sequence/swimlane diagrams (who does what, in what order), flowcharts and decision trees, causal/event networks (what drives what), state machines, layered or market-structure maps, and step-by-step walkthroughs — rendered in the qk palette to light and dark SVG + PNG (plus PDF/GIF) for Typst, HTML, Markdown, slides or standalone use. Use whenever the user wants a 流程图, 时序图, 泳道图, 生命周期图, 拓扑图, 因果图, 传导链, 关系图, state diagram, or asks to "visualize how X works / how A affects B / the steps of X", in any project — even without the word "diagram". Not for data charts (dataviz), mind maps (/mindmap), dated timelines (Typst herodot/timeliney) or a concept drawn as an isometric physical machine (anatomy).
+description: Draw structural diagrams with D2 — process lifecycles and sequence/swimlane diagrams (who does what, in what order), flowcharts and decision trees, causal/event networks (what drives what), state machines, layered or market-structure maps, and step-by-step walkthroughs — rendered in the qk palette to light and dark SVG + PNG (plus PDF/GIF) for Typst, HTML, Markdown, slides or standalone use. Use whenever the user wants a 流程图, 时序图, 泳道图, 生命周期图, 拓扑图, 因果图, 传导链, 关系图, state diagram, or asks to "visualize how X works / how A affects B / the steps of X", in any project — even without the word "diagram". 中文说法 — "画流程图", "画时序图", "因果图", "状态机", "画个图说明", "传导链". Not for data charts (dataviz), mind maps (/mindmap), dated timelines (Typst herodot/timeliney) or a concept drawn as an isometric physical machine (anatomy).
 argument-hint: "<what to draw> [-o outdir]"
 allowed-tools: Read, Write, Edit, Bash
 ---
@@ -15,6 +15,18 @@ A diagram makes an argument that prose cannot: what causes what, who acts when, 
 go next. Two tests decide whether it works. With every label deleted, does the shape alone still
 say something (a fan-out, a cycle, a hand-off between lanes)? And could the reader learn a concrete
 fact from it, or does it only name boxes?
+
+## Machine-readable output
+
+Every script here takes `--json` and prints one object on stdout, with human
+progress on stderr. Check the exit code for pass/fail and read the object for the
+detail — do not parse the prose.
+
+```json
+{"ok": true, "exit": 0, "source": "/abs/x.d2", "name": "x",
+ "renders": [{"mode": "light", "svg": "/abs/x.light.svg", "png": "/abs/x.light.png"}],
+ "pdf": null, "gif": null}
+```
 
 ## 1. Decide depth and type
 

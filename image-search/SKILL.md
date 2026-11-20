@@ -1,47 +1,80 @@
 ---
 name: image-search
-description: Search the web for images (photos, logos, graphics) and download them with Typst embedding code. Use when the user needs real-world images, company logos, or existing graphics for documents.
-allowed-tools: Bash
-argument-hint: <query> [--logo] [--stock] [--url <url>] [--dir images] [-n 1] [--size large|medium|icon] [--type photo|clipart|face|lineart]
+description: Search the web for images (photos, logos, icons, stock) and download them with Typst embedding code. Use when a document needs a real photo, a company logo, an icon, or a licence-clear stock image. 中文说法 — "找张图", "搜图片", "配图", "这个图哪来的", "下载图片".
+allowed-tools: Bash, Read
+argument-hint: <query> [--logo|--icon|--stock] [--engine <name>] [-n 1] [--aspect 16:9 --crop]
 ---
 
-Parse `$ARGUMENTS` into flags for the bundled script and run it in **one** Bash call. The script handles search, download, filename generation, and Typst code output.
-
-Flags: `query` (positional), `--logo`, `--stock`, `--url <url>`, `-d` dir, `-o` output, `-n` count, `--size`, `--type`, `--width`, `--caption "..."`
-
-Pass `--typst` when generating images for Typst documents (the typical case). If `--output`/`-o` is not given, omit it (script auto-generates from query + dir).
-
-Run exactly one command:
+Parse `$ARGUMENTS` into flags for the bundled script and run it in **one** Bash call. The script handles search, ranking, dedupe, format normalisation, licence metadata, and Typst code.
 
 ```bash
-SERPAPI_KEY="$SERPAPI_KEY" uv run --script ${CLAUDE_SKILL_DIR}/scripts/image_search.py "<query>" --typst [other flags...]
+uv run --script ${CLAUDE_SKILL_DIR}/scripts/image_search.py "<query>" --typst [flags...]
 ```
 
-If SERPAPI_KEY is empty in this shell, read it directly from fish universal variables (avoids shell greeting pollution): `` `printf '%b' "$(sed -n 's/.*SERPAPI_KEY://p' ~/.config/fish/fish_variables)"` ``. The same goes for `LOGO_DEV_TOKEN` and `UNSPLASH_ACCESS_KEY`: all three are fish universal variables, so a session started before one was set does not have it. Running the command through `fish -c '...'` picks them all up.
+Keys are discovered automatically — env first, then fish universals (`~/.config/fish/fish_variables`) and `~/.zshenv`. No shell gymnastics needed; `--list-engines` shows which are loaded.
 
-For `--stock` mode, also forward Unsplash/Pexels keys if available:
-```bash
-SERPAPI_KEY="$SERPAPI_KEY" UNSPLASH_ACCESS_KEY="$UNSPLASH_ACCESS_KEY" PEXELS_API_KEY="$PEXELS_API_KEY" uv run --script ${CLAUDE_SKILL_DIR}/scripts/image_search.py "<query>" --stock --typst [other flags...]
-```
+## Workflow
 
-Print the script's stdout to the user. Done.
+0. **Does the picture exist at all?** This skill only finds what someone already published. For a
+   scene, character, product shot or illustration that has to be invented - "a paper boat in a
+   neon alley", "our mug on a walnut desk" - search once to be sure, then hand off to
+   `/grok-media` (`image`, `edit`, `video`). Generated files carry no licence and need no credit;
+   never pass off a generated image as a photograph of a real event or person.
+1. **Pick the mode** from the table below. Defaults are fine for photos.
+2. **Run once**, read the `Saved:` block (path, size, dimensions, engine, licence).
+3. **Verify the pixels**: `Read` the saved file and check it shows the requested subject, is not watermarked, and is not a logo collage or a chart. This is the step that catches wrong-entity logos and unrelated results — the script cannot see images.
+   * Wrong or weak? Re-run with `-n 3` and pick, or change `--engine`, or rephrase (see Query craft).
+4. **Report** the path and the Typst figure. Keep the licence/credit line when the source is CC, stock, or NASA.
 
 ## Modes
 
-| Mode | Flag | Behavior |
-|------|------|----------|
-| Image search (default) | none | SerpAPI -> DuckDuckGo fallback -> download best match |
-| Logo lookup | `--logo` | Logo.dev -> image search fallback. Logo.dev returns a 200 px square icon (the brand mark), not a wide wordmark; for a wordmark use the default mode with "<company> logo" |
-| Stock photos | `--stock` | Unsplash -> Pexels -> image search fallback (license-clear) |
-| Direct URL | `--url <url>` | Download image directly from URL |
+| Mode | Flag | Ladder |
+|------|------|--------|
+| Photo (default) | none | brave → serpapi → ddgs → commons → openverse |
+| One channel | `--engine X` | `commons` `openverse` `ddgs` `nasa` `brave` `serpapi` |
+| Logo | `--logo` | Simple Icons SVG → Brandfetch → Commons SVG → Logo.dev PNG → favicon |
+| Icon | `--icon` | Iconify SVG (diagrams, inline glyphs) |
+| Stock | `--stock` | Pixabay → Pexels → Unsplash (licence-clear, download-friendly order) |
+| Direct URL | `--url <url>` | fetches and normalises one URL |
 
-## Environment
+**Logo note**: `--logo "Alphabet Inc"` resolves the domain from Wikidata `P856` (not `alphabet.com`, which is a car-leasing firm), then tries vector sources first. A 200 px PNG is the floor, not the goal — for print, prefer a Commons SVG wordmark or `--engine commons` on `"<company> logo"`.
 
-Zero API keys required — works via DuckDuckGo by default. Each key unlocks a better tier:
+## Query craft
 
-| Key | Purpose |
-|-----|---------|
-| `SERPAPI_KEY` | Google Images (best quality). Set. Free plan, 250 searches a month, shared with the `reddit` skill's search; one search per default-mode call |
-| `UNSPLASH_ACCESS_KEY` | Stock photos via Unsplash. Set (demo app, 50 requests an hour). Unsplash's API terms ask for credit to the photographer and Unsplash; the script does not print the author, so add the credit by hand in anything published |
-| `PEXELS_API_KEY` | Stock photos via Pexels. Not set: Pexels had paused issuing new API keys in November 2026 |
-| `LOGO_DEV_TOKEN` | `--logo` via Logo.dev (publishable key). Set. Without it `--logo` goes straight to a web image search for "<name> logo", so check the result is the right company's mark |
+| Source | Query that works | Query that fails |
+|--------|------------------|------------------|
+| ddgs / serpapi / brave | `golden gate bridge at dusk`, `team meeting whiteboard` | `bridge`, `office` (too generic, returns collages) |
+| commons | `Golden Gate Bridge`, `Angela Merkel 2021`, `Blue whale` | abstract concepts, product shots, brand marks |
+| openverse | `mountain lake`, `street market` | anything needing a specific real place bearing |
+| stock | `business meeting`, `laptop on desk` | famous people, branded products |
+| logo | legal name: `Alphabet Inc`, `JPMorgan Chase` | product names, subsidiaries, abbreviations |
+| icon | `database`, `shield check` (kebab nouns) | sentences, brand names |
+
+Roughly: concrete nouns and one qualifier beat long natural-language sentences. Add "interior / skyline / close-up / diagram" to steer composition.
+
+## Flags
+
+`--engine`, `--serpapi-engine google_images|bing_images|yandex_images|baidu_images|google_images_light`, `--list-engines`,
+`-n/--num`, `-d/--dir` (default `images`), `-o/--output`, `--size large|medium|icon`, `--type photo|clipart|face|lineart`,
+`--aspect 16:9`, `--crop`, `--max-width` (1600), `--max-kb` (2500), `--min-width`, `--format auto|jpeg|png`, `--white-bg`,
+`--typst`, `--width` (80%), `--fit cover|contain|stretch`, `--caption`, `--json`, `--no-cache`, `--no-serpapi`, `--no-manifest`, `-v`.
+
+Defaults keep documents small: 1600 px wide, JPEG q88, target ≤2.5 MB. Use `--format png` for diagrams with transparency, `--fit cover --crop` for full-bleed figures.
+
+## Budget and failure behaviour
+
+- SerpAPI free plan is 250 searches/month **shared with the `reddit` skill**; each default-mode call spends at most one. Current-month usage prints at the end; a 429 is reported and the ladder moves on instead of failing.
+- DuckDuckGo (`ddgs`) is keyless but rate-limits bursts — three retries with backoff, then the next engine.
+- Openverse anonymous tier is ~20 req/min, 200/day. Commons and NASA are unmetered (be a good citizen: the script sends a real UA).
+- Responses are cached 24 h under `~/.cache/image-search`; `--no-cache` forces fresh results. Cache hits do not spend quota.
+- Every engine failure lands in the JSON `errors` array with `--json`, so a failed run is diagnosable without re-running.
+
+## Licence and attribution
+
+`<dir>/.image-search-manifest.json` records engine, source page, image URL, licence, author, and dimensions for each file.
+
+- Commons / Openverse: licence is printed (`CC BY-SA 4.0`, `BY 2.0`, …). CC BY and CC BY-SA need credit + licence name in the document.
+- NASA: public domain, no credit required.
+- Unsplash: the API terms require hotlinking the returned URL, crediting the photographer and Unsplash, and pinging the download endpoint — the script saves a local copy for convenience, so treat Unsplash output as internal-review-only unless you add the credit line.
+- Logo.dev/favicon marks: trademarks of their owners; use for identification, not decoration.
+- Web images with `unknown (web image)`: check before publishing anything external.

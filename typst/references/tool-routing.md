@@ -58,7 +58,7 @@ Python is only for the last three rows. Embed its output with `#figure(image("ch
 | Mind maps, concept maps, topic trees | **`/mindmap`** |
 | Company or brand logos | **`/image-search --logo`** |
 | Real-world photos | **`/image-search`** |
-| Conceptual illustrations, metaphors, cover art | No image generator is available. Use a diagram where one fits; if the `anatomy` skill is installed, suggest an isometric figure and wait for a yes (one takes up to an hour); otherwise leave a placeholder `#rect` and tell the user |
+| Conceptual illustrations, metaphors, cover art, a photo no library has | `/grok-media image --prompt "..." --aspect 16:9 --out assets` (SuperGrok), embed the returned path; `edit` to restyle, `video` for a clip. Diagrams and charts stay native. Technical cutaways: suggest an `anatomy` figure and wait for a yes |
 | The document's central mechanism, where precise parts and true numbers matter | **`/anatomy`**, then `scripts/anatomy-to-typst.mjs` (below). At most one or two per document, and only after the user agrees |
 
 ## Content Patterns

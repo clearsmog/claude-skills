@@ -1,6 +1,6 @@
 ---
 name: sec-edgar
-description: Pull primary-source data on US-listed companies from SEC EDGAR's free APIs (10-K/10-Q/8-K/proxy text, full-text search across all filings since 2001, XBRL financials). Use whenever a task needs a US public company's filings, reported financials, risk factors, segment data, exec comp, or "which companies mention X" — for valuation, job/employer research or coursework — instead of scraping finance sites.
+description: Pull primary-source data on US-listed companies from SEC EDGAR's free APIs (10-K/10-Q/8-K/proxy text, full-text search across all filings since 2001, XBRL financials). Use whenever a task needs a US public company's filings, reported financials, risk factors, segment data, exec comp, or "which companies mention X" — for valuation, job/employer research or coursework — instead of scraping finance sites. 中文说法 — "查 10-K", "看财报原文", "SEC 文件", "招股书", "全文本搜索公告".
 ---
 # SEC EDGAR
 

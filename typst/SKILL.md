@@ -1,6 +1,6 @@
 ---
 name: typst
-description: Syntax guide and ecosystem reference for writing Typst (.typ) files. Use this skill when writing, editing, or debugging Typst documents. Covers core syntax, common errors, packages, and best practices.
+description: Syntax guide and ecosystem reference for writing Typst (.typ) files. Use this skill when writing, editing, or debugging Typst documents. Covers core syntax, common errors, packages, and best practices. 中文说法 — "写个 typst", "排版成 PDF", "做文档", "排一下版".
 license: MIT
 ---
 
@@ -59,7 +59,7 @@ Priority order:
 - Diagrams: native Typst (fletcher, chronos, timeliney, herodot) up to about 10 nodes and one actor; the `diagram` skill (D2) for larger, multi-party or network diagrams. Never Mermaid, Python or raster tools.
 - Charts: lilaq by default; cetz-plot only for very simple ones; Python SVG (matplotlib/seaborn/plotnine) only for kde, pair or faceted plots, or an existing Python pipeline.
 - Photos and logos: `/image-search`. Mind maps: `/mindmap`.
-- Conceptual illustrations: there is no image generator. Use a diagram, or suggest an `anatomy` figure and wait for a yes, or leave a placeholder `#rect`.
+- Conceptual illustrations, metaphors, cover art, a photo no library has: `/grok-media image --prompt "..." --aspect 16:9 --out assets`, then embed the path. Diagrams and charts stay native Typst; technical cutaways: suggest an `anatomy` figure and wait for a yes.
 
 ## Proactive Behaviors
 

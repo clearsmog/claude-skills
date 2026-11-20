@@ -1,6 +1,6 @@
 ---
 name: mindmap
-description: Generate mind map images using mind-elixir. Produces PNG or SVG files from plaintext input. Use when the user needs a mind map, concept map, or topic overview drawn as a radial tree. Not for flowcharts, sequence, causal, relationship or state diagrams (diagram).
+description: Generate mind map images using mind-elixir. Produces PNG or SVG files from plaintext input. Use when the user needs a mind map, concept map, or topic overview drawn as a radial tree. 中文说法 — "画思维导图", "梳理结构", "做个脑图". Not for flowcharts, sequence, causal, relationship or state diagrams (diagram).
 allowed-tools: Bash, Write, Read
 argument-hint: <topic or "plaintext content"> [-o path] [--format png|svg] [--theme academic|latte|dark] [--direction side|right|left] [--typst] [--caption "..."]
 ---

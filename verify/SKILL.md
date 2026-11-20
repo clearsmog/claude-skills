@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Verify that changed work actually runs and renders before a commit or before calling a task done. Compiles .typ/.qmd/.py/.R, runs the project's tests and build, and click-tests frontend changes in Chrome. Use before committing, when asked to verify or check work, or when finishing any change to compilable or visual files.
+description: Verify that changed work actually runs and renders before a commit or before calling a task done. Compiles .typ/.qmd/.py/.R, runs the project's tests and build, and click-tests frontend changes in Chrome. Use before committing, when asked to verify or check work, or when finishing any change to compilable or visual files. 中文说法 — "检查一下能不能跑", "验证渲染", "提交前确认", "这个改动真的能跑".
 allowed-tools: ["Read", "Bash", "Glob", "Grep", "Skill"]
 ---
 

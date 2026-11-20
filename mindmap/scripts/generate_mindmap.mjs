@@ -176,11 +176,11 @@ try {
 // ---------------------------------------------------------------------------
 // Render with Puppeteer
 // ---------------------------------------------------------------------------
-// Puppeteer's own Chrome download is often missing (npm install skipped it, or the
-// cache was cleared); fall back to the locally installed Chrome stable.
+// System Chrome first: one browser for every skill (SKILLS_AUDIT.md). Puppeteer's own
+// download is deliberately absent here, so the bundled path is only a fallback.
 const browser = await puppeteer
-  .launch({ headless: true })
-  .catch(() => puppeteer.launch({ headless: true, channel: "chrome" }));
+  .launch({ headless: true, channel: "chrome" })
+  .catch(() => puppeteer.launch({ headless: true }));
 try {
 const page = await browser.newPage();
 const scaleFactor = parseInt(args.scale ?? "3", 10);
