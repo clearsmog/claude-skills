@@ -7,6 +7,6 @@
   "homepage": "https://github.com/clearsmog/claude-skills",
   "repository": "https://github.com/clearsmog/claude-skills",
   "license": "MIT",
-  "keywords": ["skills", "typst", "d2", "diagrams", "mindmap", "wayback", "sec-edgar", "documents"],
+  "keywords": ["skills", "typst", "d2", "diagrams", "mindmap", "wayback", "equity-data", "documents"],
   "skills": "./"
 }

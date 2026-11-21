@@ -108,7 +108,7 @@ If you already have a `~/.claude/skills` directory, clone elsewhere and symlink 
 | Skill | What it does |
 |---|---|
 | **wayback** | Recovers dead or changed pages from the Wayback Machine, Common Crawl and Arquivo.pt together; lists captures, fetches them as text, and word-diffs two versions |
-| **sec-edgar** | US company filings from SEC EDGAR's free APIs: 10-K/10-Q/8-K text, full-text search since 2001, XBRL financials |
+| **equity-data** | Listed-company data: US filings from SEC EDGAR's free APIs (10-K/10-Q/8-K text, full-text search since 2001, XBRL financials) and China A-shares through AkShare (prices, statements, 巨潮 announcements) |
 
 ### Organise
 
@@ -177,7 +177,7 @@ Every skill with scripts uses [uv](https://docs.astral.sh/uv/) (`brew install uv
 | **typst**, **verify**, **doc-review** | [Typst CLI](https://github.com/typst/typst) (`brew install typst`); the qk component library from [typst-component-library](https://github.com/clearsmog/typst-component-library), installed as `@local/qk` |
 | **mindmap** | Node.js; uses Puppeteer's Chrome, or your installed Chrome if that is missing |
 | **image-search** | `SERPAPI_KEY` optional (DuckDuckGo is the free fallback); `UNSPLASH_ACCESS_KEY` / `PEXELS_API_KEY` for `--stock`; `LOGO_DEV_TOKEN` for `--logo` |
-| **sec-edgar** | `SEC_USER_AGENT`, an app name plus contact email (SEC rejects requests without one) |
+| **equity-data** | `SEC_USER_AGENT` for the SEC half, an app name plus contact email (SEC rejects requests without one) |
 | **google-tasks** | The `gtasks` CLI |
 
 ## Credits
