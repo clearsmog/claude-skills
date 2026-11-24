@@ -1,6 +1,7 @@
 ---
 name: diagram
-description: Draw structural diagrams with D2 — process lifecycles and sequence/swimlane diagrams (who does what, in what order), flowcharts and decision trees, causal/event networks (what drives what), state machines, layered or market-structure maps, and step-by-step walkthroughs — rendered in the qk palette to light and dark SVG + PNG (plus PDF/GIF) for Typst, HTML, Markdown, slides or standalone use. Use whenever the user wants a 流程图, 时序图, 泳道图, 生命周期图, 拓扑图, 因果图, 传导链, 关系图, state diagram, or asks to "visualize how X works / how A affects B / the steps of X", in any project — even without the word "diagram". 中文说法 — "画流程图", "画时序图", "因果图", "状态机", "画个图说明", "传导链". Not for data charts (dataviz), mind maps (/mindmap), dated timelines (Typst herodot/timeliney) or a concept drawn as an isometric physical machine (anatomy).
+description: >-
+  Draw structural diagrams with D2, rendered in the qk palette to light and dark SVG + PNG (plus PDF/GIF) for Typst, HTML, Markdown or slides: sequence/swimlane lifecycles, flowcharts and decision trees, causal networks, state machines, layered market-structure maps, step-by-step walkthroughs. Use whenever the user asks to "visualize how X works / how A affects B / the steps of X", even without the word "diagram". 中文说法 — "画流程图", "时序图", "泳道图", "生命周期图", "拓扑图", "因果图", "传导链", "状态机", "关系图", "画个图说明". Not for data charts (dataviz), mind maps (/mindmap), dated timelines (Typst herodot/timeliney) or an isometric machine (anatomy).
 argument-hint: "<what to draw> [-o outdir]"
 allowed-tools: Read, Write, Edit, Bash
 ---
@@ -58,6 +59,9 @@ fletcher (see `typst/references/tool-routing.md`); a mechanism drawn as a real, 
 **Size.** 5–15 nodes reads well. Past 15, split by phase or zoom level, or turn it into a step
 walkthrough. Don't shrink the text.
 
+**Done when:** the depth (sketch or teaching) and the type are named, and the matching example is
+picked; a figure over 15 nodes has a split plan.
+
 ## 2. Write the source
 
 Read the matching example first; it carries the idioms for its type.
@@ -109,6 +113,9 @@ Sources:
 - For per-edge provenance in HTML, put it in `tooltip:`; it shows on hover and survives into the SVG.
 - Mark anything unchecked `[unverified]` in its label.
 
+**Done when:** `d2 fmt` has run, the source has no hex and no `vars.d2-config`, and every causal
+edge or lifecycle step is cited at the top or marked `[unverified]`.
+
 ## 3. Render
 
 ```bash
@@ -125,7 +132,11 @@ Output names and locations:
   40 characters), so the source gets committed; otherwise next to the deliverable.
 
 Exit 1 means one of: a lint failure (hex, d2-config, unformatted), a compile error (reported at
-the line in your file), or a D2 warning.
+the line in your file), or a D2 warning. Before switching layout engines, hand-editing an SVG, exporting
+PDF/GIF with CJK, or when a dependency (d2, Chrome, uv, pdftoppm) is missing, read
+`references/gotchas.md`.
+
+**Done when:** `render.sh` exits 0 and the PNG paths it printed exist.
 
 ## 4. Look, in two passes, then fix
 
@@ -144,9 +155,11 @@ Read the PNGs (light and dark, or every page) and judge them in this order.
 - [ ] The dark version has no black or white blocks, and every label is readable
 - [ ] Aspect ratio is at most 3.5:1 (the script notes it); otherwise switch `direction` or split
 
-Fix the source and re-render. Expect 2–4 rounds. Stop when both passes are clean and you would show
-it without caveats. Don't hand over a figure you have not looked at. When delivering, show the
-light PNG and list the paths.
+Fix the source and re-render. Expect 2–4 rounds. Don't hand over a figure you have not looked at.
+When delivering, show the light PNG and list the paths.
+
+**Done when:** every box in both passes is ticked on the latest render, read as a PNG (light and
+dark, or every page), and you would show it without caveats.
 
 ## 5. Embed
 
@@ -160,22 +173,4 @@ light PNG and list the paths.
 The SVG embeds its own fonts (Source Sans plus a CJK fallback), so it does not match a Typst
 document's body font. When that matters for a small diagram, use fletcher.
 
-## Gotchas (verified on d2 0.9.0)
-
-- `d2 validate` passes files that fail to compile (for example, a theme code such as `AA4` used
-  as a style value). Trust `render.sh`.
-- `render.sh` applies these SVG patches; keep them if you hand-edit an SVG:
-  - Sequence groups are drawn with `mix-blend-mode: multiply`, which turns them black on dark. The
-    dark SVG switches it to `screen`.
-  - The italic face used for edge labels slants CJK in browsers. Labels are pointed at the regular
-    face with a sans fallback.
-  - The legend box is hard-coded white/black. The dark SVG recolours it.
-- On ELK and dagre, `label.near` on an edge is accepted but does nothing, and self-loop labels
-  overlap the loop. Use `-l tala`. TALA ignores `direction` on containers, so keep lanes on ELK.
-- PDF/GIF export dies on CJK with the system fallback font (a .ttc over D2's 128 MB limit), and one
-  23 MB CJK `.ttf` passed for two faces breaks the 64 MB scene limit. `render.sh` handles this by
-  subsetting `Arial Unicode.ttf` to the source's characters (about 50 KB) with fonttools via `uvx`.
-  The cost: PDF/GIF lose bold, since that font has one weight; the SVG/PNG keep it. Override the
-  font with `D2_CJK_TTF=<path to a .ttf>` (`.otf` is rejected).
-- Needs `d2` (`brew install d2`) and Google Chrome (or `CHROME=<path>`). PDF/GIF and step boards
-  also need `uv` and `pdftoppm` (poppler).
+**Done when:** the target document references the rendered file with the snippet for its format.

@@ -1,0 +1,22 @@
+# Archive internals
+
+Read by the wayback skill when a result looks wrong (missing captures, odd text, slow Common Crawl) or before tuning `--source`, `--from` or retries.
+
+## Gotchas
+
+- **Common Crawl** lookups skip the index server (index.commoncrawl.org, which 503/504s for hours): the script binary-searches each crawl's `cluster.idx` on data.commoncrawl.org with Range reads and gunzips the matching CDX block, about 16 requests / 0.5 MB per crawl, 3 crawls at a time (`WAYBACK_CC_WORKERS`; 3 showed no throttling, 5 was barely faster). Without `--from` it searches the newest 12 of 129 crawls (about a year, ~13–40 s depending on the network); `--from 2020` (~70 crawls) takes ~1.5 min. The crawl list (`collinfo.json`) is cached in `~/.cache/wayback-skill/` for a week and used stale when the server is down; with no cache, crawl dates are approximated from the crawl IDs. Prefix sweeps stop after 20 index blocks (~60k index lines) per crawl and warn.
+- CC is shallow per page but broad per site: a `--domain` sweep returns what CC actually crawled, sometimes a few dozen pages for a whole corporate site, so treat it as a sample, not a sitemap.
+- CC keys are SURTs: `www.`, scheme, fragment, default port and a trailing slash are ignored, case-insensitive, query params sorted. So `https://www.x.com/a/` and `x.com/a` are the same lookup, but `x.com/a?utm=..` is a different page; use `x.com/a*` to catch query variants.
+- CC records are cut at 1 MiB (before CC-MAIN-2025-13) or 5 MiB; the script warns `record truncated`. Big PDFs are often incomplete. Crawls 2008–2012 are ARC, not WARC (handled, but less tested). CCBot runs no JavaScript, so SPA captures are shells, as in Wayback.
+- CC and Arquivo CDX are pywb: no `collapse=digest`, so dedup is client-side; filters use `filter=status:200` / `filter=!status:200` / `filter=~field:regex`.
+- `list`/`history` use CDX with `collapse=digest`, so captures whose bytes did not change are hidden. Captures that differ only in boilerplate (a timestamp, a cookie banner) still show up; `--start`/`--end` cropping makes their diffs empty.
+- `archive.org/wayback/available` often returns empty for archived sites; don't trust it, use CDX.
+- `id_` in the fetch URL returns the original page without the Wayback toolbar; the script does this.
+- Text extraction keeps nav, cookie banners and footers in `<name>.txt` (they are also evidence of what the page looked like) and only `--main`, `--raw` or `--start`/`--end` remove them. Because body text is far shorter than the page, `history` skips captures under `--min-chars 300`; raise it when a template change is what you are looking for, lower it for one-paragraph pages. Every capture still has a `.full.txt`, so a wrong crop or a wrong extractor costs a re-run, not a refetch.
+- Many captures of JS-rendered sites (careers portals, SPAs) are empty shells or "position filled" pages. Check the text length before diffing; try other URL variants (with/without `www`, trailing slash, query string) or an aggregator copy (eFinancialCareers, LinkedIn, Indeed).
+- `diff`/`history` fetch 4 captures at a time and cache each uncropped text as `<dir>/<timestamp>.full.txt`. When the script warns `--start not found` / `--end not found`, or skips most captures as short, open a `.full.txt`, fix the regex, and re-run with the same `-o`: no refetch. `history --max N` limits a page with 100 captures to the newest N.
+- `id_` replays the archived response, sometimes still gzip-encoded; the script decompresses gzip/deflate and warns on anything still binary (brotli). A warned capture's diff is noise.
+- Retries: 5xx and timeouts back off (Retry-After honoured, seconds or HTTP date, capped at 60 s); 429 gets one 5 s retry, then the source is dropped — `retry in 5s` and `ia: skipped` lines are normal. A connection cut mid-read (Arquivo.pt raises SSL `UNEXPECTED_EOF` when four history fetches overlap) is retried; a refused handshake is not. Before that retry existed, 9 of 36 captures silently went missing from one history run, and a missing capture also changes which lines count as shared — so watch the `N versions` line against `list`'s count.
+- Useless for login-gated pages.
+- `save` uses unauthenticated Save Page Now: 10–60 s per page, throttled after a burst. Sites that block the crawler return 520/523; the script then prints the latest existing capture and warns `no new capture was made`, so check that warning before citing the timestamp as "today". Login-gated pages save as a login wall.
+
