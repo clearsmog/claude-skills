@@ -10,14 +10,18 @@
 Typst compiles directly to PNG — no external tools needed:
 
 ```bash
+# Per-session output dir: the session scratchpad, or a fresh mktemp dir.
+# A fixed /tmp path gets overwritten by parallel sessions.
+out="$(mktemp -d)"
+
 # Single page
-typst compile doc.typ /tmp/preview.png --pages 1
+typst compile doc.typ "$out/preview.png" --pages 1
 
 # All pages as numbered PNGs
-typst compile doc.typ /tmp/preview-{0p}.png
+typst compile doc.typ "$out/preview-{0p}.png"
 
 # Specific page range
-typst compile doc.typ /tmp/preview-{0p}.png --pages 3-5
+typst compile doc.typ "$out/preview-{0p}.png" --pages 3-5
 ```
 
 Use the `Read` tool on PNG files to visually inspect rendered pages. Claude is multimodal and can detect layout issues by looking at the rendered output.

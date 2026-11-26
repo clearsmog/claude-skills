@@ -1,0 +1,12 @@
+{
+  "skill_name": "typst",
+  "evals": [
+    {"id": 1, "prompt": "Write a one-page Typst document report.typ in this directory: an A4 memo titled \"Q3 Liquidity Review\" with a header line, a 4-row table of funding sources (source, amount in GBP m, maturity) with right-aligned numbers, and a short bulleted conclusion. Compile it to report.pdf and make sure it compiles cleanly."},
+    {"id": 2, "prompt": "用 Typst 写一份两页的中文讲义 notes.typ：标题“期权定价入门”，含一节 Black-Scholes 公式（行间公式，带编号）、一个带标题的定理框、页码和页眉。编译成 notes.pdf，确认中文字体正常显示、没有警告。"},
+    {"id": 3, "prompt": "Create slides.typ, a 5-slide Typst presentation (16:9) introducing Value at Risk: title slide, definition, historical vs parametric method side by side, a simple bar chart of daily P&L made in Typst, and a summary. Compile to slides.pdf."},
+    {"id": 4, "prompt": "In Typst, write flow.typ: a one-page document with a flowchart of an OTC derivatives trade lifecycle (trade capture -> confirmation -> clearing decision, branching to CCP clearing or bilateral margining -> settlement), with labelled arrows and no overlapping labels. Compile to flow.pdf and check the diagram visually."},
+    {"id": 5, "prompt": "用 Typst 做一页中英双语简历 cv.typ（虚构人物“林晓 Lin Xiao”，量化分析师）：左侧窄栏放联系方式和技能，右侧放工作经历和教育，每段经历 2–3 条要点。必须严格一页 A4，编译成 cv.pdf 并确认没有溢出到第二页。"},
+    {"id": 6, "prompt": "Write paper.typ, a 2-page Typst article on momentum in equity returns with an abstract, two sections, one numbered equation, and a bibliography in APA style from a refs.bib you create with three real, well-known papers (Jegadeesh & Titman 1993, Carhart 1997, Asness, Moskowitz & Pedersen 2013) with correct metadata. Compile to paper.pdf."},
+    {"id": 7, "prompt": "Make chart.typ in Typst: a one-page figure plotting two made-up yield curves (today vs one year ago, maturities 3M to 30Y, 10 points each) as lines with markers, a legend, axis labels with units, and a log-scaled maturity axis. Compile to chart.pdf and look at it to make sure the axes are readable."}
+  ]
+}
